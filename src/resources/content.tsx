@@ -199,7 +199,7 @@ const about: About = {
         images: [
           // optional: leave the array empty if you don't want to display images
           {
-            src: "/images/projects/project-01/cover-01.jpg",
+            src: "/images/projects/project-01/cover-09.png",
             alt: "My landing page at Melintas.Id ",
             width: 16,
             height: 9,
