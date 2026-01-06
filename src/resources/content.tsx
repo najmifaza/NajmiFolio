@@ -12,8 +12,8 @@ import { Line, Row, Text } from "@once-ui-system/core";
 import React from "react";
 
 const person: Person = {
-  firstName: "Najmi",
-  lastName: "Faza",
+  firstName: "Adridinan",
+  lastName: " Najmi Faza",
   name: "Najmi Faza",
   role: "Web Developer",
   avatar: "/images/avatar.png",
@@ -24,7 +24,7 @@ const person: Person = {
 
 const newsletter: Newsletter = {
   display: true,
-  title: <>Subscribe to {person.firstName}'s Newsletter</>,
+  title: <>Subscribe to {person.name}'s Newsletter</>,
   description: <>My weekly newsletter about creativity and engineering</>,
 };
 
@@ -35,7 +35,7 @@ const social: Social = [
   {
     name: "GitHub",
     icon: "github",
-    link: "https://github.com/once-ui-system",
+    link: "https://github.com/najmifaza",
     essential: true,
   },
   {
@@ -47,15 +47,10 @@ const social: Social = [
   {
     name: "Instagram",
     icon: "instagram",
-    link: "https://www.instagram.com/once_ui/",
-    essential: false,
-  },
-  {
-    name: "Threads",
-    icon: "threads",
-    link: "https://www.threads.com/@once_ui",
+    link: "https://www.instagram.com/najmi.zaa/",
     essential: true,
   },
+
   {
     name: "Email",
     icon: "email",
@@ -140,7 +135,7 @@ const about: About = {
         images: [
           // optional: leave the array empty if you don't want to display images
           {
-            src: "/images/projects/project-01/cover.jpg",
+            src: "/images/projects/project-01/cover-01.jpg",
             alt: "Rabiha's Instagram Project",
             width: 16,
             height: 9,
@@ -166,11 +161,11 @@ const about: About = {
         ],
       },
       {
-        company: "KMI Tazakka",
+        company: "KMI - Pondok Modern Tazakka",
         timeframe: "2024 - 2025",
         role: "Pengajar",
         achievements: [
-          "Mengajar dengan jadwal rutin (4x per minggu) dengan mapel Media & Jurnalistik dan, Grammar 3",
+          "Mengajar dengan jadwal rutin (4x per minggu) dengan mapel Media Jurnalistik dan, Grammar 3.",
         ],
         images: [
           // optional: leave the array empty if you don't want to display images
@@ -198,8 +193,8 @@ const about: About = {
         images: [
           // optional: leave the array empty if you don't want to display images
           {
-            src: "/images/projects/project-01/cover-03.png",
-            alt: "Rabiha's Instagram Project",
+            src: "/images/projects/project-01/cover-01.jpg",
+            alt: "My landing page at Melintas.Id ",
             width: 16,
             height: 9,
           },
