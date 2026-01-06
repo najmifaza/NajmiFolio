@@ -13,12 +13,12 @@ import { Line, Row, Text } from "@once-ui-system/core";
 const person: Person = {
   firstName: "Najmi",
   lastName: "Faza",
-  name: `Najmi Faza`,
+  name: "Najmi Faza",
   role: "Web Developer",
   avatar: "/images/avatar.png",
-  email: "example@gmail.com",
+  email: "adridinan99@gmail.com",
   location: "Asia/Jakarta", // Expecting the IANA time zone identifier, e.g., 'Europe/Vienna'
-  languages: ["English", "Bahasa"], // optional: Leave the array empty if you don't want to display languages
+  languages: ["English", "Bahasa", "Arabic"], // optional: Leave the array empty if you don't want to display languages
 };
 
 const newsletter: Newsletter = {
@@ -116,10 +116,12 @@ const about: About = {
     title: "Introduction",
     description: (
       <>
-        Selene is a Jakarta-based design engineer with a passion for
-        transforming complex challenges into simple, elegant design solutions.
-        Her work spans digital interfaces, interactive experiences, and the
-        convergence of design and technology.
+        Mahasiswa Informatika dengan pengalaman nyata di content production,
+        media operations, dan product mockup design. Terbiasa bekerja dengan
+        deadline, mengelola konten digital, serta menerjemahkan kebutuhan
+        non-teknis menjadi output visual dan informasi yang terstruktur.
+        Memiliki pengalaman mengajar, koordinasi tim, dan dokumentasi kegiatan
+        skala institusi negara.
       </>
     ),
   },
@@ -132,40 +134,101 @@ const about: About = {
         timeframe: "2025 - Present",
         role: "Social Media and Web Specialist",
         achievements: [
-          <>
-            Redesigned the UI/UX for the FLY platform, resulting in a 20%
-            increase in user engagement and 30% faster load times.
-          </>,
-          <>
-            Spearheaded the integration of AI tools into design workflows,
-            enabling designers to iterate 50% faster.
-          </>,
+          <>Mengelola konten dan tampilan media sosial perusahaan.</>,
         ],
         images: [
           // optional: leave the array empty if you don't want to display images
           {
-            src: "/images/projects/project-01/cover-01.jpg",
-            alt: "Once UI Project",
+            src: "/images/projects/project-01/cover.jpg",
+            alt: "Rabiha's Instagram Project",
             width: 16,
             height: 9,
           },
         ],
       },
       {
-        company: "Creativ3",
-        timeframe: "2018 - 2022",
-        role: "Lead Designer",
+        company: "Pondok Modern Tazakka",
+        timeframe: "2024 - 2025",
+        role: "Staff Media & Jurnalistik",
         achievements: [
           <>
-            Developed a design system that unified the brand across multiple
-            platforms, improving design consistency by 40%.
+            Bertanggung jawab dalam mengelola dokumentasi, publikasi, dan
+            informasi kegiatan pondok.
           </>,
           <>
-            Led a cross-functional team to launch a new product line,
-            contributing to a 15% increase in overall company revenue.
+            Peran ini melibatkan publikasi blog Website, pembuatan konten,
+            pengelolaan media sosial, desain grafis, serta dokumentasi foto dan
+            video.
           </>,
         ],
-        images: [],
+        images: [
+          // optional: leave the array empty if you don't want to display images
+          {
+            src: "/images/projects/project-01/cover-02.jpg",
+            alt: "Rabiha's Instagram Project",
+            width: 16,
+            height: 9,
+          },
+        ],
+      },
+      {
+        company: "KMI Tazakka",
+        timeframe: "2024 - 2025",
+        role: "Pengajar",
+        achievements: [
+          <>
+            Mengajar dengan jadwal rutin (4x per minggu) dengan mapel Media &
+            Jurnalistik dan, Grammar 3
+          </>,
+        ],
+      },
+      {
+        company: "PT Promedia Teknologi Indonesia (Melintas.id)",
+        timeframe: "2025",
+        role: "Web Content Writer",
+        achievements: [
+          <>
+            Menulis konten edukasi dan literasi digital untuk platform media
+            online
+          </>,
+          <>
+            Mengolah topik teknologi dan pendidikan menjadi artikel yang mudah
+            dipahami publik
+          </>,
+        ],
+        images: [
+          // optional: leave the array empty if you don't want to display images
+          {
+            src: "/images/projects/project-01/cover-03.png",
+            alt: "Rabiha's Instagram Project",
+            width: 16,
+            height: 9,
+          },
+        ],
+      },
+    ],
+  },
+
+  Organization: {
+    display: true, // set to false to hide this section
+    title: "Organization and Commite",
+    experiences: [
+      {
+        company: "Seminar Nasional Pelepasan Duta Asfa MPR-RI ",
+        timeframe: "2025",
+        role: "Jurnalis & Dokumenter",
+        achievements: [
+          <>Mengelola konten dan tampilan media sosial perusahaan.</>,
+        ],
+        images: [
+          // optional: leave the array empty if you don't want to display images
+          {
+            src: "/images/projects/project-01/cover-05.jpg",
+            alt: "Rabiha's Instagram Project",
+            width: 16,
+            height: 9,
+          },
+        ],
       },
     ],
   },
@@ -174,12 +237,12 @@ const about: About = {
     title: "Studies",
     institutions: [
       {
-        name: "University of Jakarta",
-        description: <>Studied software engineering.</>,
+        name: "Universitas Jenderal Soedirman",
+        description: <>Bachelor of Informatics Engineering</>,
       },
       {
-        name: "Build the Future",
-        description: <>Studied online marketing and personal branding.</>,
+        name: "Pondok Modern Tazakka",
+        description: <>High school based on KMI curriculum</>,
       },
     ],
   },
@@ -188,17 +251,61 @@ const about: About = {
     title: "Technical skills",
     skills: [
       {
-        title: "Figma",
+        title: "Basic Programming",
         description: (
           <>Able to prototype in Figma with Once UI with unnatural speed.</>
         ),
         tags: [
           {
-            name: "Figma",
-            icon: "figma",
+            name: "Html",
+            icon: "html",
+          },
+          {
+            name: "CSS",
+            icon: "css",
+          },
+          {
+            name: "JavaScript",
+            icon: "javascript",
+          },
+          {
+            name: "C",
+            icon: "c",
+          },
+          {
+            name: "Python",
+            icon: "python",
+          },
+          {
+            name: "MySql",
+            icon: "sql",
+          },
+          {
+            name: "MongoDB",
+            icon: "mongodb",
           },
         ],
         // optional: leave the array empty if you don't want to display images
+      },
+      {
+        title: "Wordpress Development",
+        description: (
+          <>Building next gen apps with Next.js + Once UI + Supabase.</>
+        ),
+        tags: [
+          {
+            name: "Wordpress",
+            icon: "wordpress",
+          },
+          {
+            name: "Elementor",
+            icon: "elementor",
+          },
+          {
+            name: "WooCommerce",
+            icon: "woocommerce",
+          },
+        ],
         images: [
           {
             src: "/images/projects/project-01/cover-02.jpg",
@@ -213,35 +320,7 @@ const about: About = {
             height: 9,
           },
         ],
-      },
-      {
-        title: "Next.js",
-        description: (
-          <>Building next gen apps with Next.js + Once UI + Supabase.</>
-        ),
-        tags: [
-          {
-            name: "JavaScript",
-            icon: "javascript",
-          },
-          {
-            name: "Next.js",
-            icon: "nextjs",
-          },
-          {
-            name: "Supabase",
-            icon: "supabase",
-          },
-        ],
         // optional: leave the array empty if you don't want to display images
-        images: [
-          {
-            src: "/images/projects/project-01/cover-04.jpg",
-            alt: "Project image",
-            width: 16,
-            height: 9,
-          },
-        ],
       },
     ],
   },
