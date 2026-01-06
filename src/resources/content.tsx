@@ -1,4 +1,4 @@
-import {
+import type {
   About,
   Blog,
   Gallery,
@@ -9,6 +9,7 @@ import {
   Work,
 } from "@/types";
 import { Line, Row, Text } from "@once-ui-system/core";
+import React from "react";
 
 const person: Person = {
   firstName: "Najmi",
@@ -134,7 +135,7 @@ const about: About = {
         timeframe: "2025 - Present",
         role: "Social Media and Web Specialist",
         achievements: [
-          <>Mengelola konten dan tampilan media sosial perusahaan.</>,
+          "Mengelola konten dan tampilan media sosial perusahaan.",
         ],
         images: [
           // optional: leave the array empty if you don't want to display images
@@ -151,20 +152,13 @@ const about: About = {
         timeframe: "2024 - 2025",
         role: "Staff Media & Jurnalistik",
         achievements: [
-          <>
-            Bertanggung jawab dalam mengelola dokumentasi, publikasi, dan
-            informasi kegiatan pondok.
-          </>,
-          <>
-            Peran ini melibatkan publikasi blog Website, pembuatan konten,
-            pengelolaan media sosial, desain grafis, serta dokumentasi foto dan
-            video.
-          </>,
+          "Bertanggung jawab dalam mengelola dokumentasi, publikasi, dan informasi kegiatan pondok.",
+          "Peran ini melibatkan publikasi blog Website, pembuatan konten, pengelolaan media sosial, desain grafis, serta dokumentasi foto dan video.",
         ],
         images: [
           // optional: leave the array empty if you don't want to display images
           {
-            src: "/images/projects/project-01/cover-02.jpg",
+            src: "/images/projects/project-01/cover-06.png",
             alt: "Rabiha's Instagram Project",
             width: 16,
             height: 9,
@@ -176,10 +170,16 @@ const about: About = {
         timeframe: "2024 - 2025",
         role: "Pengajar",
         achievements: [
-          <>
-            Mengajar dengan jadwal rutin (4x per minggu) dengan mapel Media &
-            Jurnalistik dan, Grammar 3
-          </>,
+          "Mengajar dengan jadwal rutin (4x per minggu) dengan mapel Media & Jurnalistik dan, Grammar 3",
+        ],
+        images: [
+          // optional: leave the array empty if you don't want to display images
+          {
+            src: "/images/projects/project-01/cover-07.jpg",
+            alt: "Rabiha's Instagram Project",
+            width: 16,
+            height: 9,
+          },
         ],
       },
       {
@@ -187,14 +187,14 @@ const about: About = {
         timeframe: "2025",
         role: "Web Content Writer",
         achievements: [
-          <>
+          <React.Fragment key="achievement-1">
             Menulis konten edukasi dan literasi digital untuk platform media
             online
-          </>,
-          <>
+          </React.Fragment>,
+          <React.Fragment key="achievement-2">
             Mengolah topik teknologi dan pendidikan menjadi artikel yang mudah
             dipahami publik
-          </>,
+          </React.Fragment>,
         ],
         images: [
           // optional: leave the array empty if you don't want to display images
@@ -212,13 +212,14 @@ const about: About = {
   Organization: {
     display: true, // set to false to hide this section
     title: "Organization and Commite",
+
     experiences: [
       {
         company: "Seminar Nasional Pelepasan Duta Asfa MPR-RI ",
         timeframe: "2025",
         role: "Jurnalis & Dokumenter",
         achievements: [
-          <>Mengelola konten dan tampilan media sosial perusahaan.</>,
+          "Mengelola konten dan tampilan media sosial perusahaan.",
         ],
         images: [
           // optional: leave the array empty if you don't want to display images

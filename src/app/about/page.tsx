@@ -42,6 +42,9 @@ export default function About() {
     {
       title: about.Organization.title,
       display: about.Organization.display,
+      items: about.Organization.experiences.map(
+        (experience) => experience.company
+      ),
     },
     {
       title: about.studies.title,

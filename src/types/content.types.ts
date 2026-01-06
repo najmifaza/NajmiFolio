@@ -171,6 +171,7 @@ export interface About extends BasePageConfig {
     /** Title for the work experience section */
     title: string;
     /** List of work experiences */
+
     experiences: Array<{
       /** Company name */
       company: string;
@@ -179,6 +180,10 @@ export interface About extends BasePageConfig {
       /** Role or job title */
       role: string;
       /** Achievements at the company */
+      tags?: Array<{
+        name: string;
+        icon?: string;
+      }>;
       achievements: React.ReactNode[];
       /** Images related to the experience */
       images?: Array<{
