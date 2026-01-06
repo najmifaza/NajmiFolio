@@ -272,7 +272,9 @@ const about: About = {
       {
         title: "Basic Programming",
         description: (
-          <>Able to prototype in Figma with Once UI with unnatural speed.</>
+          <>
+            Memiliki dasar pemrograman yang kuat sebagai mahasiswa Informatika.
+          </>
         ),
         tags: [
           {
@@ -309,7 +311,10 @@ const about: About = {
       {
         title: "Wordpress Development",
         description: (
-          <>Building next gen apps with Next.js + Once UI + Supabase.</>
+          <>
+            Berpengalaman dalam mengelola platform media online dan website
+            berbasis CMS untuk publikasi konten edukasi dan informasi
+          </>
         ),
         tags: [
           {
@@ -325,20 +330,36 @@ const about: About = {
             icon: "woocommerce",
           },
         ],
-        images: [
+
+        // optional: leave the array empty if you don't want to display images
+      },
+      {
+        title: "Editing & Design",
+        description: (
+          <>
+            Ahli dalam pembuatan konten visual, mulai dari desain hingga editing
+            video dan dokumentasi kegiatan institusi
+          </>
+        ),
+        tags: [
           {
-            src: "/images/projects/project-01/cover-08.png",
-            alt: "Project image",
-            width: 16,
-            height: 9,
+            name: "Adobe Photoshop",
+            icon: "Adobephotoshop",
           },
           {
-            src: "/images/projects/project-01/cover-03.jpg",
-            alt: "Project image",
-            width: 16,
-            height: 9,
+            name: "Adobe Premierepro",
+            icon: "Adobepremierepro",
+          },
+          {
+            name: "Adobe Lightroom",
+            icon: "Adobelightroom",
+          },
+          {
+            name: "Coreldraw",
+            icon: "Coreldraw",
           },
         ],
+
         // optional: leave the array empty if you don't want to display images
       },
     ],

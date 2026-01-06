@@ -37,6 +37,10 @@ import {
   SiMongodb,
   SiElementor,
   SiWoocommerce,
+  SiAdobephotoshop,
+  SiAdobepremierepro,
+  SiAdobelightroom,
+  SiCoreldraw,
 } from "react-icons/si";
 
 import {
@@ -97,6 +101,10 @@ export const iconLibrary: Record<string, IconType> = {
   mongodb: SiMongodb,
   elementor: SiElementor,
   woocommerce: SiWoocommerce,
+  Adobephotoshop: SiAdobephotoshop,
+  Adobepremierepro: SiAdobepremierepro,
+  Adobelightroom: SiAdobelightroom,
+  Coreldraw: SiCoreldraw,
 };
 
 export type IconLibrary = typeof iconLibrary;
