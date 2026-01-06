@@ -19,7 +19,7 @@ const person: Person = {
   avatar: "/images/avatar.png",
   email: "adridinan99@gmail.com",
   location: "Asia/Jakarta", // Expecting the IANA time zone identifier, e.g., 'Europe/Vienna'
-  languages: ["English", "Bahasa", "Arabic"], // optional: Leave the array empty if you don't want to display languages
+  languages: ["English", "Indonesian", "Arabic"], // optional: Leave the array empty if you don't want to display languages
 };
 
 const newsletter: Newsletter = {
@@ -41,7 +41,7 @@ const social: Social = [
   {
     name: "LinkedIn",
     icon: "linkedin",
-    link: "https://www.linkedin.com/company/once-ui/",
+    link: "https://www.linkedin.com/in/adridinan-najmi-faza-80b88a301",
     essential: true,
   },
   {
@@ -70,12 +70,12 @@ const home: Home = {
   label: "Home",
   title: `${person.name}'s Portfolio`,
   description: `Portfolio website showcasing my work as a ${person.role}`,
-  headline: <>Building bridges between design and code</>,
+  headline: <>Passionate about EdTech & Social Impact</>,
   featured: {
     display: true,
     title: (
       <Row gap="12" vertical="center">
-        <strong className="ml-4">Once UI</strong>{" "}
+        <strong className="ml-4">Latest Project</strong>{" "}
         <Line background="brand-alpha-strong" vert height="20" />
         <Text marginRight="4" onBackground="brand-medium">
           Featured work
@@ -86,12 +86,12 @@ const home: Home = {
   },
   subline: (
     <>
-      I'm Selene, a design engineer at{" "}
+      I'm {person.firstName}, an undergraduate Informatics student at{" "}
       <Text as="span" size="xl" weight="strong">
-        ONCE UI
+        Universitas Jenderal Soedirman.{" "}
       </Text>
-      , where I craft intuitive <br /> user experiences. After hours, I build my
-      own projects.
+      I believe in technology with purpose - building systems that enable
+      people.
     </>
   ),
 };
@@ -148,12 +148,12 @@ const about: About = {
         ],
       },
       {
-        company: "Pondok Modern Tazakka",
+        company: "Media Center - Pondok Modern Tazakka",
         timeframe: "2024 - 2025",
-        role: "Staff Media & Jurnalistik",
+        role: "Staff Media",
         achievements: [
-          "Bertanggung jawab dalam mengelola dokumentasi, publikasi, dan informasi kegiatan pondok.",
-          "Peran ini melibatkan publikasi blog Website, pembuatan konten, pengelolaan media sosial, desain grafis, serta dokumentasi foto dan video.",
+          "Mengelola dokumentasi, publikasi, dan informasi kegiatan pondok.",
+          "Terlibat dalam pembuatan konten, pengelolaan website, medsos, desain grafis, serta foto & video.",
         ],
         images: [
           // optional: leave the array empty if you don't want to display images
@@ -189,7 +189,6 @@ const about: About = {
         achievements: [
           <React.Fragment key="achievement-1">
             Menulis konten edukasi dan literasi digital untuk platform media
-            online
           </React.Fragment>,
           <React.Fragment key="achievement-2">
             Mengolah topik teknologi dan pendidikan menjadi artikel yang mudah
@@ -215,11 +214,11 @@ const about: About = {
 
     experiences: [
       {
-        company: "Seminar Nasional Pelepasan Duta Asfa MPR-RI ",
+        company: "Seminar Nasional di MPR-RI - LAZIS Assalam Fil Alamin ",
         timeframe: "2025",
         role: "Jurnalis & Dokumenter",
         achievements: [
-          "Mengelola konten dan tampilan media sosial perusahaan.",
+          "Bertugas sebagai jurnalis dan tim dokumentasi pada acara Pelepasan Duta Asfa.",
         ],
         images: [
           // optional: leave the array empty if you don't want to display images
@@ -230,6 +229,24 @@ const about: About = {
             height: 9,
           },
         ],
+      },
+      {
+        company: "Panggung Gembira & Khutbatul Arsy 608 & 609",
+        timeframe: "2024 & 2025",
+        role: "Koordinator FOH & Dokumenter",
+        achievements: [
+          "FOH Coordinator Supervisor Panggung Gembira 609",
+          "Documentation Supervisor (Khutbatul Arsy 2024)",
+        ],
+        // images: [
+        //   // optional: leave the array empty if you don't want to display images
+        //   {
+        //     src: "/images/projects/project-01/cover-05.jpg",
+        //     alt: "Rabiha's Instagram Project",
+        //     width: 16,
+        //     height: 9,
+        //   },
+        // ],
       },
     ],
   },
