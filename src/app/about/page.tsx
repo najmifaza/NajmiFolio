@@ -141,12 +141,12 @@ export default function About() {
               >
                 <Icon
                   paddingLeft="12"
-                  name="calendar"
+                  name="project"
                   onBackground="brand-weak"
                 />
-                <Row paddingX="8">Schedule a call</Row>
+                <Row paddingX="8">View My Project</Row>
                 <IconButton
-                  href={about.calendar.link}
+                  href={"work"}
                   data-border="rounded"
                   variant="secondary"
                   icon="chevronRight"

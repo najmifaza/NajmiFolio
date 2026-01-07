@@ -11,6 +11,7 @@ import {
   HiOutlineEyeSlash,
   HiOutlineDocument,
   HiOutlineGlobeAsiaAustralia,
+  HiOutlineComputerDesktop,
   HiOutlineRocketLaunch,
 } from "react-icons/hi2";
 
@@ -105,6 +106,7 @@ export const iconLibrary: Record<string, IconType> = {
   Adobepremierepro: SiAdobepremierepro,
   Adobelightroom: SiAdobelightroom,
   Coreldraw: SiCoreldraw,
+  project: HiOutlineComputerDesktop,
 };
 
 export type IconLibrary = typeof iconLibrary;
