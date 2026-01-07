@@ -124,8 +124,8 @@ const effects: EffectsConfig = {
     color: "brand-background-strong",
   },
   grid: {
-    display: false,
-    opacity: 100,
+    display: true,
+    opacity: 20,
     color: "neutral-alpha-medium",
     width: "0.25rem",
     height: "0.25rem",
