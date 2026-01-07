@@ -236,8 +236,8 @@ const about: About = {
         timeframe: "2024 & 2025",
         role: "Koordinator FOH & Dokumenter",
         achievements: [
-          "FOH Coordinator Supervisor Panggung Gembira 609",
-          "Documentation Supervisor (Khutbatul Arsy 2024)",
+          "FOH Coordinator Supervisor Panggung Gembira ",
+          "Documentation Supervisor Khutbatul Arsy ",
         ],
         // images: [
         //   // optional: leave the array empty if you don't want to display images

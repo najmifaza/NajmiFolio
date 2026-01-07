@@ -1,0 +1,93 @@
+---
+title: "Edu-Tajwid: Platform Edukasi Digital Ilmu Tajwid"
+publishedAt: "2025-03-02"
+summary: "TajwidApps adalah platform edukasi berbasis web yang dirancang untuk membantu pengguna mempelajari hukum bacaan Al-Qur'an (Tajwid), makharijul huruf, dan sifat huruf secara fasih dan tartil."
+images:
+  - "/images/projects/project-01/video-03.mp4"
+team:
+  - name: "Najmi Faza"
+    role: "Social Media Specialist & Web Developer"
+    avatar: "/images/avatar.png"
+    linkedIn: "https://www.linkedin.com/in/adridinan-najmi-faza-80b88a301/"
+---
+
+# TajwidApps (Edu-Tajwid)
+
+**TajwidApps** adalah platform edukasi berbasis web yang dirancang untuk membantu pengguna mempelajari hukum bacaan Al-Qur'an (Tajwid), makharijul huruf, dan sifat huruf secara fasih dan tartil.
+
+Aplikasi ini dibangun sebagai _Static Web Application_ yang modern, responsif, dan interaktif, memudahkan pengguna untuk belajar tajwid di mana saja melalui perangkat desktop maupun seluler.
+
+---
+
+## Fitur Utama
+
+### 1. Pembelajaran Terstruktur & Lengkap
+
+Menyediakan kurikulum yang disusun sistematis mulai dari dasar hingga tingkat mahir. Materi dibagi menjadi 16 bab utama yang mencakup seluruh aspek penting ilmu Tajwid.
+
+### 2. Formulir Kontak Serverless (Web3Forms)
+
+Menggunakan integrasi **Web3Forms** untuk menangani pengiriman pesan dari pengguna langsung ke email tanpa membutuhkan backend PHP, menjaga aplikasi tetap ringan dan statis.
+
+### 3. Antarmuka Modern & Responsif
+
+- **Desain Adaptif**: Dibangun menggunakan **Bootstrap v5.3.3**, memastikan tampilan situs menyesuaikan otomatis di berbagai ukuran layar (HP, Tablet, Desktop).
+- **Navigasi Ramah Seluler**: Menu navigasi yang mudah diakses dengan dukungan _off-canvas_ untuk perangkat seluler.
+
+### 4. Interaktivitas Pengguna
+
+- **Animasi Halus**: Menggunakan **AOS (Animate On Scroll)** untuk memberikan efek visual menarik saat pengguna menggulir halaman.
+- **Galeri Media**: Integrasi **GLightbox** untuk menampilkan video pembelajaran atau gambar ilustrasi tanpa meninggalkan halaman utama.
+- **Statistik & Slider**: Menampilkan data statistik dengan **PureCounter** dan ulasan pengguna menggunakan **Swiper**.
+
+---
+
+##Kurikulum Materi
+
+Aplikasi ini mencakup 16 topik pembahasan Tajwid yang tersedia dalam halaman terpisah:
+
+1.  **Hukum Nun Sukun Dan Tanwin** (Izhar, Idgham, Iqlab, Ikhfa)
+2.  **Hukum Mim Sukun**
+3.  **Hukum Mim Tasydid Dan Nun Tasydid**
+4.  **Hukum Lam Tarif** (Syamsiyah & Qamariyah)
+5.  **Hukum Lam Tebal dan Tipis** (Lafzul Jalalah)
+6.  **Idgham Mutamatsilain**
+7.  **Idgham Mutaqaribain**
+8.  **Idgham Mutajanisain**
+9.  **Hukum Bacaan Panjang (Mad)**
+10. **Hukum Membaca Ra**
+11. **Hukum Qalqalah**
+12. **Bacaan Imalah Dan Isymam** (Gharib)
+13. **Bacaan Naql Dan Tashil** (Gharib)
+14. **Bacaan Saktah Dan Hukum Sad Dibaca Sin**
+15. **Mad Fathah Dibaca Pendek**
+16. **Hukum Waqaf Dan Ibtida'**
+
+---
+
+##Teknologi yang Digunakan
+
+- **Frontend**: HTML5, CSS3, JavaScript (Vanilla).
+- **Framework CSS**: Bootstrap v5.3.3.
+- **Form Handling**: [Web3Forms](https://web3forms.com/).
+- **Library Eksternal**:
+  - `AOS` - Animasi scrolling.
+  - `GLightbox` - Lightbox media galeri.
+  - `Swiper` - Slider sentuh responsif.
+  - `PureCounter` - Animasi angka statistik.
+
+---
+
+##Struktur Proyek
+
+```text
+TajwidApps/
+├── assets/
+│   ├── css/           # File gaya utama (main.css)
+│   ├── img/           # Aset gambar (logo, ilustrasi, avatar)
+│   ├── js/            # Logika JavaScript utama (main.js)
+│   └── vendor/        # Pustaka pihak ketiga (Bootstrap, AOS, dll)
+├── index.html         # Halaman Beranda (Landing Page)
+├── materi-tajwid.html # Halaman Indeks Materi
+└── [File Materi]      # File HTML materi individu (1Hukum... s/d 16Hukum...)
+```
