@@ -112,12 +112,11 @@ const about: About = {
     title: "Introduction",
     description: (
       <>
-        Mahasiswa Informatika dengan pengalaman nyata di content production,
-        media operations, dan product mockup design. Terbiasa bekerja dengan
-        deadline, mengelola konten digital, serta menerjemahkan kebutuhan
-        non-teknis menjadi output visual dan informasi yang terstruktur.
-        Memiliki pengalaman mengajar, koordinasi tim, dan dokumentasi kegiatan
-        skala institusi negara.
+        Mahasiswa Informatika dengan pengalaman di content production dan media
+        operation. Terbiasa bekerja dengan deadline, mengelola konten digital,
+        serta menerjemahkan kebutuhan non-teknis menjadi output visual dan
+        informasi yang terstruktur. Memiliki pengalaman mengajar, koordinasi
+        tim, dan dokumentasi kegiatan skala institusi negara.
       </>
     ),
   },
@@ -160,7 +159,7 @@ const about: About = {
           // optional: leave the array empty if you don't want to display images
           {
             src: "/images/projects/project-01/cover-06.png",
-            alt: "Rabiha's Instagram Project",
+            alt: "Foto bersama tim media center",
             width: 16,
             height: 9,
           },
@@ -177,7 +176,7 @@ const about: About = {
           // optional: leave the array empty if you don't want to display images
           {
             src: "/images/projects/project-01/cover-07.jpg",
-            alt: "Rabiha's Instagram Project",
+            alt: "foto bersama Guru KMI 2024/2025",
             width: 16,
             height: 9,
           },
@@ -215,39 +214,71 @@ const about: About = {
 
     experiences: [
       {
-        company: "Seminar Nasional di MPR-RI - LAZIS Assalam Fil Alamin ",
-        timeframe: "2025",
+        company: "Seminar Nasional di MPR-RI - LAZIS Assalam Fil Alamin",
+        timeframe: "Juli 2025",
         role: "Jurnalis & Dokumenter",
         achievements: [
           "Bertugas sebagai jurnalis dan tim dokumentasi pada acara Pelepasan Duta Asfa.",
         ],
-        images: [
-          // optional: leave the array empty if you don't want to display images
-          {
-            src: "/images/projects/project-01/cover-05.jpg",
-            alt: "Rabiha's Instagram Project",
-            width: 16,
-            height: 9,
-          },
+      },
+
+      {
+        company: "Panggung Gembira 609",
+        timeframe: "Agustus 2024",
+        role: "FOH Coordinator Supervisor",
+        achievements: [
+          "Mengawasi koordinasi Front of House (FOH) selama pelaksanaan acara.",
         ],
       },
       {
-        company: "Panggung Gembira & Khutbatul Arsy 608 & 609",
-        timeframe: "2024 & 2025",
-        role: "Koordinator FOH & Dokumenter",
+        company: "Khutbatul Arsy 2024",
+        timeframe: "Agustus 2024",
+        role: "Dokumentation Supervisor",
         achievements: [
-          "FOH Coordinator Supervisor Panggung Gembira ",
-          "Documentation Supervisor Khutbatul Arsy ",
+          "Bertanggung jawab sebagai pengawas bagian dokumentasi acara.",
         ],
-        // images: [
-        //   // optional: leave the array empty if you don't want to display images
-        //   {
-        //     src: "/images/projects/project-01/cover-05.jpg",
-        //     alt: "Rabiha's Instagram Project",
-        //     width: 16,
-        //     height: 9,
-        //   },
-        // ],
+      },
+      {
+        company: "Khataman Santri Akhir 2024",
+        timeframe: "Maret 2024",
+        role: "Secretary",
+        achievements: [
+          "Mengelola administrasi dan kesekretariatan untuk rangkaian acara khataman.",
+        ],
+      },
+      {
+        company: "OPPM (Organisasi Pelajar Pondok Modern)",
+        timeframe: "2023 - 2024",
+        role: "Language Section - Secretary",
+        achievements: [
+          "Mengelola administrasi bagian bahasa dan pengajaran dalam organisasi pelajar.",
+        ],
+      },
+      {
+        company: "Panggung Gembira 608",
+        timeframe: "Juni 2023 - Agustus 2023",
+        role: "Secretary, Graphic Design, and Coordinator FOH",
+        achievements: [
+          "Merangkap tugas kesekretariatan, desain grafis, dan koordinasi operasional FOH.",
+        ],
+      },
+      {
+        company: "Khutbatul Arsy 2023",
+        timeframe: "Juni 2023 - Juli 2023",
+        role: "Secretary",
+        achievements: [
+          "Menangani urusan administrasi dan surat-menyurat kepanitiaan.",
+        ],
+      },
+      {
+        company: "Jam'iyyatul Qurra' Pondok Modern Tazakka",
+        timeframe: "Januari 2020 - Maret 2025",
+        role: "Pengurus & Musyrif (Pembimbing)",
+        achievements: [
+          "Mengoordinasi kegiatan latihan dan pembinaan tilawah bagi anggota.",
+          "Bertugas sebagai muadzin dan qori masjid di lingkungan pondok.",
+          "Menjadi musyrif yang mendampingi dan membimbing para santri.",
+        ],
       },
     ],
   },
