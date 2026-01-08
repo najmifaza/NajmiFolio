@@ -1,11 +1,5 @@
 @use "./breakpoints.scss" as breakpoints;
 
-.header {
-  // atau .container tergantung nama class di file Anda
-  padding-top: 2rem; // Sesuaikan nilai ini untuk menambah tinggi ke atas
-  padding-bottom: 2rem; // Sesuaikan nilai ini untuk menambah tinggi ke bawah
-}
-
 .mask {
   pointer-events: none;
   backdrop-filter: blur(0.5rem);
