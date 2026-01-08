@@ -419,34 +419,43 @@ const gallery: Gallery = {
   path: "/gallery",
   label: "Licenses & certifications",
   title: `Licenses & certifications – ${person.name}`,
-  description: `A photo collection by ${person.name}`,
-  // Images by https://lorant.one
-  // These are placeholder images, replace with your own
-  images: [
+  description: `Professional certifications and achievements by ${person.name}`,
+  // PENTING: Ganti 'images' menjadi 'certificates' seperti di bawah ini
+  certificates: [
     {
-      src: "/images/gallery/horizontal-1.jpg",
-      alt: "image",
-      orientation: "horizontal",
+      title: "Google Data Analytics Professional Certificate",
+      issuer: "Google",
+      date: "Aug 2024",
+      image: "/images/gallery/horizontal-1.jpg", // Pastikan path gambar benar
+      url: "https://coursera.org",
     },
     {
-      src: "/images/gallery/horizontal-1.jpg",
-      alt: "image",
-      orientation: "horizontal",
+      title: "Google Data Analytics Professional Certificate",
+      issuer: "Google",
+      date: "Aug 2024",
+      image: "/images/gallery/horizontal-1.jpg", // Pastikan path gambar benar
+      url: "https://coursera.org",
     },
     {
-      src: "/images/gallery/horizontal-1.jpg",
-      alt: "image",
-      orientation: "horizontal",
+      title: "Google Data Analytics Professional Certificate",
+      issuer: "Google",
+      date: "Aug 2024",
+      image: "/images/gallery/horizontal-1.jpg", // Pastikan path gambar benar
+      url: "https://coursera.org",
     },
     {
-      src: "/images/gallery/horizontal-1.jpg",
-      alt: "image",
-      orientation: "horizontal",
+      title: "Google Data Analytics Professional Certificate",
+      issuer: "Google",
+      date: "Aug 2024",
+      image: "/images/gallery/horizontal-1.jpg", // Pastikan path gambar benar
+      url: "https://coursera.org",
     },
     {
-      src: "/images/gallery/horizontal-1.jpg",
-      alt: "image",
-      orientation: "horizontal",
+      title: "Google Data Analytics Professional Certificate",
+      issuer: "Google",
+      date: "Aug 2024",
+      image: "/images/gallery/horizontal-1.jpg", // Pastikan path gambar benar
+      url: "https://coursera.org",
     },
   ],
 };

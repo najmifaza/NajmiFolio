@@ -261,13 +261,12 @@ export interface Work extends BasePageConfig {}
  * @description Configuration for the Gallery page, including metadata, navigation label, and image list.
  */
 export interface Gallery extends BasePageConfig {
-  /** List of images in the gallery */
-  images: Array<{
-    /** Image source path */
-    src: string;
-    /** Image alt text */
-    alt: string;
-    /** Image orientation (horizontal/vertical) */
-    orientation: string;
+  /** List of certificates */
+  certificates: Array<{
+    title: string;
+    issuer: string;
+    date: string;
+    image: string;
+    url?: string;
   }>;
 }
