@@ -20,7 +20,7 @@ export default function GalleryView() {
             src={cert.image}
             alt={cert.title}
             objectFit="cover" // Atau 'contain' jika ingin melihat seluruh sertifikat tanpa terpotong
-            style={{ border: "1px solid var(--neutral-border-weak)" }} // Opsional: border tipis
+            style={{}} // Opsional: border tipis
           />
 
           {/* Bagian Informasi Teks */}
@@ -33,7 +33,7 @@ export default function GalleryView() {
             {/* Tombol Link (Jika ada URL) */}
             {cert.url && (
               <Flex marginTop="8">
-                <SmartLink href={cert.url} suffixIcon="arrowUpRight">
+                <SmartLink href={cert.url} suffixIcon="arrowRight">
                   <Text variant="body-default-s">View Credential</Text>
                 </SmartLink>
               </Flex>

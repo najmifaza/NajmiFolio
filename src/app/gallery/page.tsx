@@ -1,6 +1,7 @@
-import { Flex, Meta, Schema } from "@once-ui-system/core";
+import { Flex, Meta, Schema, Heading } from "@once-ui-system/core";
 import GalleryView from "@/components/gallery/GalleryView";
 import { baseURL, gallery, person } from "@/resources";
+import styles from "@/components/about/about.module.scss";
 
 export async function generateMetadata() {
   return Meta.generate({
@@ -14,7 +15,7 @@ export async function generateMetadata() {
 
 export default function Gallery() {
   return (
-    <Flex maxWidth="l">
+    <Flex maxWidth="l" direction="column" gap="32">
       <Schema
         as="webPage"
         baseURL={baseURL}
@@ -28,6 +29,15 @@ export default function Gallery() {
           image: `${baseURL}${person.avatar}`,
         }}
       />
+      {/* 3. Masukkan judul ke sini agar muncul di layar */}
+      <Heading
+        style={{ fontSize: "22px", marginTop: "20px" }}
+        padding="4"
+        className={styles.textAlign}
+        align="center"
+      >
+        Licenses & certifications
+      </Heading>
       <GalleryView />
     </Flex>
   );

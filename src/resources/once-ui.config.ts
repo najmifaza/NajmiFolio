@@ -142,7 +142,7 @@ const effects: EffectsConfig = {
 };
 
 const mailchimp: MailchimpConfig = {
-  action: "https://url/subscribe/post?parameters",
+  action: "https://api.web3forms.com/submit",
   effects: {
     mask: {
       cursor: true,

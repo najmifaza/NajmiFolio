@@ -220,6 +220,15 @@ const about: About = {
         achievements: [
           "Bertugas sebagai jurnalis dan tim dokumentasi pada acara Pelepasan Duta Asfa.",
         ],
+        images: [
+          // optional: leave the array empty if you don't want to display images
+          {
+            src: "/images/projects/project-01/cover-05.jpg",
+            alt: "di Gedung Nusantara V, MPR-RI",
+            width: 16,
+            height: 9,
+          },
+        ],
       },
 
       {
@@ -409,7 +418,7 @@ const blog: Blog = {
 const work: Work = {
   path: "/work",
   label: "Project",
-  title: `Projects – ${person.name}`,
+  title: `Project – ${person.name}`,
   description: `Design and dev projects by ${person.name}`,
   // Create new project pages by adding a new .mdx file to app/blog/posts
   // All projects will be listed on the /home and /work routes

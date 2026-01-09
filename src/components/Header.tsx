@@ -106,6 +106,7 @@ export const Header = () => {
             padding="4"
             horizontal="center"
             zIndex={1}
+            style={{ transform: "scale(1.15)", margin: "5px" }}
           >
             <Row
               gap="4"
