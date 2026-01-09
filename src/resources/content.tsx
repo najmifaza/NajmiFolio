@@ -12,7 +12,7 @@ import { Line, Row, Text } from "@once-ui-system/core";
 import React from "react";
 
 const person: Person = {
-  firstName: "Adridinan",
+  firstName: "Adridinan Najmi Faza",
   lastName: " Najmi Faza",
   name: "Najmi Faza",
   role: "Web Developer",
@@ -63,7 +63,7 @@ const home: Home = {
   path: "/",
   image: "/images/og/home.jpg",
   label: "Home",
-  title: `${person.name}'s Portfolio`,
+  title: `${person.firstName} Portfolio`,
   description: `Portfolio website showcasing my work as a ${person.role}`,
   headline: <>Passionate about EdTech & Social Impact</>,
   featured: {
