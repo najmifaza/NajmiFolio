@@ -1,7 +1,5 @@
 @use "./breakpoints.scss" as breakpoints;
-:root {
-  --header-scale: 1.9;
-}
+
 .mask {
   pointer-events: none;
   backdrop-filter: blur(0.5rem);
