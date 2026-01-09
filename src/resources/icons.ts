@@ -13,6 +13,7 @@ import {
   HiOutlineGlobeAsiaAustralia,
   HiOutlineComputerDesktop,
   HiOutlineRocketLaunch,
+  HiOutlineBadgeCheck,
 } from "react-icons/hi2";
 
 import {
