@@ -179,6 +179,47 @@ function createHR() {
     </Row>
   );
 }
+// Tambahkan kode ini di dalam src/components/mdx.tsx sebelum variabel 'const components'
+
+function createTable({ children }: { children: ReactNode }) {
+  return (
+    <div style={{ overflowX: "auto", margin: "1.5rem 0" }}>
+      <table
+        style={{ width: "100%", borderCollapse: "collapse", fontSize: "0.9em" }}
+      >
+        {children}
+      </table>
+    </div>
+  );
+}
+
+function createTh({ children }: { children: ReactNode }) {
+  return (
+    <th
+      style={{
+        padding: "12px 16px",
+        textAlign: "left",
+        borderBottom: "1px solid var(--neutral-border-medium)",
+        fontWeight: 600,
+      }}
+    >
+      {children}
+    </th>
+  );
+}
+
+function createTd({ children }: { children: ReactNode }) {
+  return (
+    <td
+      style={{
+        padding: "12px 16px",
+        borderBottom: "1px solid var(--neutral-border-weak)",
+      }}
+    >
+      {children}
+    </td>
+  );
+}
 
 const components = {
   p: createParagraph as any,
@@ -196,6 +237,9 @@ const components = {
   ul: createList as any,
   li: createListItem as any,
   hr: createHR as any,
+  table: createTable as any,
+  th: createTh as any,
+  td: createTd as any,
   Heading,
   Text,
   CodeBlock,
