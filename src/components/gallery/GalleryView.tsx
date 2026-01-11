@@ -15,8 +15,9 @@ export default function GalleryView() {
         <Flex key={index} direction="column" fillWidth gap="16">
           {/* Bagian Gambar Sertifikat */}
           <Media
+            enlarge
             radius="m"
-            aspectRatio="16 / 9" // Rasio landscape standar sertifikat
+            aspectRatio="10 /7" // Rasio landscape standar sertifikat
             src={cert.image}
             alt={cert.title}
             objectFit="cover" // Atau 'contain' jika ingin melihat seluruh sertifikat tanpa terpotong

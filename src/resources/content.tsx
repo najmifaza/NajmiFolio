@@ -432,39 +432,31 @@ const gallery: Gallery = {
   // PENTING: Ganti 'images' menjadi 'certificates' seperti di bawah ini
   certificates: [
     {
-      title: "Google Data Analytics Professional Certificate",
-      issuer: "Google",
-      date: "Aug 2024",
-      image: "/images/gallery/horizontal-1.jpg", // Pastikan path gambar benar
-      url: "https://coursera.org",
+      title: "Basic Website Programming Certificate",
+      issuer: "Dicoding",
+      date: "Dec 2025",
+      image: "/images/gallery/DasarPemWeb.png", // Pastikan path gambar benar
+      url: "https://www.dicoding.com/certificates/JMZVV7L53ZN9",
     },
     {
-      title: "Google Data Analytics Professional Certificate",
-      issuer: "Google",
-      date: "Aug 2024",
-      image: "/images/gallery/horizontal-1.jpg", // Pastikan path gambar benar
-      url: "https://coursera.org",
+      title: "Basic Artificial Intelligence Certificate",
+      issuer: "Dicoding",
+      date: "Nov 2024",
+      image: "/images/gallery/BasicAI.png", // Pastikan path gambar benar
+      url: "https://www.dicoding.com/certificates/ERZR2DVO2PYV",
     },
     {
-      title: "Google Data Analytics Professional Certificate",
-      issuer: "Google",
+      title: "Data Classification and Summarization Using IBM Granite",
+      issuer: "IBM SkillsBuild & Hacktiv4",
       date: "Aug 2024",
-      image: "/images/gallery/horizontal-1.jpg", // Pastikan path gambar benar
-      url: "https://coursera.org",
+      image: "/images/gallery/IBMData.png", // Pastikan path gambar benar
+      url: "https://www.credly.com/badges/8a96daae-43d7-4b68-b44f-bfa5c740ae8e/public_url",
     },
     {
-      title: "Google Data Analytics Professional Certificate",
+      title: "Soedirman Digital School 2025 - Web Development",
       issuer: "Google",
       date: "Aug 2024",
-      image: "/images/gallery/horizontal-1.jpg", // Pastikan path gambar benar
-      url: "https://coursera.org",
-    },
-    {
-      title: "Google Data Analytics Professional Certificate",
-      issuer: "Google",
-      date: "Aug 2024",
-      image: "/images/gallery/horizontal-1.jpg", // Pastikan path gambar benar
-      url: "https://coursera.org",
+      image: "/images/gallery/SDSWeb.png", // Pastikan path gambar benar
     },
   ],
 };
