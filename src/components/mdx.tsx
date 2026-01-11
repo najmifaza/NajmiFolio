@@ -183,7 +183,14 @@ function createHR() {
 
 function createTable({ children }: { children: ReactNode }) {
   return (
-    <div style={{ overflowX: "auto", margin: "1.5rem 0" }}>
+    <div
+      style={{
+        overflowX: "auto",
+        margin: "1.5rem 0",
+        border: "1px solid var(--neutral-border-medium)",
+        borderRadius: "var(--radius-m)",
+      }}
+    >
       <table
         style={{ width: "100%", borderCollapse: "collapse", fontSize: "0.9em" }}
       >
@@ -192,8 +199,7 @@ function createTable({ children }: { children: ReactNode }) {
     </div>
   );
 }
-
-function createTh({ children }: { children: ReactNode }) {
+function createTh({ children, ...props }: any) {
   return (
     <th
       style={{
@@ -201,20 +207,23 @@ function createTh({ children }: { children: ReactNode }) {
         textAlign: "left",
         borderBottom: "1px solid var(--neutral-border-medium)",
         fontWeight: 600,
+        backgroundColor: "var(--neutral-alpha-weak)",
       }}
+      {...props}
     >
       {children}
     </th>
   );
 }
 
-function createTd({ children }: { children: ReactNode }) {
+function createTd({ children, ...props }: any) {
   return (
     <td
       style={{
         padding: "12px 16px",
         borderBottom: "1px solid var(--neutral-border-weak)",
       }}
+      {...props}
     >
       {children}
     </td>
@@ -266,6 +275,12 @@ export function CustomMDX(props: CustomMDXProps) {
   return (
     <MDXRemote
       {...props}
+      // 2. TAMBAHKAN OPTIONS INI
+      options={{
+        mdxOptions: {
+          remarkPlugins: [remarkGfm],
+        },
+      }}
       components={{ ...components, ...(props.components || {}) }}
     />
   );
