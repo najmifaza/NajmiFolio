@@ -454,7 +454,7 @@ const gallery: Gallery = {
     },
     {
       title: "Soedirman Digital School 2025 - Web Development",
-      issuer: "Google",
+      issuer: "BEM-U",
       date: "Aug 2024",
       image: "/images/gallery/SDSWeb.png", // Pastikan path gambar benar
     },
