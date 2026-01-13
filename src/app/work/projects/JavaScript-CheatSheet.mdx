@@ -1,0 +1,216 @@
+---
+title: "CheatSheeet JavaScript"
+publishedAt: "2"
+summary: ""
+images:
+
+team:
+  - name: "Najmi Faza"
+    role: "Social Media Specialist & Web Developer"
+    avatar: "/images/avatar.png"
+    linkedIn: "https://www.linkedin.com/in/adridinan-najmi-faza-80b88a301/"
+---
+
+## 1. DOM Manipulation (Interaksi dengan HTML)
+
+Ini adalah jembatan antara logika JavaScript dan tampilan antarmuka (UI).
+
+**Memilih Elemen (Selectors)**
+
+```javascript
+const btn = document.getElementById("submitBtn");
+const items = document.getElementsByClassName("item");
+const title = document.querySelector("h1.judul"); // Pilih satu (CSS Selector)
+const allLinks = document.querySelectorAll("a"); // Pilih semua (NodeList)
+```
+
+**Memanipulasi Konten & Style**
+
+```javascript
+const box = document.querySelector(".box");
+
+box.innerHTML = "<p>Teks Baru</p>"; // Ubah HTML di dalam
+box.textContent = "Hanya Teks"; // Ubah teks saja (lebih aman)
+box.style.backgroundColor = "blue"; // Ubah CSS langsung
+box.classList.add("aktif"); // Tambah class CSS
+box.classList.remove("hidden"); // Hapus class CSS
+box.classList.toggle("dark-mode"); // Switch on/off class
+```
+
+**Event Listeners (Interaksi User)**
+
+```javascript
+const tombol = document.querySelector("button");
+
+tombol.addEventListener("click", (event) => {
+  event.preventDefault(); // Mencegah reload halaman (pada form)
+  console.log("Tombol diklik!");
+});
+```
+
+---
+
+## 2. Advanced Array Methods
+
+Metode fungsional yang lebih kuat daripada `for loop` biasa.
+
+```javascript
+const angka = [10, 20, 30, 40];
+
+// 1. REDUCE: Menggabungkan elemen menjadi satu nilai (misal: total)
+const total = angka.reduce((total, num) => total + num, 0); // Hasil: 100
+
+// 2. FIND: Mencari SATU item pertama yang cocok
+const ketemu = angka.find((num) => num > 25); // Hasil: 30
+
+// 3. INCLUDES: Cek keberadaan data (Boolean)
+const ada = angka.includes(20); // Hasil: true
+
+// 4. SOME & EVERY
+const adaYgBesar = angka.some((num) => num > 35); // true (minimal satu)
+const semuaBesar = angka.every((num) => num > 5); // true (semua harus > 5)
+```
+
+---
+
+## 3. Fitur Modern ES6+ (Wajib Tahu)
+
+Sintaks ini membuat kode lebih bersih dan sering dipakai di framework seperti React/Vue.
+
+**Destructuring (Membongkar Data)**
+
+```javascript
+// Array
+const [x, y] = [100, 200];
+
+// Object
+const user = { id: 1, nama: "Siti", role: "Admin" };
+const { nama, role } = user; // Ambil properti jadi variabel
+console.log(nama); // "Siti"
+```
+
+**Spread & Rest Operator (`...`)**
+
+```javascript
+// Menggabungkan Array (Spread)
+const arr1 = [1, 2];
+const gabung = [...arr1, 3, 4]; // [1, 2, 3, 4]
+
+// Copy Object (Spread)
+const userBaru = { ...user, umur: 22 }; // Copy user lama + tambah umur
+
+// Function Arguments (Rest)
+function jumlahkanSemua(...nomor) {
+  return nomor.reduce((a, b) => a + b);
+}
+jumlahkanSemua(1, 2, 3, 4, 5);
+```
+
+**Nullish Coalescing (`??`) & Optional Chaining (`?.`)**
+
+```javascript
+// Optional Chaining: Mencegah error jika data null/undefined
+const jalan = user?.alamat?.jalan; // Tidak error meski alamat tidak ada
+
+// Nullish Coalescing: Nilai default jika null/undefined
+const skor = inputUser ?? 0; // Jika inputUser null, pakai 0
+```
+
+---
+
+## 4. JSON & Penyimpanan (Storage)
+
+Penting untuk komunikasi dengan Backend dan menyimpan data sementara di browser.
+
+**JSON (JavaScript Object Notation)**
+
+```javascript
+const dataObj = { nama: "Ali", umur: 20 };
+
+// Object ke String (untuk dikirim ke Server)
+const jsonString = JSON.stringify(dataObj);
+
+// String ke Object (untuk dipakai di JS)
+const dataAsli = JSON.parse(jsonString);
+```
+
+**Local Storage (Browser Database)**
+Menyimpan data di browser user (tidak hilang saat di-refresh).
+
+```javascript
+localStorage.setItem("username", "budi123"); // Simpan
+const user = localStorage.getItem("username"); // Ambil
+localStorage.removeItem("username"); // Hapus
+localStorage.clear(); // Hapus semua
+```
+
+---
+
+## 5. Logika Pendek (Shortcuts)
+
+Menulis logika if-else dengan lebih singkat.
+
+**Ternary Operator**
+
+```javascript
+// Format: kondisi ? benar : salah
+const status = nilai >= 75 ? "Lulus" : "Remidial";
+```
+
+**Short-Circuit Logic**
+
+```javascript
+// AND (&&): Jalan jika kiri TRUE
+isLoggedIn && tampilkanDashboard();
+
+// OR (||): Jalan jika kiri FALSE (untuk nilai default)
+const namaUser = inputNama || "Pengguna Tanpa Nama";
+```
+
+---
+
+## 6. Object Oriented Programming (OOP)
+
+Menggunakan Class (seperti Java/C++ namun versi JS).
+
+```javascript
+class Hewan {
+  constructor(nama) {
+    this.nama = nama;
+  }
+
+  suara() {
+    return `${this.nama} bersuara`;
+  }
+}
+
+class Kucing extends Hewan {
+  suara() {
+    return "Meong!";
+  }
+}
+
+const myCat = new Kucing("Mochi");
+console.log(myCat.suara()); // "Meong!"
+```
+
+---
+
+## 7. Error Handling
+
+Mencegah aplikasi _crash_ saat ada error.
+
+```javascript
+try {
+  // Kode yang mungkin error (misal panggil API)
+  let hasil = panggilFungsiGaAda();
+} catch (error) {
+  // Penanganan error
+  console.error("Terjadi kesalahan:", error.message);
+} finally {
+  // Selalu dijalankan (sukses atau gagal)
+  console.log("Proses selesai.");
+}
+```
+
+---
