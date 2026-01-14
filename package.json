@@ -1,6 +1,9 @@
 {
-  "name": "@once-ui-system/magic-portfolio",
-  "version": "2.3.0",
+  "name": "najmifolio",
+  "version": "1.0.0",
+  "author": "Najmi Faza",
+  "private": true,
+  "description": "Portofolio pribadi Najmi Faza - Web Developer",
   "scripts": {
     "dev": "next dev",
     "export": "next export",
