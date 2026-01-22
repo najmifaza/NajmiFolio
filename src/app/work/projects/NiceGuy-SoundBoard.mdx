@@ -1,0 +1,128 @@
+---
+title: "NiceGuy Sound Board"
+publishedAt: "2026-01-23"
+summary: "Buat para streamer laper yang pengen naik kereta Bigmo via Soundboard telah kami sediakan aplikasi yang sudah sepaket dengan sound2 yang sering digunakan oleh rektor kita BIGMO."
+images:
+  - "/images/projects/project-01/niceguy.png"
+team:
+  - name: "Najmi Faza"
+    role: "Social Media Specialist & Web Developer"
+    avatar: "/images/avatar.png"
+    linkedIn: "https://www.linkedin.com/in/adridinan-najmi-faza-80b88a301/"
+link: "https://niceguy-sound-board.vercel.app/"
+---
+
+# 🎵 NiceGuy SoundBoard
+
+**NiceGuy SoundBoard** adalah aplikasi web interaktif sederhana yang memungkinkan pengguna memutar berbagai efek suara meme populer secara instan. Dibangun menggunakan React dan Vite dengan styling modern menggunakan Tailwind CSS.
+
+Proyek ini dirancang untuk kecepatan dan kemudahan penggunaan, mendukung pemutaran audio melalui klik tombol maupun **shortcut keyboard**.
+
+## 🌟 Fitur Utama
+
+- **Pemutaran Audio Instan**: Memutar klip audio pendek (meme sounds) tanpa delay.
+- **Keyboard Shortcuts**: Tekan tombol keyboard tertentu untuk memutar suara tanpa harus mengklik (Keybinds tersedia di bawah).
+- **Visualisasi Audio**: Efek animasi bar sederhana pada kartu saat audio sedang diputar.
+- **Desain Responsif**: Tampilan grid yang rapi dengan Tailwind CSS.
+- **Manajemen Playback**: Fitur _toggle_ (Play/Pause) dan reset otomatis saat audio diputar ulang.
+
+## 🛠️ Teknologi yang Digunakan
+
+Proyek ini dibangun menggunakan stack teknologi modern:
+
+- **[React](https://react.dev/)** (v19) - Library UI utama.
+- **[Vite](https://vitejs.dev/)** - Build tool yang cepat untuk pengembangan frontend.
+- **[Tailwind CSS](https://tailwindcss.com/)** (v4) - Framework CSS utility-first untuk styling.
+- **[Lucide React](https://lucide.dev/)** - Koleksi ikon yang ringan dan fleksibel.
+- **Framer Motion / CSS Animation** - Untuk efek visual pada kartu suara.
+
+## 🎹 Daftar Shortcut Keyboard
+
+Anda dapat menggunakan tombol berikut pada keyboard untuk memutar suara secara cepat:
+
+| Tombol (Key) | Nama Suara / Judul | Deskripsi Singkat              |
+| :----------: | :----------------- | :----------------------------- |
+|    **Q**     | Get Out            | Efek suara "Get Out"           |
+|    **W**     | Oh Hell Nah        | Efek suara viral "Oh Hell Nah" |
+|    **E**     | FAHHHH             | Efek suara teriak              |
+|    **R**     | 4 (China)          | Meme suara                     |
+|    **T**     | 5                  | Meme suara instan              |
+|    **A**     | Bahlil Ngolaah     | Suara Bahlil                   |
+|    **S**     | Lagu Kebangsaan    | Bigmo sound                    |
+|    **D**     | Iziiiin / Coin     | Efek suara Izin atau Koin      |
+
+> **Catatan:** Pastikan keyboard Anda dalam mode input bahasa Inggris (US) standar agar keybind berfungsi dengan baik.
+
+## 📂 Struktur Proyek
+
+```text
+soundboard/
+├── public/
+│   ├── audio/       # File audio (.mp3)
+│   └── image/       # Aset gambar untuk kartu
+├── src/
+│   ├── components/
+│   │   ├── card.tsx         # Komponen kartu musik & logika audio
+│   │   ├── header.tsx       # Header melayang
+│   │   ├── dotBG.tsx        # Latar belakang bermotif dot
+│   │   └── ...
+│   ├── App.jsx              # Komponen utama & data mapping
+│   ├── main.jsx             # Entry point aplikasi
+│   └── index.css            # Import Tailwind CSS
+├── package.json
+└── vite.config.js
+
+```
+
+## 🚀 Cara Menjalankan (Instalasi)
+
+Ikuti langkah-langkah berikut untuk menjalankan proyek ini di komputer lokal Anda:
+
+### 1. Clone Repositori
+
+```bash
+git clone [https://github.com/najmifaza/soundboard.git](https://github.com/najmifaza/soundboard.git)
+cd soundboard
+
+```
+
+### 2. Install Dependencies
+
+Pastikan Anda sudah menginstall [Node.js](https://nodejs.org/). Gunakan `npm` atau `pnpm` (disarankan jika ada `pnpm-lock.yaml`).
+
+```bash
+npm install
+# atau
+pnpm install
+
+```
+
+### 3. Jalankan Mode Development
+
+```bash
+npm run dev
+# atau
+pnpm dev
+
+```
+
+Buka browser dan akses alamat yang muncul di terminal (biasanya `http://localhost:5173`).
+
+### 4. Build untuk Production
+
+Jika ingin men-deploy aplikasi:
+
+```bash
+npm run build
+
+```
+
+## 🤝 Kontribusi
+
+Kontribusi selalu diterima! Jika Anda ingin menambahkan suara baru atau fitur lain:
+
+1. Fork repositori ini.
+2. Buat branch fitur baru (`git checkout -b fitur-keren`).
+3. Commit perubahan Anda (`git commit -m 'Menambah suara baru'`).
+4. Push ke branch (`git push origin fitur-keren`).
+5. Buat Pull Request.
