@@ -1,14 +1,14 @@
 "use client";
-
+import { Row, IconButton, SmartLink, Text } from "@once-ui-system/core";
+import { person, social } from "@/resources";
+import styles from "./Footer.module.scss";
 import { mailchimp, newsletter } from "@/resources";
 import {
   Button,
   Heading,
   Input,
-  Text,
   Background,
   Column,
-  Row,
 } from "@once-ui-system/core";
 import { opacity, SpacingToken } from "@once-ui-system/core";
 import { useState } from "react";
@@ -141,14 +141,7 @@ export const Mailchimp: React.FC<React.ComponentProps<typeof Column>> = ({
         id="mc-embedded-subscribe-form"
         name="mc-embedded-subscribe-form"
       >
-        <Row
-          id="mc_embed_signup_scroll"
-          fillWidth
-          maxWidth={24}
-          s={{ direction: "column" }}
-          gap="8"
-        >
-          <Input
+        {/* <Input
             formNoValidate
             id="mce-EMAIL"
             name="EMAIL"
@@ -198,20 +191,26 @@ export const Mailchimp: React.FC<React.ComponentProps<typeof Column>> = ({
               tabIndex={-1}
               value=""
             />
-          </div>
-          <div className="clear">
-            <Row height="48" vertical="center">
-              <Button
-                id="mc-embedded-subscribe"
-                value="Subscribe"
-                size="m"
-                fillWidth
-              >
-                Subscribe
-              </Button>
+          </div> */}
+        <div className="clear">
+          <Row height="48" vertical="center">
+            <Row gap="16" vertical="center">
+              {social.map(
+                (item) =>
+                  item.link && (
+                    <IconButton
+                      key={item.name}
+                      href={item.link}
+                      icon={item.icon}
+                      tooltip={item.name}
+                      size="l"
+                      variant="secondary"
+                    />
+                  ),
+              )}
             </Row>
-          </div>
-        </Row>
+          </Row>
+        </div>
       </form>
     </Column>
   );
