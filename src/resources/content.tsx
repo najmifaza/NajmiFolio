@@ -24,7 +24,7 @@ const person: Person = {
 
 const newsletter: Newsletter = {
   display: true,
-  title: <>Follow to {person.name}'s Social Medias</>,
+  title: <>Follow to {person.name}'s Social Media</>,
   description: (
     <>My social media about my life as a student and software engineer</>
   ),
@@ -443,10 +443,18 @@ const gallery: Gallery = {
     {
       title: "Basic Artificial Intelligence Certificate",
       issuer: "Dicoding",
-      date: "Nov 2024",
+      date: "Nov 2025",
       image: "/images/gallery/BasicAI.png", // Pastikan path gambar benar
       url: "https://www.dicoding.com/certificates/ERZR2DVO2PYV",
     },
+    {
+      title: "Basic JavaScript Programming Certificate",
+      issuer: "Dicoding",
+      date: "Jan 2026",
+      image: "/images/gallery/JSprogramming.png", // Pastikan path gambar benar
+      url: "https://www.dicoding.com/certificates/RVZKGN0YOXD5",
+    },
+
     {
       title: "Data Classification and Summarization Using IBM Granite",
       issuer: "IBM SkillsBuild & Hacktiv4",
