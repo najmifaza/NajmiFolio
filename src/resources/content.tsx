@@ -63,7 +63,7 @@ const social: Social = [
 
 const home: Home = {
   path: "/",
-  image: "/images/og/home.jpg",
+  image: "/images/og/home.png",
   label: "Home",
   title: `${person.firstName} Portfolio`,
   description: `Portfolio website showcasing my work as a ${person.role}`,
@@ -434,39 +434,46 @@ const gallery: Gallery = {
   // PENTING: Ganti 'images' menjadi 'certificates' seperti di bawah ini
   certificates: [
     {
-      title: "Basic Website Programming Certificate",
-      issuer: "Dicoding",
-      date: "Dec 2025",
-      image: "/images/gallery/DasarPemWeb.png", // Pastikan path gambar benar
-      url: "https://www.dicoding.com/certificates/JMZVV7L53ZN9",
-    },
-    {
-      title: "Basic Artificial Intelligence Certificate",
-      issuer: "Dicoding",
-      date: "Nov 2025",
-      image: "/images/gallery/BasicAI.png", // Pastikan path gambar benar
-      url: "https://www.dicoding.com/certificates/ERZR2DVO2PYV",
-    },
-    {
-      title: "Basic JavaScript Programming Certificate",
-      issuer: "Dicoding",
-      date: "Jan 2026",
-      image: "/images/gallery/JSprogramming.png", // Pastikan path gambar benar
-      url: "https://www.dicoding.com/certificates/RVZKGN0YOXD5",
-    },
-
-    {
-      title: "Data Classification and Summarization Using IBM Granite",
+      title: "Data Classification and Summarization with IBM Granite",
       issuer: "IBM SkillsBuild & Hacktiv4",
-      date: "Aug 2024",
-      image: "/images/gallery/IBMData.png", // Pastikan path gambar benar
+      date: "Oct 2025",
+      image: "/images/gallery/IBMData.png",
       url: "https://www.credly.com/badges/8a96daae-43d7-4b68-b44f-bfa5c740ae8e/public_url",
     },
     {
-      title: "Soedirman Digital School 2025 - Web Development",
+      title: "Soedirman Digital School 2025 – Web Development Program",
       issuer: "BEM-U",
-      date: "Aug 2024",
-      image: "/images/gallery/SDSWeb.png", // Pastikan path gambar benar
+      date: "Nov 2025",
+      image: "/images/gallery/SDSWeb.png",
+    },
+    {
+      title: "Basic Artificial Intelligence Certificate",
+      issuer: "Dicoding Indonesia",
+      date: "Nov 2025",
+      image: "/images/gallery/BasicAI.png",
+      url: "https://www.dicoding.com/certificates/ERZR2DVO2PYV",
+    },
+    {
+      title: "Basic Web Programming Certificate",
+      issuer: "Dicoding Indonesia",
+      date: "Dec 2025",
+      image: "/images/gallery/DasarPemWeb.png",
+      url: "https://www.dicoding.com/certificates/JMZVV7L53ZN9",
+    },
+
+    {
+      title: "Basic JavaScript Programming Certificate",
+      issuer: "Dicoding Indonesia",
+      date: "Jan 2026",
+      image: "/images/gallery/JSprogramming.png",
+      url: "https://www.dicoding.com/certificates/RVZKGN0YOXD5",
+    },
+    {
+      title: "Front-End Web Development Certificate",
+      issuer: "Dicoding Indonesia",
+      date: "Jan 2026",
+      image: "/images/gallery/FE_DEV_DICODING.png",
+      url: "https://www.dicoding.com/certificates/L4PQ2DY72ZO1",
     },
   ],
 };
