@@ -43,7 +43,7 @@ export default function About() {
       title: about.Organization.title,
       display: about.Organization.display,
       items: about.Organization.experiences.map(
-        (experience) => experience.company
+        (experience) => experience.company,
       ),
     },
     {
@@ -154,7 +154,7 @@ export default function About() {
               </Row>
             )}
             <Heading className={styles.textAlign} variant="display-strong-xl">
-              {person.name}
+              {person.lastName}
             </Heading>
             <Text
               className={styles.textAlign}
@@ -201,7 +201,7 @@ export default function About() {
                             />
                           </Row>
                         </React.Fragment>
-                      )
+                      ),
                   )}
               </Row>
             )}
@@ -267,7 +267,7 @@ export default function About() {
                           >
                             {achievement}
                           </Text>
-                        )
+                        ),
                       )}
                     </Column>
                     {experience.images && experience.images.length > 0 && (
@@ -351,7 +351,7 @@ export default function About() {
                           >
                             {achievement}
                           </Text>
-                        )
+                        ),
                       )}
                     </Column>
                     {experience.images && experience.images.length > 0 && (

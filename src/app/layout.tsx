@@ -25,6 +25,12 @@ export async function generateMetadata() {
       path: home.path,
       image: home.image,
     }),
+    applicationName: "Najmi Folio",
+    openGraph: {
+      siteName: "Najmi Folio",
+      type: "website",
+      locale: "id_ID", // Opsional, membantu SEO lokal
+    },
     // TAMBAHKAN INI:
     keywords: [
       "Adridinan Najmi Faza",
@@ -42,6 +48,13 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    name: "Najmi Folio",
+    alternateName: ["Adridinan Najmi Faza Portfolio", "Najmi Faza"],
+    url: baseURL, // Mengambil dari import @/resources
+  };
   return (
     <Flex
       suppressHydrationWarning
@@ -56,6 +69,10 @@ export default async function RootLayout({
       )}
     >
       <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
         <script
           id="theme-init"
           dangerouslySetInnerHTML={{
