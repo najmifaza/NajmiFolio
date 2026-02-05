@@ -14,7 +14,7 @@ import React from "react";
 const person: Person = {
   firstName: "Adridinan Najmi Faza",
   lastName: " Najmi Faza",
-  name: "Najmi Faza",
+  name: "Adridinan Najmi Faza",
   role: "Web Developer",
   avatar: "/images/avatar.png",
   email: "adridinan99@gmail.com",
@@ -24,7 +24,7 @@ const person: Person = {
 
 const newsletter: Newsletter = {
   display: true,
-  title: <>Follow to {person.name}'s Social Media</>,
+  title: <>Follow to {person.lastName}'s Social Media</>,
   description: (
     <>My social media about my life as a student and software engineer</>
   ),
