@@ -1,0 +1,88 @@
+---
+title: "URL Shortener BEM Unsoed Edition"
+publishedAt: "2026-02-15"
+summary: "Pengembangan aplikasi pemendek URL profesional dengan antarmuka Glassmorphism untuk kebutuhan publikasi BEM Universitas Jenderal Soedirman."
+images:
+  - "/images/projects/project-01/video-4.mp4"
+team:
+  - name: "Najmi Faza"
+    role: "Full-stack Developer"
+    avatar: "/images/avatar.png"
+    linkedIn: "https://www.linkedin.com/in/adridinan-najmi-faza-80b88a301/"
+link: "https://bem-unsoed.com"
+---
+
+# Najmi's URL Shortener (BEM Unsoed Edition)
+
+**Tech Stack:** Next.js 15, Tailwind CSS 4, Supabase, TypeScript, Radix UI, Framer Motion.
+
+Sebuah aplikasi pemendek URL (URL Shortener) profesional yang dirancang khusus untuk kebutuhan publikasi **BEM Universitas Jenderal Soedirman**. Aplikasi ini mengubah tautan yang panjang (seperti Google Drive atau Form) menjadi tautan pendek yang tepercaya, estetis, dan mudah diingat.
+
+## ✨ Fitur Utama
+
+- **Custom Slugs:** Buat tautan pendek dengan nama yang Anda inginkan (misal: `bem-unsoed.com/oprec`).
+- **Admin Verification:** Keamanan ekstra dengan sistem password untuk memastikan hanya admin yang berwenang yang dapat membuat tautan.
+- **Glassmorphism UI:** Antarmuka modern dengan efek kaca yang elegan, dibangun menggunakan komponen kustom.
+- **Click Tracking:** Melacak jumlah klik pada setiap tautan secara real-time.
+- **Institutional Branding:** Terintegrasi dengan identitas visual BEM Unsoed.
+- **Responsive Design:** Pengalaman pengguna yang mulus di perangkat desktop maupun mobile.
+
+## 🛠️ Tech Stack
+
+- **Frontend:** Next.js 15 (App Router)
+- **Styling:** Tailwind CSS 4
+- **Database & Auth:** Supabase
+- **UI Components:** Radix UI & Framer Motion
+- **Form Validation:** React Hook Form & Zod
+- **Notifications:** Sonner
+
+## 🚀 Memulai (Local Development)
+
+### 1. Prasyarat
+
+Pastikan Anda sudah menginstal:
+
+- Node.js (versi terbaru direkomendasikan)
+- NPM atau PNPM
+
+### 2. Instalasi
+
+Clone repositori ini dan instal dependensinya:
+
+```bash
+git clone https://github.com/najmifaza/najmisurlshortener.git
+cd najmisurlshortener
+npm install
+```
+
+### 3. Konfigurasi Environment Variables
+
+Buat file `.env.local` di root direktori dan tambahkan kredensial Supabase Anda:
+
+```env
+NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+```
+
+### 4. Menjalankan Server
+
+```bash
+npm run dev
+```
+
+Aplikasi akan berjalan di `http://localhost:3000`.
+
+## 📂 Struktur Proyek
+
+- `src/app`: Routing Next.js (Home, Shortener, Database, dan Dynamic Redirects).
+- `src/components`: Komponen UI kustom, termasuk sistem desain _Glassmorphism_.
+- `src/lib`: Konfigurasi Supabase, utilitas, dan konstanta.
+- `public`: Aset statis seperti logo dan ikon.
+
+## 🔒 Keamanan
+
+Aplikasi ini menggunakan sistem verifikasi password sederhana untuk pembuatan tautan baru. Password default diatur di sisi klien (untuk prototipe ini), namun sangat disarankan untuk dipindahkan ke sisi server atau menggunakan Supabase Auth untuk penggunaan produksi yang lebih aman.
+
+## 🤝 Kontribusi
+
+Kontribusi selalu terbuka! Jika Anda ingin meningkatkan aplikasi ini, silakan buat _Pull Request_ atau laporkan _Issue_.
