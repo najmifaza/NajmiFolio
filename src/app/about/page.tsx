@@ -16,6 +16,7 @@ import { baseURL, about, person, social } from "@/resources";
 import TableOfContents from "@/components/about/TableOfContents";
 import styles from "@/components/about/about.module.scss";
 import React from "react";
+import { GitHubContribution } from "@/components";
 
 export async function generateMetadata() {
   return Meta.generate({
@@ -215,6 +216,7 @@ export default function About() {
               marginBottom="xl"
             >
               {about.intro.description}
+              <GitHubContribution />
             </Column>
           )}
 
