@@ -13,7 +13,7 @@ import {
 } from "@once-ui-system/core";
 import { home, about, person, baseURL, routes } from "@/resources";
 import { Mailchimp, GitHubContribution } from "@/components";
-import { Projects } from "@/components/work/Projects";
+import { Projects } from "@/components/project/Projects";
 import { Posts } from "@/components/blog/Posts";
 
 export async function generateMetadata() {

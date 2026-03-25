@@ -79,7 +79,7 @@ const home: Home = {
         </Text>
       </Row>
     ),
-    href: "/work/GrowTo-Platform-Delivery-Order",
+    href: "/project/",
   },
   subline: (
     <>
@@ -315,7 +315,7 @@ const about: About = {
         title: "Modern Web Development",
         description: (
           <>
-            Berpengalaman dalam membangun aplikasi web modern yang responsif, 
+            Berpengalaman dalam membangun aplikasi web modern yang responsif,
             cepat, dan scalable menggunakan ekosistem React terbaru.
           </>
         ),
@@ -331,7 +331,7 @@ const about: About = {
         title: "Backend & Infrastructure",
         description: (
           <>
-            Mengelola database dan otentikasi menggunakan solusi cloud modern 
+            Mengelola database dan otentikasi menggunakan solusi cloud modern
             serta memastikan integritas data dengan skema yang kuat.
           </>
         ),
@@ -346,8 +346,8 @@ const about: About = {
         title: "AI & Computer Vision",
         description: (
           <>
-            Mengembangkan sistem deteksi real-time menggunakan Python 
-            untuk pengenalan gestur tangan dan pengolahan citra.
+            Mengembangkan sistem deteksi real-time menggunakan Python untuk
+            pengenalan gestur tangan dan pengolahan citra.
           </>
         ),
         tags: [
@@ -384,13 +384,13 @@ const blog: Blog = {
   // All posts will be listed on the /blog route
 };
 
-const work: Work = {
-  path: "/work",
+const project: Work = {
+  path: "/project",
   label: "Project",
   title: `Project – ${person.name}`,
   description: `Design and dev projects by ${person.name}`,
   // Create new project pages by adding a new .mdx file to app/blog/posts
-  // All projects will be listed on the /home and /work routes
+  // All projects will be listed on the /home and /project routes
 };
 
 const gallery: Gallery = {
@@ -445,4 +445,4 @@ const gallery: Gallery = {
   ],
 };
 
-export { person, social, newsletter, home, about, blog, work, gallery };
+export { person, social, newsletter, home, about, blog, project, gallery };

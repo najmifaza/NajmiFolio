@@ -22,13 +22,14 @@ export const GitHubContribution: React.FC = () => {
   if (!mounted) return null;
 
   return (
-    <div>
+    <div style={{ width: "100%" }}>
       <GitHubCalendar
         username="najmifaza"
         colorScheme={theme === "dark" ? "dark" : "light"}
         fontSize={10}
         blockSize={8}
         blockMargin={4}
+        year="last"
       />
     </div>
   );

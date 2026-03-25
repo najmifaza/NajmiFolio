@@ -6,7 +6,7 @@ export {
   home,
   about,
   blog,
-  work,
+  project,
   gallery,
 } from "./content";
 
