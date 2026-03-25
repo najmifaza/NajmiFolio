@@ -312,97 +312,64 @@ const about: About = {
     title: "Technical skills",
     skills: [
       {
-        title: "Basic Programming",
+        title: "Modern Web Development",
         description: (
           <>
-            Memiliki dasar pemrograman yang kuat sebagai mahasiswa Informatika.
+            Berpengalaman dalam membangun aplikasi web modern yang responsif, 
+            cepat, dan scalable menggunakan ekosistem React terbaru.
           </>
         ),
         tags: [
-          {
-            name: "Html",
-            icon: "html",
-          },
-          {
-            name: "CSS",
-            icon: "css",
-          },
-          {
-            name: "JavaScript",
-            icon: "javascript",
-          },
-          {
-            name: "C",
-            icon: "c",
-          },
-          {
-            name: "Python",
-            icon: "python",
-          },
-          {
-            name: "MySql",
-            icon: "sql",
-          },
-          {
-            name: "MongoDB",
-            icon: "mongodb",
-          },
+          { name: "Next.js", icon: "nextjs" },
+          { name: "React", icon: "javascript" }, // Using JS icon as placeholder if React not in library
+          { name: "TypeScript", icon: "javascript" },
+          { name: "Tailwind CSS", icon: "css" },
+          { name: "Shadcn/UI", icon: "figma" }, // Using Figma icon for UI kits
         ],
-        // optional: leave the array empty if you don't want to display images
       },
       {
-        title: "Wordpress Development",
+        title: "Backend & Infrastructure",
         description: (
           <>
-            Berpengalaman dalam mengelola platform media online dan website
-            berbasis CMS untuk publikasi konten edukasi dan informasi
+            Mengelola database dan otentikasi menggunakan solusi cloud modern 
+            serta memastikan integritas data dengan skema yang kuat.
           </>
         ),
         tags: [
-          {
-            name: "Wordpress",
-            icon: "wordpress",
-          },
-          {
-            name: "Elementor",
-            icon: "elementor",
-          },
-          {
-            name: "WooCommerce",
-            icon: "woocommerce",
-          },
+          { name: "Supabase", icon: "supabase" },
+          { name: "PostgreSQL", icon: "postgree" },
+          { name: "Zod", icon: "document" },
+          { name: "GitHub", icon: "github" },
         ],
-
-        // optional: leave the array empty if you don't want to display images
+      },
+      {
+        title: "AI & Computer Vision",
+        description: (
+          <>
+            Mengembangkan sistem deteksi real-time menggunakan Python 
+            untuk pengenalan gestur tangan dan pengolahan citra.
+          </>
+        ),
+        tags: [
+          { name: "Python", icon: "python" },
+          { name: "MediaPipe", icon: "rocket" },
+          { name: "OpenCV", icon: "project" },
+        ],
       },
       {
         title: "Editing & Design",
         description: (
           <>
             Ahli dalam pembuatan konten visual, mulai dari desain hingga editing
-            video dan dokumentasi kegiatan institusi
+            video dan dokumentasi kegiatan institusi.
           </>
         ),
         tags: [
-          {
-            name: "Adobe Photoshop",
-            icon: "Adobephotoshop",
-          },
-          {
-            name: "Adobe Premierepro",
-            icon: "Adobepremierepro",
-          },
-          {
-            name: "Adobe Lightroom",
-            icon: "Adobelightroom",
-          },
-          {
-            name: "Coreldraw",
-            icon: "Coreldraw",
-          },
+          { name: "Adobe Photoshop", icon: "Adobephotoshop" },
+          { name: "Adobe Premierepro", icon: "Adobepremierepro" },
+          { name: "Adobe Lightroom", icon: "Adobelightroom" },
+          { name: "Coreldraw", icon: "Coreldraw" },
         ],
-
-        // optional: leave the array empty if you don't want to display images
       },
     ],
   },
