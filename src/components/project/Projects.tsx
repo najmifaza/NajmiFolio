@@ -1,5 +1,5 @@
 import { getPosts } from "@/utils/utils";
-import { Column } from "@once-ui-system/core";
+import { Column, Row } from "@once-ui-system/core";
 import { ProjectCard } from "@/components";
 
 interface ProjectsProps {
@@ -27,7 +27,12 @@ export function Projects({ range, exclude }: ProjectsProps) {
     : sortedProjects;
 
   return (
-    <Column fillWidth gap="xl" marginBottom="40" paddingX="l">
+    <Column
+      columns={3}
+      s={{ columns: 1 }}
+      gap="40" // Jarak antar kartu
+      fillWidth
+    >
       {displayedProjects.map((post, index) => (
         <ProjectCard
           priority={index < 2}

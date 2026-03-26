@@ -147,7 +147,7 @@ export default function About() {
                 />
                 <Row paddingX="8">View My Project</Row>
                 <IconButton
-                  href={"work"}
+                  href={"project"}
                   data-border="rounded"
                   variant="secondary"
                   icon="chevronRight"

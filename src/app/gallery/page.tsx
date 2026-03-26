@@ -15,7 +15,7 @@ export async function generateMetadata() {
 
 export default function Gallery() {
   return (
-    <Flex maxWidth="l" direction="column" gap="32">
+    <Flex maxWidth="m" direction="column" gap="32" paddingTop="24">
       <Schema
         as="webPage"
         baseURL={baseURL}
@@ -30,12 +30,7 @@ export default function Gallery() {
         }}
       />
       {/* 3. Masukkan judul ke sini agar muncul di layar */}
-      <Heading
-        style={{ fontSize: "22px", marginTop: "20px" }}
-        padding="4"
-        className={styles.textAlign}
-        align="center"
-      >
+      <Heading marginBottom="l" variant="heading-strong-l" align="center">
         Licenses & certifications
       </Heading>
       <GalleryView />
