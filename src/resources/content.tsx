@@ -343,20 +343,6 @@ const about: About = {
         ],
       },
       {
-        title: "AI & Computer Vision",
-        description: (
-          <>
-            Mengembangkan sistem deteksi real-time menggunakan Python untuk
-            pengenalan gestur tangan dan pengolahan citra.
-          </>
-        ),
-        tags: [
-          { name: "Python", icon: "python" },
-          { name: "MediaPipe", icon: "rocket" },
-          { name: "OpenCV", icon: "project" },
-        ],
-      },
-      {
         title: "Editing & Design",
         description: (
           <>
