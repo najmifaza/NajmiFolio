@@ -137,7 +137,7 @@ const about: About = {
         images: [
           // optional: leave the array empty if you don't want to display images
           {
-            src: "/images/projects/project-01/pelantikan-bem-u.jpg",
+            src: "/images/projects/project-01/pelantikan-bem-u.webp",
             alt: "Pelantikan BEM-U 2026/2027 di Graha Widyatama, Universitas Jenderal Soedirman",
             width: 16,
             height: 9,
@@ -154,7 +154,7 @@ const about: About = {
         images: [
           // optional: leave the array empty if you don't want to display images
           {
-            src: "/images/projects/project-01/cover-01.jpg",
+            src: "/images/projects/project-01/cover-01.webp",
             alt: "Rabiha's Instagram Project",
             width: 16,
             height: 9,
@@ -172,7 +172,7 @@ const about: About = {
         images: [
           // optional: leave the array empty if you don't want to display images
           {
-            src: "/images/projects/project-01/cover-06.png",
+            src: "/images/projects/project-01/cover-06.webp",
             alt: "Foto bersama tim media center",
             width: 16,
             height: 9,
@@ -190,7 +190,7 @@ const about: About = {
         images: [
           // optional: leave the array empty if you don't want to display images
           {
-            src: "/images/projects/project-01/cover-07.jpg",
+            src: "/images/projects/project-01/cover-07.webp",
             alt: "foto bersama Guru KMI 2024/2025",
             width: 16,
             height: 9,
@@ -207,7 +207,7 @@ const about: About = {
         images: [
           // optional: leave the array empty if you don't want to display images
           {
-            src: "/images/projects/project-01/cover-09.png",
+            src: "/images/projects/project-01/cover-09.webp",
             alt: "My landing page at Melintas.Id ",
             width: 16,
             height: 9,
@@ -243,7 +243,7 @@ const about: About = {
         images: [
           // optional: leave the array empty if you don't want to display images
           {
-            src: "/images/projects/project-01/cover-05.jpg",
+            src: "/images/projects/project-01/cover-05.webp",
             alt: "di Gedung Nusantara V, MPR-RI",
             width: 16,
             height: 9,
