@@ -124,12 +124,30 @@ const about: About = {
   },
   work: {
     display: true, // set to false to hide this section
-    title: "Work Experience",
+    title: "Organization & Work Experience",
     experiences: [
       {
+        company: "Badan Eksekutif Mahasiswa Universitas Jenderal Soedirman",
+        timeframe: "Februari 2026 - Present",
+        role: "Web Development Staff",
+        achievements: [
+          "Mengelola dan mengembangkan website resmi BEM-U menggunakan WordPress",
+          "Membangun ekosistem digital untuk mendukung komunikasi dan publikasi kegiatan BEM-U, termasuk pemesanan konten, dan pembuatan aplikasi shortlink untuk memudahkan akses informasi bagi mahasiswa.",
+        ],
+        images: [
+          // optional: leave the array empty if you don't want to display images
+          {
+            src: "/images/projects/project-01/pelantikan-bem-u.jpg",
+            alt: "Pelantikan BEM-U 2026/2027 di Graha Widyatama, Universitas Jenderal Soedirman",
+            width: 16,
+            height: 9,
+          },
+        ],
+      },
+      {
         company: "Rabiha Tour & Travel",
-        timeframe: "2025 - Present",
-        role: "Social Media and Web Specialist",
+        timeframe: "2025 - 2026",
+        role: "Social Media  Specialist",
         achievements: [
           "Mengelola konten dan tampilan media sosial perusahaan.",
         ],
@@ -138,12 +156,6 @@ const about: About = {
           {
             src: "/images/projects/project-01/cover-01.jpg",
             alt: "Rabiha's Instagram Project",
-            width: 16,
-            height: 9,
-          },
-          {
-            src: "/images/projects/project-01/cover-08.png",
-            alt: "Project image",
             width: 16,
             height: 9,
           },
@@ -202,33 +214,24 @@ const about: About = {
           },
         ],
       },
+      {
+        company: "OPPM (Organisasi Pelajar Pondok Modern)",
+        timeframe: "2023 - 2024",
+        role: "Language Section - Secretary",
+        achievements: [
+          "Mengelola seluruh administrasi dan surat-menyurat Divisi Bahasa",
+          "Menyusun Laporan Pertanggungjawaban (LPJ) program kerja tahunan.",
+          "Menegakkan wajib berbahasa Arab dan Inggris kepada seluruh santri",
+        ],
+      },
     ],
   },
 
   Organization: {
     display: true, // set to false to hide this section
-    title: "Organization & Commite",
+    title: "Commite",
 
     experiences: [
-      {
-        company: "Badan Eksekutif Mahasiswa Universitas Jenderal Soedirman",
-        timeframe: "Februari 2026 - Present",
-        role: "Web Development Staff",
-        achievements: [
-          "Bertanggung jawab dalam peliputan jurnalistik dan dokumentasi pada acara Seminar Nasional Pelepasan Duta Asfa yang diselenggarakan di MPR RI.",
-          "Menyusun narasi berita dan mengelola aset dokumentasi visual untuk keperluan publikasi acara.",
-        ],
-        images: [
-          // optional: leave the array empty if you don't want to display images
-          {
-            src: "/images/projects/project-01/cover-05.jpg",
-            alt: "Pelantikan BEM-U 2026/2027 di Graha Widyatama, Universitas Jenderal Soedirman",
-            width: 16,
-            height: 9,
-          },
-        ],
-      },
-
       {
         company: "Seminar Nasional di MPR-RI - LAZIS Assalam Fil Alamin",
         timeframe: "Juli 2025",
@@ -271,16 +274,6 @@ const about: About = {
         role: "Secretary",
         achievements: [
           "Mengelola seluruh korespondensi resmi kepanitiaan serta penyusunan berbagai surat undangan kegiatan.",
-        ],
-      },
-      {
-        company: "OPPM (Organisasi Pelajar Pondok Modern)",
-        timeframe: "2023 - 2024",
-        role: "Language Section - Secretary",
-        achievements: [
-          "Mengelola seluruh administrasi dan surat-menyurat Divisi Bahasa",
-          "Menyusun Laporan Pertanggungjawaban (LPJ) program kerja tahunan.",
-          "Menegakkan wajib berbahasa Arab dan Inggris kepada seluruh santri",
         ],
       },
       {
