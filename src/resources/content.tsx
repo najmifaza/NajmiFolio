@@ -84,7 +84,7 @@ const home: Home = {
   subline: (
     <>
       I'm {person.firstName}, an undergraduate Informatics student at{" "}
-      <Text as="span" size="xl" weight="strong">
+      <Text as="span" size="l" weight="strong">
         Universitas Jenderal Soedirman.{" "}
       </Text>
       I believe in technology with purpose - building systems that enable
@@ -154,8 +154,8 @@ const about: About = {
         timeframe: "2024 - 2025",
         role: "Staff Media",
         achievements: [
-          "Mengelola dokumentasi, publikasi, dan informasi kegiatan pondok.",
-          "Terlibat dalam pembuatan konten, pengelolaan website, medsos, desain grafis, serta foto & video.",
+          "Mengelola, menyunting, dan mempublikasikan konten berita serta artikel pada website resmi pondok menggunakan WordPress.",
+          "Bertanggung jawab penuh atas pengelolaan dokumentasi visual dan informasi kegiatan pondok.",
         ],
         images: [
           // optional: leave the array empty if you don't want to display images
@@ -173,6 +173,7 @@ const about: About = {
         role: "Pengajar",
         achievements: [
           "Mengajar dengan jadwal rutin (4x per minggu) dengan mapel Media Jurnalistik dan, Grammar 3.",
+          "Berperan dalam bimbingan akademik dan pengembangan karakter santri.",
         ],
         images: [
           // optional: leave the array empty if you don't want to display images
@@ -189,13 +190,7 @@ const about: About = {
         timeframe: "2025",
         role: "Web Content Writer",
         achievements: [
-          <React.Fragment key="achievement-1">
-            Menulis konten edukasi dan literasi digital untuk platform media
-          </React.Fragment>,
-          <React.Fragment key="achievement-2">
-            Mengolah topik teknologi dan pendidikan menjadi artikel yang mudah
-            dipahami publik
-          </React.Fragment>,
+          "Berkontribusi sebagai staf penulis lepas pada platform media Melintas.id",
         ],
         images: [
           // optional: leave the array empty if you don't want to display images
@@ -212,15 +207,35 @@ const about: About = {
 
   Organization: {
     display: true, // set to false to hide this section
-    title: "Organization and Commite",
+    title: "Organization & Commite",
 
     experiences: [
+      {
+        company: "Badan Eksekutif Mahasiswa Universitas Jenderal Soedirman",
+        timeframe: "Februari 2026 - Present",
+        role: "Web Development Staff",
+        achievements: [
+          "Bertanggung jawab dalam peliputan jurnalistik dan dokumentasi pada acara Seminar Nasional Pelepasan Duta Asfa yang diselenggarakan di MPR RI.",
+          "Menyusun narasi berita dan mengelola aset dokumentasi visual untuk keperluan publikasi acara.",
+        ],
+        images: [
+          // optional: leave the array empty if you don't want to display images
+          {
+            src: "/images/projects/project-01/cover-05.jpg",
+            alt: "Pelantikan BEM-U 2026/2027 di Graha Widyatama, Universitas Jenderal Soedirman",
+            width: 16,
+            height: 9,
+          },
+        ],
+      },
+
       {
         company: "Seminar Nasional di MPR-RI - LAZIS Assalam Fil Alamin",
         timeframe: "Juli 2025",
         role: "Jurnalis & Dokumenter",
         achievements: [
-          "Bertugas sebagai jurnalis dan tim dokumentasi pada acara Pelepasan Duta Asfa.",
+          "Bertanggung jawab dalam peliputan jurnalistik dan dokumentasi pada acara Seminar Nasional Pelepasan Duta Asfa yang diselenggarakan di MPR RI.",
+          "Menyusun narasi berita dan mengelola aset dokumentasi visual untuk keperluan publikasi acara.",
         ],
         images: [
           // optional: leave the array empty if you don't want to display images
@@ -238,7 +253,7 @@ const about: About = {
         timeframe: "Agustus 2024",
         role: "FOH Coordinator Supervisor",
         achievements: [
-          "Mengawasi koordinasi Front of House (FOH) selama pelaksanaan acara.",
+          "Mengawasi koordinasi teknis di area Front of House (FOH), memastikan sinkronisasi antara operator sound, visual, dan tim acara.",
         ],
       },
       {
@@ -246,7 +261,8 @@ const about: About = {
         timeframe: "Agustus 2024",
         role: "Dokumentation Supervisor",
         achievements: [
-          "Bertanggung jawab sebagai pengawas bagian dokumentasi acara.",
+          "Memimpin dan mengarahkan tim dokumentasi untuk meliput rangkaian acara pekan perkenalan.",
+          "Memastikan kualitas visual (foto/video) memenuhi standar publikasi institusi.",
         ],
       },
       {
@@ -254,7 +270,7 @@ const about: About = {
         timeframe: "Maret 2024",
         role: "Secretary",
         achievements: [
-          "Mengelola administrasi dan kesekretariatan untuk rangkaian acara khataman.",
+          "Mengelola seluruh korespondensi resmi kepanitiaan serta penyusunan berbagai surat undangan kegiatan.",
         ],
       },
       {
@@ -262,7 +278,9 @@ const about: About = {
         timeframe: "2023 - 2024",
         role: "Language Section - Secretary",
         achievements: [
-          "Mengelola administrasi bagian bahasa dan pengajaran dalam organisasi pelajar.",
+          "Mengelola seluruh administrasi dan surat-menyurat Divisi Bahasa",
+          "Menyusun Laporan Pertanggungjawaban (LPJ) program kerja tahunan.",
+          "Menegakkan wajib berbahasa Arab dan Inggris kepada seluruh santri",
         ],
       },
       {
@@ -270,7 +288,8 @@ const about: About = {
         timeframe: "Juni 2023 - Agustus 2023",
         role: "Secretary, Graphic Design, and Coordinator FOH",
         achievements: [
-          "Merangkap tugas kesekretariatan, desain grafis, dan koordinasi operasional FOH.",
+          "Menjadi penghubung utama antara konsep acara panitia dengan vendor/tim teknis (sound system, videotron, dan live streaming)",
+          "Mengelola dokumen resmi, surat-menyurat, dan pengarsipan seluruh proses kepanitiaan.",
         ],
       },
       {
@@ -278,7 +297,7 @@ const about: About = {
         timeframe: "Juni 2023 - Juli 2023",
         role: "Secretary",
         achievements: [
-          "Menangani urusan administrasi dan surat-menyurat kepanitiaan.",
+          "Mengelola seluruh korespondensi resmi kepanitiaan serta penyusunan berbagai surat undangan kegiatan.",
         ],
       },
       {

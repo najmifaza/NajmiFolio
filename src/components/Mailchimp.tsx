@@ -66,7 +66,7 @@ export const Mailchimp: React.FC<React.ComponentProps<typeof Column>> = ({
     <Column
       overflow="hidden"
       fillWidth
-      padding="xl"
+      padding="l"
       radius="l"
       marginBottom="m"
       horizontal="center"

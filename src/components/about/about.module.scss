@@ -1,19 +1,69 @@
 @use "../breakpoints.scss" as breakpoints;
 
 .hover {
-    transition: var(--transition-micro-medium);
+  transition: var(--transition-micro-medium);
 
-    &:hover {
-        transform: translateX(var(--static-space-4));
-    }
+  &:hover {
+    transform: translateX(var(--static-space-4));
+  }
 }
 
 @media (max-width: breakpoints.$s) {
-    .textAlign {
-        text-align: center;
-    }
+  .textAlign {
+    text-align: center;
+  }
 
-    .blockAlign {
-        align-self: center;
-    }
+  .blockAlign {
+    align-self: center;
+  }
+}
+
+.noArrowAccordion {
+  border: none !important;
+  box-shadow: none !important;
+  overflow: visible !important;
+}
+
+.noArrowAccordion :global(.icon) {
+  display: none !important;
+}
+.zoomOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: rgba(0, 0, 0, 0.85);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  animation: fadeInOverlay 220ms ease forwards;
+}
+
+.zoomImage {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  border-radius: 12px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.6);
+  animation: zoomInImage 220ms ease forwards;
+}
+
+@keyframes fadeInOverlay {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes zoomInImage {
+  from {
+    transform: scale(0.94);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
 }

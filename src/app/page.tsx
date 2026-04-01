@@ -28,7 +28,7 @@ export async function generateMetadata() {
 
 export default function Home() {
   return (
-    <Column maxWidth="m" gap="xl" paddingY="12" horizontal="center">
+    <Column maxWidth="m" gap="l" paddingY="12" horizontal="center">
       <Schema
         as="webPage"
         baseURL={baseURL}
@@ -85,7 +85,7 @@ export default function Home() {
             <Text
               wrap="balance"
               onBackground="neutral-weak"
-              variant="heading-default-xl"
+              variant="heading-default-l"
             >
               {home.subline}
             </Text>
