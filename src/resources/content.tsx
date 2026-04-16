@@ -13,7 +13,7 @@ import React from "react";
 
 const person: Person = {
   firstName: "Adridinan Najmi Faza",
-  lastName: " Najmi Faza",
+  lastName: "Najmi Faza",
   name: "Adridinan Najmi Faza",
   role: "Web Developer",
   avatar: "/images/avatar.png",
@@ -65,8 +65,9 @@ const home: Home = {
   path: "/",
   image: "/images/og/home.png",
   label: "Home",
-  title: `${person.firstName} Portfolio`,
-  description: `Portfolio website showcasing my work as a ${person.role}`,
+  title: `${person.firstName} | Portfolio`,
+  description:
+    "Situs resmi portofolio Adridinan Najmi Faza (Najmi Faza), Web Developer dan mahasiswa Informatika Universitas Jenderal Soedirman.",
   headline: <>Passionate about EdTech & Social Impact</>,
   featured: {
     display: true,

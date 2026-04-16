@@ -4,19 +4,25 @@ import "@/resources/custom.css";
 
 import classNames from "classnames";
 
-import {
-  Background,
-  Column,
-  Flex,
-  Meta,
-  opacity,
-  RevealFx,
-  SpacingToken,
-} from "@once-ui-system/core";
+import { Background, Column, Flex, Meta, RevealFx } from "@once-ui-system/core";
+import type { opacity, SpacingToken } from "@once-ui-system/core";
 import { Footer, Header, RouteGuard, Providers } from "@/components";
-import { baseURL, effects, fonts, style, dataStyle, home } from "@/resources";
+import {
+  baseURL,
+  effects,
+  fonts,
+  style,
+  dataStyle,
+  home,
+  person,
+  social,
+} from "@/resources";
 
 export async function generateMetadata() {
+  const normalizedBaseURL = baseURL.endsWith("/")
+    ? baseURL.slice(0, -1)
+    : baseURL;
+
   return {
     ...Meta.generate({
       title: home.title,
@@ -26,20 +32,51 @@ export async function generateMetadata() {
       image: home.image,
     }),
     applicationName: "Najmi Folio",
+    metadataBase: new URL(baseURL),
+    alternates: {
+      canonical: "/",
+    },
     openGraph: {
       siteName: "Najmi Folio",
       type: "website",
-      locale: "id_ID", // Opsional, membantu SEO lokal
+      locale: "id_ID",
+      url: normalizedBaseURL,
+      title: home.title,
+      description: home.description,
+      images: [
+        {
+          url: home.image,
+          alt: home.title,
+        },
+      ],
     },
-    // TAMBAHKAN INI:
+    twitter: {
+      card: "summary_large_image",
+      title: home.title,
+      description: home.description,
+      images: [home.image],
+    },
+    robots: {
+      index: true,
+      follow: true,
+      googleBot: {
+        index: true,
+        follow: true,
+        "max-image-preview": "large",
+        "max-snippet": -1,
+        "max-video-preview": -1,
+      },
+    },
     keywords: [
       "Adridinan Najmi Faza",
       "Najmi Faza",
       "Informatika Unsoed",
       "Web Developer Purwokerto",
+      "Portofolio Web Developer Indonesia",
     ],
     authors: [{ name: "Adridinan Najmi Faza" }],
     creator: "Adridinan Najmi Faza",
+    publisher: "Adridinan Najmi Faza",
   };
 }
 
@@ -48,18 +85,35 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const jsonLd = {
+  const normalizedBaseURL = baseURL.endsWith("/")
+    ? baseURL.slice(0, -1)
+    : baseURL;
+  const personJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    name: person.name,
+    alternateName: [person.lastName],
+    url: normalizedBaseURL,
+    image: `${normalizedBaseURL}${person.avatar}`,
+    jobTitle: person.role,
+    sameAs: social
+      .map((socialItem) => socialItem.link)
+      .filter((link) => link.startsWith("http")),
+  };
+
+  const websiteJsonLd = {
     "@context": "https://schema.org",
     "@type": "WebSite",
     name: "Najmi Folio",
     alternateName: ["Adridinan Najmi Faza Portfolio", "Najmi Faza"],
-    url: baseURL, // Mengambil dari import @/resources
+    url: normalizedBaseURL,
+    inLanguage: "id-ID",
   };
   return (
     <Flex
       suppressHydrationWarning
       as="html"
-      lang="en"
+      lang="id"
       fillWidth
       className={classNames(
         fonts.heading.variable,
@@ -69,14 +123,13 @@ export default async function RootLayout({
       )}
     >
       <head>
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-        />
-        <script
-          id="theme-init"
-          dangerouslySetInnerHTML={{
-            __html: `
+        <script type="application/ld+json">
+          {JSON.stringify(personJsonLd)}
+        </script>
+        <script type="application/ld+json">
+          {JSON.stringify(websiteJsonLd)}
+        </script>
+        <script id="theme-init">{`
               (function() {
                 try {
                   const root = document.documentElement;
@@ -127,9 +180,7 @@ export default async function RootLayout({
                   document.documentElement.setAttribute('data-theme', 'dark');
                 }
               })();
-            `,
-          }}
-        />
+            `}</script>
       </head>
       <Providers>
         <Column

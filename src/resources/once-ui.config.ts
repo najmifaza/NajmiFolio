@@ -1,4 +1,4 @@
-import {
+import type {
   DataStyleConfig,
   DisplayConfig,
   EffectsConfig,
@@ -196,9 +196,9 @@ const schema: SchemaConfig = {
 
 // social links
 const sameAs: SameAsConfig = {
-  threads: "https://www.threads.com/@once_ui",
-  linkedin: "https://www.linkedin.com/company/once-ui/",
-  discord: "https://discord.com/invite/5EyAQ4eNdS",
+  threads: "https://www.threads.com/@najmi.zaa",
+  linkedin: "https://www.linkedin.com/in/adridinan-najmi-faza-80b88a301",
+  discord: "https://github.com/najmifaza",
 };
 
 // social sharing configuration for blog posts
