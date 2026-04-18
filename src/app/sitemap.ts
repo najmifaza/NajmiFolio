@@ -6,12 +6,12 @@ export default async function sitemap() {
     url: `${baseURL}/blog/${post.slug}`,
     lastModified: post.metadata.publishedAt,
   }));
-const projectRoutes = getPosts(["src", "app", "project", "projects"]).map(
-  (post) => ({
-    url: `${baseURL}/project/${post.slug}`,
-    lastModified: post.metadata.publishedAt,
-  }),
-);
+  const projectRoutes = getPosts(["src", "app", "project", "projects"]).map(
+    (post) => ({
+      url: `${baseURL}/project/${post.slug}`,
+      lastModified: post.metadata.publishedAt,
+    }),
+  );
   const activeRoutes = Object.keys(routesConfig).filter(
     (route) => routesConfig[route as keyof typeof routesConfig],
   );
