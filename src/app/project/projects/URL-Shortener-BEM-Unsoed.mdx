@@ -21,20 +21,23 @@ Sebuah aplikasi pemendek URL (URL Shortener) profesional yang dirancang khusus u
 ## ✨ Fitur Utama
 
 - **Custom Slugs:** Buat tautan pendek dengan nama yang Anda inginkan (misal: `bem-unsoed.com/oprec`).
-- **Admin Verification:** Keamanan ekstra dengan sistem password untuk memastikan hanya admin yang berwenang yang dapat membuat tautan.
-- **Glassmorphism UI:** Antarmuka modern dengan efek kaca yang elegan, dibangun menggunakan komponen kustom.
+- **QR Code Generator:** Membuat dan mengunduh QR Code untuk setiap tautan pendek yang dibuat.
+- **Database Management:** Kelola, perbarui (edit tautan/password), dan hapus tautan yang sudah ada melalui antarmuka admin yang intuitif.
+- **Complex URL Support:** Mendukung pemendekan URL kompleks dengan parameter query panjang (seperti UTM tags atau share links).
+- **Admin Verification:** Keamanan ekstra dengan sistem password untuk memastikan hanya admin yang berwenang yang dapat membuat atau mengedit tautan.
+- **Glassmorphism UI:** Antarmuka modern dengan efek kaca yang elegan dan dinamis, dibangun menggunakan komponen kustom.
 - **Click Tracking:** Melacak jumlah klik pada setiap tautan secara real-time.
 - **Institutional Branding:** Terintegrasi dengan identitas visual BEM Unsoed.
 - **Responsive Design:** Pengalaman pengguna yang mulus di perangkat desktop maupun mobile.
 
 ## 🛠️ Tech Stack
 
-- **Frontend:** Next.js 15 (App Router)
+- **Frontend:** Next.js 16 (App Router)
 - **Styling:** Tailwind CSS 4
 - **Database & Auth:** Supabase
-- **UI Components:** Radix UI & Framer Motion
+- **UI Components:** Radix UI & Motion (Framer Motion)
 - **Form Validation:** React Hook Form & Zod
-- **Notifications:** Sonner
+- **Utilities:** QRCode.react, Sonner, Lucide Icons
 
 ## 🚀 Memulai (Local Development)
 
@@ -74,8 +77,8 @@ Aplikasi akan berjalan di `http://localhost:3000`.
 
 ## 📂 Struktur Proyek
 
-- `src/app`: Routing Next.js (Home, Shortener, Database, dan Dynamic Redirects).
-- `src/components`: Komponen UI kustom, termasuk sistem desain _Glassmorphism_.
+- `src/app`: Routing Next.js (Home, Shortener, Database, QR Generator, Contact, dan Dynamic Redirects).
+- `src/components`: Komponen UI kustom, termasuk sistem desain _Glassmorphism_ dan navigasi _Dock_.
 - `src/lib`: Konfigurasi Supabase, utilitas, dan konstanta.
 - `public`: Aset statis seperti logo dan ikon.
 
