@@ -242,7 +242,7 @@ export default function AboutClient() {
                 />
                 <Row paddingX="8">View My Project</Row>
                 <IconButton
-                  href={"work"}
+                  href={"project"}
                   data-border="rounded"
                   variant="secondary"
                   icon="chevronRight"
@@ -487,15 +487,8 @@ export default function AboutClient() {
       </Row>
 
       {zoomImage && (
-        <div
-          className={styles.zoomOverlay}
-          onClick={() => setZoomImage(null)}
-        >
-          <img
-            src={zoomImage}
-            alt="Zoom"
-            className={styles.zoomImage}
-          />
+        <div className={styles.zoomOverlay} onClick={() => setZoomImage(null)}>
+          <img src={zoomImage} alt="Zoom" className={styles.zoomImage} />
         </div>
       )}
     </Column>
