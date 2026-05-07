@@ -10,7 +10,7 @@ Website portofolio pribadi yang dibangun menggunakan **Once UI System** dan **Ne
 
 ---
 
-## 🚀 Tech Stack
+## Tech Stack
 
 ### **Core Framework**
 * **Next.js 16 (App Router):** Framework utama untuk performa dan SEO yang optimal.
@@ -27,7 +27,7 @@ Website portofolio pribadi yang dibangun menggunakan **Once UI System** dan **Ne
 
 ---
 
-## 📁 Key Projects & Experiences
+## Key Projects & Experiences
 
 Sistem ini menampilkan portofolio multidisiplin, termasuk:
 
@@ -37,7 +37,7 @@ Sistem ini menampilkan portofolio multidisiplin, termasuk:
 
 ---
 
-## 🛠️ Project Structure
+## Project Structure
 
 ```text
 ├── src/
@@ -53,7 +53,7 @@ Sistem ini menampilkan portofolio multidisiplin, termasuk:
 
 ---
 
-## ⚙️ Development
+## Development
 
 ### **Prasyarat**
 
