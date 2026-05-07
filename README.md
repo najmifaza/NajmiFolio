@@ -92,16 +92,6 @@ npm run dev
 
 ---
 
-## ✉️ Contact
-
-**Adridinan Najmi Faza** Web Developer & Student at Universitas Jenderal Soedirman.
-
-* **Email:** adridinan99@gmail.com
-* **LinkedIn:** [Najmi Faza](https://www.linkedin.com/in/adridinan-najmi-faza-80b88a301)
-* **GitHub:** [@najmifaza](https://github.com/najmifaza)
-
----
-
 © 2025 Najmi Faza. Built with passion and code.
 
 
