@@ -48,8 +48,7 @@ export async function generateMetadata({
     title: post.metadata.title,
     description: post.metadata.summary,
     baseURL: baseURL,
-    image:
-      post.metadata.image || `/api/og/generate?title=${post.metadata.title}`,
+    image: post.metadata.image || "/images/og/home.png",
     path: `${blog.path}/${post.slug}`,
   });
 }
@@ -96,10 +95,7 @@ export default async function Blog({
             description={post.metadata.summary}
             datePublished={post.metadata.publishedAt}
             dateModified={post.metadata.publishedAt}
-            image={
-              post.metadata.image ||
-              `/api/og/generate?title=${encodeURIComponent(post.metadata.title)}`
-            }
+            image={post.metadata.image || "/images/og/home.png"}
             author={{
               name: person.name,
               url: `${baseURL}${about.path}`,

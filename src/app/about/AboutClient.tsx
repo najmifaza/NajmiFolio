@@ -160,7 +160,7 @@ export default function AboutClient() {
         title={about.title}
         description={about.description}
         path={about.path}
-        image={`/api/og/generate?title=${encodeURIComponent(about.title)}`}
+        image="/images/og/home.png"
         author={{
           name: person.name,
           url: `${baseURL}${about.path}`,

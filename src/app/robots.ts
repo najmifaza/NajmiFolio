@@ -1,5 +1,7 @@
 import { baseURL } from "@/resources";
 
+export const dynamic = "force-static";
+
 export default function robots() {
   const normalizedBaseURL = baseURL.endsWith("/")
     ? baseURL.slice(0, -1)
