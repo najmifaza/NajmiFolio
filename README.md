@@ -1,4 +1,3 @@
-
 # Najmi Faza Portfolio (NajmiFolio)
 
 ![Status](https://img.shields.io/badge/Status-Active-brightgreen?style=for-the-badge)
@@ -13,17 +12,20 @@ Website portofolio pribadi yang dibangun menggunakan **Once UI System** dan **Ne
 ## Tech Stack
 
 ### **Core Framework**
-* **Next.js 16 (App Router):** Framework utama untuk performa dan SEO yang optimal.
-* **React 19:** Library UI untuk komponen yang reaktif.
-* **TypeScript:** Memastikan keamanan tipe data (type-safety) di seluruh aplikasi.
+
+- **Next.js 16 (App Router):** Framework utama untuk performa dan SEO yang optimal.
+- **React 19:** Library UI untuk komponen yang reaktif.
+- **TypeScript:** Memastikan keamanan tipe data (type-safety) di seluruh aplikasi.
 
 ### **Styling & UI System**
-* **Once UI Core:** Desain sistem yang konsisten untuk komponen antarmuka.
-* **SCSS Modules:** Pengelolaan gaya visual tingkat lanjut dengan *breakpoints* responsif.
+
+- **Once UI Core:** Desain sistem yang konsisten untuk komponen antarmuka.
+- **SCSS Modules:** Pengelolaan gaya visual tingkat lanjut dengan _breakpoints_ responsif.
 
 ### **Content Management**
-* **MDX (Markdown with JSX):** Digunakan untuk menulis konten blog dan studi kasus proyek secara dinamis.
-* **Gray-matter:** Parsing frontmatter pada file `.mdx`.
+
+- **MDX (Markdown with JSX):** Digunakan untuk menulis konten blog dan studi kasus proyek secara dinamis.
+- **Gray-matter:** Parsing frontmatter pada file `.mdx`.
 
 ---
 
@@ -31,9 +33,9 @@ Website portofolio pribadi yang dibangun menggunakan **Once UI System** dan **Ne
 
 Sistem ini menampilkan portofolio multidisiplin, termasuk:
 
-* **Transformasi Digital Rabiha Tour:** Pengembangan website berbasis WordPress & Elementor serta identitas visual menggunakan CorelDRAW & Photoshop.
-* **Media Center Pondok Modern Tazakka:** Pengelolaan dokumentasi dan publikasi digital skala institusi.
-* **Sertifikasi Profesional:** Termasuk sertifikasi dari Dicoding (Web & AI) serta IBM SkillsBuild (Data Classification).
+- **Transformasi Digital Rabiha Tour:** Pengembangan website berbasis WordPress & Elementor serta identitas visual menggunakan CorelDRAW & Photoshop.
+- **Media Center Pondok Modern Tazakka:** Pengelolaan dokumentasi dan publikasi digital skala institusi.
+- **Sertifikasi Profesional:** Termasuk sertifikasi dari Dicoding (Web & AI) serta IBM SkillsBuild (Data Classification).
 
 ---
 
@@ -57,41 +59,38 @@ Sistem ini menampilkan portofolio multidisiplin, termasuk:
 
 ### **Prasyarat**
 
-* Node.js (versi terbaru direkomendasikan)
-* NPM / Yarn
+- Node.js (versi terbaru direkomendasikan)
+- NPM / Yarn
 
 ### **Instalasi**
 
 1. Clone repositori:
+
 ```bash
 git clone [https://github.com/najmifaza/najmifolio.git](https://github.com/najmifaza/najmifolio.git)
 
 ```
 
-
 2. Instal dependensi:
+
 ```bash
 npm install
 
 ```
 
-
 3. Jalankan server pengembangan:
+
 ```bash
 npm run dev
 
 ```
 
-
-
 ### **Scripts**
 
-* `npm run build`: Membangun aplikasi untuk produksi.
-* `npm run lint`: Menjalankan pengecekan kualitas kode.
-* `npm run biome-write`: Memformat kode menggunakan Biome.
+- `npm run build`: Membangun aplikasi untuk produksi.
+- `npm run lint`: Menjalankan pengecekan kualitas kode.
+- `npm run biome-write`: Memformat kode menggunakan Biome.
 
 ---
 
 © 2025 Najmi Faza. Built with passion and code.
-
-
