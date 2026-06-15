@@ -2,13 +2,17 @@ import { getPosts } from "@/utils/utils";
 import { baseURL, routes as routesConfig } from "@/resources";
 
 export default async function sitemap() {
+  const normalizedBaseURL = baseURL.endsWith("/")
+    ? baseURL.slice(0, -1)
+    : baseURL;
+
   const blogs = getPosts(["src", "app", "blog", "posts"]).map((post) => ({
-    url: `${baseURL}/blog/${post.slug}`,
+    url: `${normalizedBaseURL}/blog/${post.slug}`,
     lastModified: post.metadata.publishedAt,
   }));
   const projectRoutes = getPosts(["src", "app", "project", "projects"]).map(
     (post) => ({
-      url: `${baseURL}/project/${post.slug}`,
+      url: `${normalizedBaseURL}/project/${post.slug}`,
       lastModified: post.metadata.publishedAt,
     }),
   );
@@ -17,7 +21,7 @@ export default async function sitemap() {
   );
 
   const routes = activeRoutes.map((route) => ({
-    url: `${baseURL}${route !== "/" ? route : ""}`,
+    url: `${normalizedBaseURL}${route !== "/" ? route : ""}`,
     lastModified: new Date().toISOString().split("T")[0],
   }));
 
