@@ -1,0 +1,82 @@
+---
+title: "Panggih Sedulur: Kuisioner Minat Bakat UKM Unsoed"
+publishedAt: "2026-06-19"
+summary: "Platform kuisioner interaktif untuk UKM Unsoed dengan sistem scoring 5 kategori utama, branching questions, dan rekomendasi personalisasi."
+images:
+  - "/images/projects/project-01/panggihsedulur.webp"
+team:
+  - name: "Najmi Faza"
+    role: "Web Developer"
+    avatar: "/images/avatar.png"
+    linkedIn: "https://www.linkedin.com/in/adridinan-najmi-faza-80b88a301/"
+link: "https://www.panggihsedulur.bem-unsoed.com/"
+---
+
+# Panggih Sedulur Apps
+
+**Panggih Sedulur Apps** adalah platform kuisioner interaktif untuk minat bakat UKM Unsoed. Sistem ini memadukan form biodata, tes minat bakat yang dilengkapi _branching logic_, dan kalkulasi rekomendasi personal yang akurat menggunakan integrasi Supabase.
+
+---
+
+## 🚀 Tech Stack
+
+Sistem ini dikembangkan dengan _tech stack_ modern untuk memastikan performa yang cepat dan pengalaman pengguna yang optimal:
+
+- **Framework**: Next.js (App Router)
+- **Styling**: Tailwind CSS
+- **Form & Validasi**: React Hook Form + Zod
+- **Database**: Supabase
+- **Language**: TypeScript
+
+---
+
+## 🎯 Kategori Utama & Alur Logika
+
+Sistem _scoring_ kuisioner ini difokuskan pada 5 kategori utama pada _scoring level 1_:
+
+1. **Olahraga**
+2. **Seni**
+3. **Penalaran**
+4. **Pecinta Alam**
+5. **Sosial & Disiplin**
+
+_(Catatan: Kategori seperti Kerohanian, jalur KIP-K, dan spesifikasi Fakultas diterapkan secara dinamis sebagai pre-filter dari data biodata yang diinput oleh user)._
+
+### Alur Implementasi Kuisioner:
+
+1. **Pengisian Biodata**: Pengguna mengisi form di `/kuisioner/biodata` yang kemudian disimpan secara persisten di sesi browser (localStorage).
+2. **Soal Level 1**: Pengguna menjawab 5 pertanyaan awal yang berfungsi menentukan skor dasar tiap kategori.
+3. **Branching Logic**: Sistem mendeteksi 2 kategori tertinggi dari hasil _scoring level 1_. Selanjutnya, sistem secara pintar menampilkan pertanyaan lanjutan (level 2 dan 3) secara berurutan khusus untuk kategori teratas tersebut.
+4. **Kalkulasi Rekomendasi**: Rekomendasi UKM terbaik dihasilkan dengan menggabungkan:
+   - Hasil jawaban dari _branching_ (paling spesifik sesuai minat)
+   - Aturan _Pre-filter_ dari biodata (Agama, KIP-K, Fakultas)
+   - _Fallback scoring_ apabila alur _branching_ tidak menghasilkan rekomendasi spesifik.
+5. **Penyimpanan Data**: Seluruh hasil tes dan detail rekomendasi UKM direkam di tabel `student_results` di dalam database **Supabase**.
+6. **Result Page**: Pengguna langsung diarahkan ke `/kuisioner/result` untuk melihat hasil rekomendasi secara interaktif.
+
+---
+
+## 📁 Struktur Implementasi
+
+Sistem terorganisasi ke dalam modul-modul efisien:
+
+- **Data & Validasi**:
+  - `lib/schema.ts` (Validasi struktur data menggunakan Zod)
+  - `lib/questions.ts` (Bank soal dan skenario _branching logic_)
+  - `data/UkmLogic.ts` (Algoritma rekomendasi spesifik per UKM)
+- **Komponen Interaktif**:
+  - `BiodataForm.tsx` (Penanganan form interaktif untuk user)
+  - `QuestionCard.tsx` & `ProgressBar.tsx` (UI tes interaktif)
+  - `UkmCard.tsx` (Visualisasi detail hasil rekomendasi)
+- **Backend & Database**:
+  - `lib/supabase.ts` (Konfigurasi dan integrasi _client_ Supabase)
+  - Sinkronisasi asinkron yang andal.
+
+---
+
+## 📋 Status Pengembangan
+
+- ✅ Alur end-to-end (biodata -> tes -> hasil) telah berfungsi 100%.
+- ✅ Fitur _branching question_ interaktif berjalan lancar.
+- ✅ Sistem penyimpanan data terintegrasi _real-time_ ke backend Supabase.
+- ✅ Routing yang rapi dan terlokalisasi di _prefix_ `/kuisioner`.

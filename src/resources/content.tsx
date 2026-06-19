@@ -128,11 +128,29 @@ const about: About = {
     title: "Organization & Work Experience",
     experiences: [
       {
+        company: "Panggih Sedulur",
+        timeframe: "April 2026 - Present",
+        role: "IT Coordinator",
+        achievements: [
+          "Bertanggung jawab atas pengembangan dan pengelolaan platform web Panggih Sedulur yang terintegrasi langsung dengan sistem CRM dan database",
+          "Mengimplementasikan fitur-fitur krusial termasuk Google Login, formulir kuisioner interaktif dengan branching logic, serta sistem rekomendasi personalized untuk Unit Kegiatan Mahasiswa (UKM) Unsoed.",
+        ],
+        images: [
+          // optional: leave the array empty if you don't want to display images
+          {
+            src: "/images/projects/project-01/panggihsedulur.webp",
+            alt: "Panggih Sedulur's Website",
+            width: 16,
+            height: 9,
+          },
+        ],
+      },
+      {
         company: "Badan Eksekutif Mahasiswa Universitas Jenderal Soedirman",
         timeframe: "Februari 2026 - Present",
         role: "Web Development Staff",
         achievements: [
-          "Mengelola dan mengembangkan website resmi BEM-U menggunakan WordPress",
+          "Mengelola dan mengembangkan website resmi BEM-U menggunakan WordPress, merancang tata letak halaman dengan Elementor, serta melakukan kustomisasi tingkat lanjut melalui inject HTML/CSS.",
           "Membangun ekosistem digital untuk mendukung komunikasi dan publikasi kegiatan BEM-U, termasuk pemesanan konten, dan pembuatan aplikasi shortlink untuk memudahkan akses informasi bagi mahasiswa.",
         ],
         images: [
