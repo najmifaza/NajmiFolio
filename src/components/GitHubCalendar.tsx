@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import type React from "react";
+import { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
 import { Column, Text, RevealFx, useTheme } from "@once-ui-system/core";
 
