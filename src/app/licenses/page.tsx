@@ -1,31 +1,31 @@
 import { Flex, Meta, Schema, Heading } from "@once-ui-system/core";
-import GalleryView from "@/components/gallery/GalleryView";
-import { baseURL, gallery, person } from "@/resources";
+import LicensesView from "@/components/licenses/LicensesView";
+import { baseURL, licenses, person } from "@/resources";
 import styles from "@/components/about/about.module.scss";
 
 export async function generateMetadata() {
   return Meta.generate({
-    title: gallery.title,
-    description: gallery.description,
+    title: licenses.title,
+    description: licenses.description,
     baseURL: baseURL,
-    image: `/api/og/generate?title=${encodeURIComponent(gallery.title)}`,
-    path: gallery.path,
+    image: `/api/og/generate?title=${encodeURIComponent(licenses.title)}`,
+    path: licenses.path,
   });
 }
 
-export default function Gallery() {
+export default function Licenses() {
   return (
     <Flex maxWidth="l" direction="column" gap="32">
       <Schema
         as="webPage"
         baseURL={baseURL}
-        title={gallery.title}
-        description={gallery.description}
-        path={gallery.path}
-        image={`/api/og/generate?title=${encodeURIComponent(gallery.title)}`}
+        title={licenses.title}
+        description={licenses.description}
+        path={licenses.path}
+        image={`/api/og/generate?title=${encodeURIComponent(licenses.title)}`}
         author={{
           name: person.name,
-          url: `${baseURL}${gallery.path}`,
+          url: `${baseURL}${licenses.path}`,
           image: `${baseURL}${person.avatar}`,
         }}
       />
@@ -38,7 +38,7 @@ export default function Gallery() {
       >
         Licenses & certifications
       </Heading>
-      <GalleryView />
+      <LicensesView />
     </Flex>
   );
 }

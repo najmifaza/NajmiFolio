@@ -1,9 +1,9 @@
 "use client";
 
 import { Media, Text, Flex, Grid, SmartLink } from "@once-ui-system/core";
-import { gallery } from "@/resources";
+import { licenses } from "@/resources";
 
-export default function GalleryView() {
+export default function LicensesView() {
   return (
     <Grid
       columns={3}
@@ -11,7 +11,7 @@ export default function GalleryView() {
       gap="40" // Jarak antar kartu
       fillWidth
     >
-      {gallery.certificates.map((cert, index) => (
+      {licenses.certificates.map((cert, index) => (
         <Flex key={index} direction="column" fillWidth gap="16">
           {/* Bagian Gambar Sertifikat */}
           <Media

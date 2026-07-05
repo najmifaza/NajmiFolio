@@ -12,7 +12,7 @@ import {
   about,
   blog,
   project,
-  gallery,
+  licenses,
 } from "@/resources";
 import { ThemeToggle } from "./ThemeToggle";
 import styles from "./Header.module.scss";
@@ -179,21 +179,21 @@ export const Header = () => {
                   </Row>
                 </>
               )}
-              {routes["/gallery"] && (
+              {routes["/licenses"] && (
                 <>
                   <Row s={{ hide: true }}>
                     <ToggleButton
                       prefixIcon="document"
-                      href="/gallery"
-                      label={gallery.label}
-                      selected={pathname.startsWith("/gallery")}
+                      href="/licenses"
+                      label={licenses.label}
+                      selected={pathname.startsWith("/licenses")}
                     />
                   </Row>
                   <Row hide s={{ hide: false }}>
                     <ToggleButton
                       prefixIcon="document"
-                      href="/gallery"
-                      selected={pathname.startsWith("/gallery")}
+                      href="/licenses"
+                      selected={pathname.startsWith("/licenses")}
                     />
                   </Row>
                 </>

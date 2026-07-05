@@ -1,7 +1,7 @@
 import type {
   About,
   Blog,
-  Gallery,
+  Licenses,
   Home,
   Newsletter,
   Person,
@@ -410,8 +410,8 @@ const project: Work = {
   // All projects will be listed on the /home and /project routes
 };
 
-const gallery: Gallery = {
-  path: "/gallery",
+const licenses: Licenses = {
+  path: "/licenses",
   label: "Licenses & certifications",
   title: `Licenses & certifications – ${person.name}`,
   description: `Professional certifications and achievements by ${person.name}`,
@@ -421,27 +421,27 @@ const gallery: Gallery = {
       title: "Data Classification and Summarization with IBM Granite",
       issuer: "IBM SkillsBuild & Hacktiv4",
       date: "Oct 2025",
-      image: "/images/gallery/IBMData.png",
+      image: "/images/licenses/IBMData.png",
       url: "https://www.credly.com/badges/8a96daae-43d7-4b68-b44f-bfa5c740ae8e/public_url",
     },
     {
       title: "Soedirman Digital School 2025 – Web Development Program",
       issuer: "BEM-U",
       date: "Nov 2025",
-      image: "/images/gallery/SDSWeb.png",
+      image: "/images/licenses/SDSWeb.png",
     },
     {
       title: "Basic Artificial Intelligence Certificate",
       issuer: "Dicoding Indonesia",
       date: "Nov 2025",
-      image: "/images/gallery/BasicAI.png",
+      image: "/images/licenses/BasicAI.png",
       url: "https://www.dicoding.com/certificates/ERZR2DVO2PYV",
     },
     {
       title: "Basic Web Programming Certificate",
       issuer: "Dicoding Indonesia",
       date: "Dec 2025",
-      image: "/images/gallery/DasarPemWeb.png",
+      image: "/images/licenses/DasarPemWeb.png",
       url: "https://www.dicoding.com/certificates/JMZVV7L53ZN9",
     },
 
@@ -449,17 +449,17 @@ const gallery: Gallery = {
       title: "Basic JavaScript Programming Certificate",
       issuer: "Dicoding Indonesia",
       date: "Jan 2026",
-      image: "/images/gallery/JSprogramming.png",
+      image: "/images/licenses/JSprogramming.png",
       url: "https://www.dicoding.com/certificates/RVZKGN0YOXD5",
     },
     {
       title: "Front-End Web Development Certificate",
       issuer: "Dicoding Indonesia",
       date: "Jan 2026",
-      image: "/images/gallery/FE_DEV_DICODING.png",
+      image: "/images/licenses/FE_DEV_DICODING.png",
       url: "https://www.dicoding.com/certificates/L4PQ2DY72ZO1",
     },
   ],
 };
 
-export { person, social, newsletter, home, about, blog, project, gallery };
+export { person, social, newsletter, home, about, blog, project, licenses };

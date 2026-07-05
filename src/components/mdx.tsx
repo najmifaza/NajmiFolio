@@ -275,12 +275,6 @@ export function CustomMDX(props: CustomMDXProps) {
   return (
     <MDXRemote
       {...props}
-      // 2. TAMBAHKAN OPTIONS INI
-      options={{
-        mdxOptions: {
-          remarkPlugins: [remarkGfm],
-        },
-      }}
       components={{ ...components, ...(props.components || {}) }}
     />
   );

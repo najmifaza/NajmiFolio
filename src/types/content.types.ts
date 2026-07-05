@@ -260,7 +260,7 @@ export interface Work extends BasePageConfig {}
  * Gallery page configuration.
  * @description Configuration for the Gallery page, including metadata, navigation label, and image list.
  */
-export interface Gallery extends BasePageConfig {
+export interface Licenses extends BasePageConfig {
   /** List of certificates */
   certificates: Array<{
     title: string;
