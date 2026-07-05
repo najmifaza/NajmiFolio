@@ -3,6 +3,7 @@ import "@once-ui-system/core/css/tokens.css";
 import "@/resources/custom.css";
 
 import classNames from "classnames";
+import Script from "next/script";
 
 import { Background, Column, Flex, Meta, RevealFx } from "@once-ui-system/core";
 import type { opacity, SpacingToken } from "@once-ui-system/core";
@@ -123,6 +124,18 @@ export default async function RootLayout({
       )}
     >
       <head>
+        <Script
+          strategy="afterInteractive"
+          src="https://www.googletagmanager.com/gtag/js?id=G-KHXXN300H0"
+        />
+        <Script id="google-analytics" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-KHXXN300H0');
+          `}
+        </Script>
         <script type="application/ld+json">
           {JSON.stringify(personJsonLd)}
         </script>
