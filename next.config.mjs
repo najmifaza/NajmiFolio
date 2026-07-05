@@ -22,6 +22,21 @@ const nextConfig = {
     compiler: "modern",
     silenceDeprecations: ["legacy-js-api"],
   },
+  async redirects() {
+    return [
+      {
+        source: '/:path*',
+        has: [
+          {
+            type: 'host',
+            value: 'najmifolio.vercel.app',
+          },
+        ],
+        destination: 'https://najmifaza.my.id/:path*',
+        permanent: true, // 301 redirect
+      },
+    ];
+  },
 };
 
 export default withMDX(nextConfig);
