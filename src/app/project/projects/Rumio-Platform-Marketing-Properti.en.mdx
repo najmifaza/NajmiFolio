@@ -1,0 +1,94 @@
+---
+title: "Rumio.id: Next-Generation Property Marketing & Exploration Platform"
+publishedAt: "2026-07-05"
+summary: "Rumio.id is a comprehensive property marketing and exploration platform designed to connect seekers, owners, and property agents with an interactive 360° experience using modern web technologies."
+images:
+  - "/images/projects/project-01/rumio.webp"
+team:
+  - name: "Najmi Faza"
+    role: "Full-Stack Web Developer"
+    avatar: "/images/avatar.png"
+    linkedIn: "https://www.linkedin.com/in/adridinan-najmi-faza-80b88a301/"
+link: "https://rumio.id"
+---
+
+# Rumio.id: Property Marketing & Exploration Platform
+
+**Rumio.id** is a comprehensive property marketing and exploration platform designed to connect property seekers, owners, and agents (_scouts_). The system leverages modern web technology capabilities to deliver immersive interactive experiences (such as 360° virtual tours) while maintaining a highly performant, secure, and scalable administrative infrastructure.
+
+---
+
+# System Architecture
+
+Rumio.id is built on a modern _full-stack_ architecture using the **Next.js App Router** paradigm, which unifies the _frontend_ layer, API, and _backend_ logic into a single cohesive ecosystem.
+
+### 1. Presentation Layer (Frontend)
+
+- **Framework & Rendering:** Utilizes Next.js Server Components and Client Components to minimize client-side JavaScript overhead. Static pages are automatically _cached_ at the _edge_, while dynamic dashboards and forms utilize _server-side rendering_ (SSR).
+- **Styling Engine:** Uses **Tailwind CSS v4** to generate responsive, utility-based, and highly optimized CSS.
+- **Interactive Media:** WebGL context is leveraged via **Three.js** and **Photo Sphere Viewer** to deliver interactive 360-degree panoramas at 60fps, optimized for both desktop and mobile (single-finger swipe controls).
+- **Smooth User Experience (UX):** **Lenis** provides a seamless _scrolling_ experience, while **Lucide React** ensures consistent and elegant iconography.
+
+### 2. Application Logic & API Layer (Backend)
+
+- **Next.js API Routes & Server Actions:** The platform extensively uses Next.js Server Actions for secure form-based data mutations (e.g., Scout Registration, Package Ordering). API Route Handlers manage dynamic data fetching and integrations like OpenGraph metadata extraction.
+- **Authentication Security System:** Secured via **NextAuth.js**, which reliably manages sessions, secure credential verification using **Bcrypt.js**, and Role-Based Access Control (RBAC) to ensure only authorized administrators can access the CMS and Dashboard.
+- **Content Management (CMS):** An integrated _rich-text_ blogging system powered by **Tiptap** (_headless_ editor) and MDX processing, allowing administrators to compose visually rich and semantically valid web content.
+
+### 3. Data Storage Layer (Database)
+
+- **ORM:** **Prisma (v6)** acts as a _strictly-typed_ bridge between the application logic and the _database_.
+- **Query Optimization:** Implements advanced query deduplication and selective _field_ fetching to prevent N+1 query issues and minimize server RAM usage.
+- **Relational Data Structure:** The _database_ includes structured schemas for `Properties`, `Scouts`, `Packages`, `Orders`, `Blog Posts`, and a complex geospatial/location directory (Province, City, District) for precise property searches.
+
+### 4. Security & Performance Architecture
+
+- **XSS Mitigation:** All user inputs and CMS content are strictly sanitized using **Sanitize-html** before being _rendered_.
+- **Rate Limiting:** Public forms and API _endpoints_ are equipped with robust rate-limiting mechanisms to prevent _bot_ abuse and resource exhaustion from DDOS-style attacks.
+- **Dynamic SEO:** Automatically generates dynamic OpenGraph images and metadata for properties and blogs, enhancing the quality of link previews on social media and visibility on search engines.
+
+---
+
+# Technology Stack Details
+
+- **Core Framework**: Next.js 16.2.9 (App Router) — _Full-stack_ orchestration, routing, SSR/SSG, and Server Actions.
+- **UI Library**: React 19 — Component lifecycle and DOM management.
+- **Styling**: Tailwind CSS v4 — Rapid UI development with automatic unused code purging.
+- **Database ORM**: Prisma v6 — _Type-safe_ database access, schema migrations, and query generation.
+- **Authentication**: NextAuth.js — Secure session management and credential _hashing_.
+- **Virtual Tour Engine**: Photo Sphere Viewer — Core _library_ for rendering interactive 360° property tours.
+- **3D Rendering**: Three.js — WebGL graphics engine powering the virtual tours.
+- **Rich Text Editor**: Tiptap & Extensions — _Headless_ WYSIWYG editor for writing blog content and property descriptions.
+- **Data Visualization**: Recharts — React components for dynamically rendering analytic charts on the dashboard.
+- **Security**: DOMPurify / Sanitize-html — Stripping malicious scripts from user inputs before processing.
+- **Server Deployment**: Node.js (Custom Server) — Custom `server.js` architecture to seamlessly support Next.js on traditional VPS environments like Hostinger.
+
+---
+
+# Directory Structure (Folder Structure)
+
+This project is organized with a modular architecture under the `src/` directory, which is the core of the Next.js App Router:
+
+```text
+rumio.id/
+├── prisma/               # Prisma configuration, database schema (schema.prisma), and migrations.
+├── public/               # Public static assets like images, icons, and platform logos.
+├── src/
+│   ├── app/              # (App Router) Page definitions, layouts, and API routes.
+│   │   ├── actions/      # Next.js Server Actions for data mutation (e.g., delete property, save blog).
+│   │   ├── admin/        # Specific pages and layouts for the Administrator Dashboard (NextAuth protected).
+│   │   ├── api/          # Backend API Route Handlers (e.g., OpenGraph scraping, rate-limited endpoints).
+│   │   ├── blog/         # Public pages for reading blog articles.
+│   │   ├── properti/     # Property exploration and 360 Virtual Tour pages.
+│   │   └── ...           # Other routes like login, pricing, and property-scout.
+│   ├── components/       # Reusable React UI components.
+│   │   ├── admin/        # Dashboard-specific components (Tables, Forms, Recharts, Custom Confirm Dialog).
+│   │   ├── ui/           # Basic UI components (Button, Modal, Toast).
+│   │   └── Section/      # Layout components for landing pages (Hero, Features).
+│   ├── data/             # Static data (e.g., Province/City directories for Scouts).
+│   ├── lib/              # Utility functions (Prisma client instance, NextAuth config, utils).
+│   └── types/            # TypeScript type definitions and data interfaces.
+├── package.json          # Dependency definitions and scripts (build, dev, start).
+├── next.config.ts        # Next.js build configuration.
+└── server.js             # Node.js custom server script for deployment compatibility on VPS/cPanel.
+```

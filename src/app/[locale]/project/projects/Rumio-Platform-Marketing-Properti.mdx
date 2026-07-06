@@ -1,0 +1,94 @@
+---
+title: "Rumio.id: Platform Marketing & Eksplorasi Properti Generasi Baru"
+publishedAt: "2026-07-05"
+summary: "Rumio.id adalah platform pemasaran dan eksplorasi properti komprehensif yang dirancang untuk menghubungkan pencari, pemilik, dan agen properti dengan pengalaman interaktif 360° menggunakan teknologi web modern."
+images:
+  - "/images/projects/project-01/rumio.webp"
+team:
+  - name: "Najmi Faza"
+    role: "Full-Stack Web Developer"
+    avatar: "/images/avatar.png"
+    linkedIn: "https://www.linkedin.com/in/adridinan-najmi-faza-80b88a301/"
+link: "https://rumio.id"
+---
+
+# Rumio.id: Platform Pemasaran & Eksplorasi Properti
+
+**Rumio.id** adalah platform pemasaran dan eksplorasi properti komprehensif yang dirancang untuk menghubungkan para pencari properti, pemilik, dan agen (_scout_). Sistem ini memanfaatkan kemampuan teknologi web modern untuk menghadirkan pengalaman interaktif yang imersif (seperti tur virtual 360°) dengan tetap mempertahankan infrastruktur administratif yang berkinerja tinggi, aman, dan dapat diskalakan.
+
+---
+
+# Arsitektur Sistem
+
+Rumio.id dibangun di atas arsitektur _full-stack_ modern yang menggunakan paradigma **Next.js App Router**, yang menyatukan lapisan _frontend_, API, dan logika _backend_ ke dalam satu ekosistem yang kohesif.
+
+### 1. Lapisan Presentasi (Frontend)
+
+- **Framework & Rendering:** Menggunakan Next.js Server Components dan Client Components untuk meminimalkan beban JavaScript di sisi klien. Halaman statis di-_cache_ secara otomatis pada _edge_, sedangkan dasbor dinamis dan formulir memanfaatkan _server-side rendering_ (SSR).
+- **Mesin Styling:** Menggunakan **Tailwind CSS v4** untuk menghasilkan CSS yang responsif, berbasis utilitas, dan sangat optimal.
+- **Media Interaktif:** Konteks WebGL dimanfaatkan melalui **Three.js** dan **Photo Sphere Viewer** untuk menghadirkan panorama 360 derajat interaktif pada 60fps yang dioptimalkan baik untuk desktop maupun seluler (kontrol geser satu jari).
+- **Pengalaman Pengguna (UX) yang Halus:** **Lenis** memberikan pengalaman menggulir (_scrolling_) yang mulus, sementara **Lucide React** memastikan ikonografi yang konsisten dan elegan.
+
+### 2. Logika Aplikasi & Lapisan API (Backend)
+
+- **Next.js API Routes & Server Actions:** Platform ini secara ekstensif menggunakan Next.js Server Actions untuk mutasi data berbasis formulir yang aman (misalnya: Registrasi Scout, Pemesanan Paket). API Route Handlers mengelola pengambilan data dinamis dan integrasi seperti ekstraksi metadata OpenGraph.
+- **Sistem Keamanan Autentikasi:** Dilindungi melalui **NextAuth.js**, yang mengelola sesi dengan andal, verifikasi kredensial yang aman menggunakan **Bcrypt.js**, dan kontrol akses berbasis peran (RBAC) untuk memastikan hanya administrator berwenang yang dapat mengakses CMS dan Dasbor.
+- **Manajemen Konten (CMS):** Sistem _blogging_ berbasis _rich-text_ terintegrasi yang didukung oleh **Tiptap** (editor _headless_) dan pemrosesan MDX, memungkinkan administrator menyusun konten web yang kaya visual dan valid secara semantik.
+
+### 3. Lapisan Penyimpanan Data (Database)
+
+- **ORM:** **Prisma (v6)** bertindak sebagai jembatan tipe-aman (_strictly-typed_) antara logika aplikasi dan _database_.
+- **Optimasi Kueri:** Menerapkan deduplikasi kueri tingkat lanjut dan pengambilan _field_ secara selektif untuk mencegah masalah kueri N+1 serta meminimalkan penggunaan RAM pada server.
+- **Struktur Data Relasional:** _Database_ mencakup skema terstruktur untuk `Properti`, `Scouts`, `Paket`, `Pesanan`, `Postingan Blog`, dan direktori geospasial/lokasi yang kompleks (Provinsi, Kota, Kecamatan) untuk pencarian properti yang akurat.
+
+### 4. Arsitektur Keamanan & Performa
+
+- **Mitigasi XSS:** Seluruh masukan pengguna dan CMS disanitasi secara ketat menggunakan **Sanitize-html** sebelum di-_render_.
+- **Pembatasan Laju (Rate Limiting):** Formulir publik dan _endpoint_ API dilengkapi mekanisme pembatasan laju yang tangguh untuk mencegah penyalahgunaan _bot_ dan kelelahan sumber daya akibat serangan bergaya DDOS.
+- **SEO Dinamis:** Menghasilkan gambar OpenGraph dan metadata dinamis untuk properti dan blog secara otomatis, meningkatkan kualitas pratinjau tautan di media sosial dan visibilitas pada mesin pencari.
+
+---
+
+# Rincian Tumpukan Teknologi (Tech Stack)
+
+- **Framework Utama**: Next.js 16.2.9 (App Router) — Orkestrasi _full-stack_, perutean, SSR/SSG, dan Server Actions.
+- **Library UI**: React 19 — Manajemen siklus hidup komponen dan DOM.
+- **Styling**: Tailwind CSS v4 — Pengembangan UI yang cepat dengan pembersihan kode tak terpakai secara otomatis.
+- **Database ORM**: Prisma v6 — Akses _database_ yang aman (_type-safe_), migrasi skema, dan pembuatan kueri.
+- **Autentikasi**: NextAuth.js — Manajemen sesi yang aman dan _hashing_ kredensial.
+- **Mesin Virtual Tour**: Photo Sphere Viewer — _Library_ inti untuk merender tur properti 360° yang interaktif.
+- **Rendering 3D**: Three.js — Mesin grafis WebGL yang menggerakkan tur virtual.
+- **Editor Rich Text**: Tiptap & Ekstensi — Editor WYSIWYG _headless_ untuk penulisan konten blog dan deskripsi properti.
+- **Visualisasi Data**: Recharts — Komponen React untuk merender grafik analitik pada dasbor secara dinamis.
+- **Keamanan**: DOMPurify / Sanitize-html — Menghapus skrip berbahaya dari masukan pengguna sebelum diolah.
+- **Server Deployment**: Node.js (Custom Server) — Arsitektur `server.js` kustom untuk mendukung Next.js secara mulus pada lingkungan VPS tradisional seperti Hostinger.
+
+---
+
+# Struktur Direktori (Folder Structure)
+
+Proyek ini terorganisir dengan arsitektur modular di bawah direktori `src/` yang merupakan inti dari Next.js App Router:
+
+```text
+rumio.id/
+├── prisma/               # Konfigurasi Prisma, skema database (schema.prisma), dan migrasi.
+├── public/               # Aset statis publik seperti gambar, ikon, dan logo platform.
+├── src/
+│   ├── app/              # (App Router) Definisi halaman, layout, dan rute API.
+│   │   ├── actions/      # Next.js Server Actions untuk mutasi data (mis: hapus properti, simpan blog).
+│   │   ├── admin/        # Halaman dan tata letak khusus untuk Dasbor Administrator (dilindungi NextAuth).
+│   │   ├── api/          # Route Handlers API backend (mis: scraping OpenGraph, endpoint rate-limited).
+│   │   ├── blog/         # Halaman publik untuk membaca artikel blog.
+│   │   ├── properti/     # Halaman penjelajahan dan Virtual Tour 360 properti.
+│   │   └── ...           # Rute lain seperti login, pricing, dan property-scout.
+│   ├── components/       # Komponen React yang dapat digunakan ulang (Reusable UI).
+│   │   ├── admin/        # Komponen spesifik dasbor (Tabel, Form, Recharts, Custom Confirm Dialog).
+│   │   ├── ui/           # Komponen UI dasar (Button, Modal, Toast).
+│   │   └── Section/      # Komponen layout untuk landing page (Hero, Features).
+│   ├── data/             # Data statis (misalnya direktori Provinsi/Kota untuk Scout).
+│   ├── lib/              # Fungsi utilitas (Prisma client instance, konfigurasi NextAuth, utils).
+│   └── types/            # Definisi tipe TypeScript dan interface data.
+├── package.json          # Definisi dependensi dan skrip (build, dev, start).
+├── next.config.ts        # Konfigurasi build Next.js.
+└── server.js             # Skrip custom server Node.js untuk kompatibilitas deployment di VPS/cPanel.
+```

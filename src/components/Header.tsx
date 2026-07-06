@@ -5,20 +5,15 @@ import { useEffect, useState } from "react";
 
 import { Fade, Flex, Line, Row, ToggleButton } from "@once-ui-system/core";
 
-import {
-  routes,
-  display,
-  person,
-  about,
-  project,
-  licenses,
-} from "@/resources";
+import { routes, display } from "@/resources";
 import { ThemeToggle } from "./ThemeToggle";
+import { LanguageToggle } from "./LanguageToggle";
+import { useDictionary } from "./LanguageProvider";
 import styles from "./Header.module.scss";
 
 type TimeDisplayProps = {
   timeZone: string;
-  locale?: string; // Optionally allow locale, defaulting to 'en-GB'
+  locale?: string;
 };
 
 const TimeDisplay: React.FC<TimeDisplayProps> = ({
@@ -54,6 +49,8 @@ export default TimeDisplay;
 
 export const Header = () => {
   const pathname = usePathname() ?? "";
+  const dict = useDictionary();
+  const { person, about, project, licenses } = dict;
 
   return (
     <>
@@ -183,6 +180,7 @@ export const Header = () => {
                 <>
                   <Line background="neutral-alpha-medium" vert maxHeight="24" />
                   <ThemeToggle />
+                  <LanguageToggle />
                 </>
               )}
             </Row>

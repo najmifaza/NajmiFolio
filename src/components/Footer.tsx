@@ -1,8 +1,10 @@
-import { Row, IconButton, SmartLink, Text } from "@once-ui-system/core";
-import { person, social } from "@/resources";
+"use client";
+import { Row, IconButton, Text } from "@once-ui-system/core";
+import { useDictionary } from "./LanguageProvider";
 import styles from "./Footer.module.scss";
 
 export const Footer = () => {
+  const { person, social } = useDictionary();
   const currentYear = new Date().getFullYear();
 
   return (

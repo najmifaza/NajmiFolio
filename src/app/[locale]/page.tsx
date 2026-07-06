@@ -9,8 +9,9 @@ import {
   Row,
   Schema,
   Meta,
+  Line,
 } from "@once-ui-system/core";
-import { baseURL } from "@/resources";
+import { baseURL, routes } from "@/resources";
 import { getDictionary } from "@/resources/i18n";
 import { Mailchimp, GitHubContribution } from "@/components";
 import { Projects } from "@/components/project/Projects";

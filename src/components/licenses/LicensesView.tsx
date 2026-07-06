@@ -1,9 +1,10 @@
 "use client";
 
 import { Media, Text, Flex, Grid, SmartLink } from "@once-ui-system/core";
-import { licenses } from "@/resources";
+import { useDictionary } from "../LanguageProvider";
 
 export default function LicensesView() {
+  const { licenses } = useDictionary();
   return (
     <Grid
       columns={3}

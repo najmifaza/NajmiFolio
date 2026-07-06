@@ -9,3 +9,5 @@ export { ScrollToHash } from "@/components/ScrollToHash";
 export { ThemeToggle } from "@/components/ThemeToggle";
 export { GitHubContribution } from "@/components/GitHubCalendar";
 export { CustomMDX } from "@/components/mdx";
+export { LanguageProvider, useLanguage, useDictionary } from "./LanguageProvider";
+export { LanguageToggle } from "./LanguageToggle";

@@ -1,4 +1,4 @@
-import { getPosts } from "@/utils/utils";
+import { getPostsForCurrentLocale } from "@/utils/utils";
 import { baseURL, routes as routesConfig } from "@/resources";
 
 export default async function sitemap() {
@@ -6,7 +6,8 @@ export default async function sitemap() {
     ? baseURL.slice(0, -1)
     : baseURL;
 
-  const projectRoutes = getPosts(["src", "app", "project", "projects"]).map(
+  const posts = await getPostsForCurrentLocale(["src", "app", "project", "projects"]);
+  const projectRoutes = posts.map(
     (post) => ({
       url: `${normalizedBaseURL}/project/${post.slug}`,
       lastModified: post.metadata.publishedAt,

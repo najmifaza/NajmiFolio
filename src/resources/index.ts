@@ -1,15 +1,5 @@
 // import a pre-defined template for config and content options
 export {
-  person,
-  social,
-  newsletter,
-  home,
-  about,
-  project,
-  licenses,
-} from "./content";
-
-export {
   display,
   mailchimp,
   routes,

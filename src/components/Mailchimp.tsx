@@ -1,8 +1,8 @@
 "use client";
-import { Row, IconButton, SmartLink, Text } from "@once-ui-system/core";
-import { person, social } from "@/resources";
+import { Row, IconButton, Text } from "@once-ui-system/core";
 import styles from "./Footer.module.scss";
-import { mailchimp, newsletter } from "@/resources";
+import { mailchimp } from "@/resources";
+import { useDictionary } from "./LanguageProvider";
 import {
   Button,
   Heading,
@@ -27,6 +27,7 @@ function debounce<T extends (...args: any[]) => void>(
 export const Mailchimp: React.FC<React.ComponentProps<typeof Column>> = ({
   ...flex
 }) => {
+  const { newsletter, social } = useDictionary();
   const [email, setEmail] = useState<string>("");
   const [error, setError] = useState<string>("");
   const [touched, setTouched] = useState<boolean>(false);

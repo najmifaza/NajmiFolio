@@ -1,0 +1,94 @@
+---
+title: "URL Shortener BEM Unsoed Edition"
+publishedAt: "2026-02-15"
+summary: "Development of a professional URL shortener application with a Glassmorphism interface for the publication needs of BEM Universitas Jenderal Soedirman."
+images:
+  - "/images/projects/project-01/shorterlink1.webp"
+  - "/images/projects/project-01/shorterlink2.webp"
+  - "/images/projects/project-01/shorterlink3.webp"
+  - "/images/projects/project-01/shorterlink4.webp"
+team:
+  - name: "Najmi Faza"
+    role: "Full-stack Developer"
+    avatar: "/images/avatar.png"
+    linkedIn: "https://www.linkedin.com/in/adridinan-najmi-faza-80b88a301/"
+link: "https://bem-unsoed.com"
+---
+
+# Najmi's URL Shortener (BEM Unsoed Edition)
+
+**Tech Stack:** Next.js 15, Tailwind CSS 4, Supabase, TypeScript, Radix UI, Framer Motion.
+
+A professional URL Shortener application specifically designed for the publication needs of **BEM Universitas Jenderal Soedirman**. This app turns long links (like Google Drive or Forms) into short links that are trustworthy, aesthetic, and easy to remember.
+
+## Key Features
+
+- **Custom Slugs:** Create short links with your desired name (e.g., `bem-unsoed.com/oprec`).
+- **QR Code Generator:** Generate and download a QR Code for every short link created.
+- **Database Management:** Manage, update (edit links/passwords), and delete existing links through an intuitive admin interface.
+- **Complex URL Support:** Supports shortening complex URLs with long query parameters (such as UTM tags or share links).
+- **Admin Verification:** Extra security with a password system to ensure only authorized admins can create or edit links.
+- **Glassmorphism UI:** A modern interface with an elegant and dynamic glass effect, built using custom components.
+- **Click Tracking:** Track the number of clicks on each link in real-time.
+- **Institutional Branding:** Integrated with the visual identity of BEM Unsoed.
+- **Responsive Design:** A seamless user experience on both desktop and mobile devices.
+
+## Tech Stack
+
+- **Frontend:** Next.js 16 (App Router)
+- **Styling:** Tailwind CSS 4
+- **Database & Auth:** Supabase
+- **UI Components:** Radix UI & Motion (Framer Motion)
+- **Form Validation:** React Hook Form & Zod
+- **Utilities:** QRCode.react, Sonner, Lucide Icons
+
+## Getting Started (Local Development)
+
+### 1. Prerequisites
+
+Make sure you have installed:
+
+- Node.js (latest version recommended)
+- NPM or PNPM
+
+### 2. Installation
+
+Clone this repository and install the dependencies:
+
+```bash
+git clone https://github.com/najmifaza/najmisurlshortener.git
+cd najmisurlshortener
+npm install
+```
+
+### 3. Environment Variables Configuration
+
+Create a `.env.local` file in the root directory and add your Supabase credentials:
+
+```env
+NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+```
+
+### 4. Running the Server
+
+```bash
+npm run dev
+```
+
+The application will run at `http://localhost:3000`.
+
+## Project Structure
+
+- `src/app`: Next.js Routing (Home, Shortener, Database, QR Generator, Contact, and Dynamic Redirects).
+- `src/components`: Custom UI components, including the _Glassmorphism_ design system and _Dock_ navigation.
+- `src/lib`: Supabase configuration, utilities, and constants.
+- `public`: Static assets like logos and icons.
+
+## Security
+
+This application uses a simple password verification system for creating new links. The default password is set on the client-side (for this prototype), but it is highly recommended to move it to the server-side or use Supabase Auth for more secure production use.
+
+## Contribution
+
+Contributions are always open! If you want to improve this application, please submit a _Pull Request_ or report an _Issue_.

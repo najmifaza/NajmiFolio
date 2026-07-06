@@ -10,7 +10,6 @@ import type {
   SchemaConfig,
   StyleConfig,
 } from "@/types";
-import { home } from "./index";
 
 // IMPORTANT: Replace with your own domain address - it's used for SEO in meta tags and schema
 const baseURL: string = "https://www.najmifaza.my.id/";
@@ -187,7 +186,7 @@ const schema: SchemaConfig = {
   logo: "",
   type: "Person",
   name: "Adridinan Najmi Faza",
-  description: home.description,
+  description: "Web Developer and UI/UX Designer based in Purwokerto, Indonesia.",
   email: "adridinan99@gmail.com",
 };
 

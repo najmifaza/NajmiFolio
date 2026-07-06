@@ -24,7 +24,7 @@ import { Projects } from "@/components/project/Projects";
 
 export async function generateStaticParams(): Promise<{ slug: string }[]> {
   // For static params, use plain .mdx files (no locale filtering at build time)
-  const posts = getPosts(["src", "app", "project", "projects"]);
+  const posts = getPosts(["src", "app", "[locale]", "project", "projects"]);
   return posts.map((post) => ({
     slug: post.slug,
   }));
@@ -41,7 +41,7 @@ export async function generateMetadata({
     : routeParams.slug || "";
 
   const { project } = await getDictionary();
-  const posts = await getPostsForCurrentLocale(["src", "app", "project", "projects"]);
+  const posts = await getPostsForCurrentLocale(["src", "app", "[locale]", "project", "projects"]);
   let post = posts.find((post) => post.slug === slugPath);
 
   if (!post) return {};
@@ -69,7 +69,7 @@ export default async function Project({
   const dict = await getDictionary();
   const { about, person, project } = dict;
 
-  const posts = await getPostsForCurrentLocale(["src", "app", "project", "projects"]);
+  const posts = await getPostsForCurrentLocale(["src", "app", "[locale]", "project", "projects"]);
   let post = posts.find((post) => post.slug === slugPath);
 
   if (!post) {

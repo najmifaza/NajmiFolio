@@ -1,0 +1,254 @@
+---
+title: "Tailwind CSS Cheat Sheet"
+publishedAt: "2024-01-01"
+summary: "A comprehensive guide and cheat sheet for Tailwind CSS, covering setup, layouts, typography, responsiveness, and interactivity."
+images:
+
+team:
+  - name: "Najmi Faza"
+    role: "Social Media Specialist & Web Developer"
+    avatar: "/images/avatar.png"
+    linkedIn: "https://www.linkedin.com/in/adridinan-najmi-faza-80b88a301/"
+---
+
+---
+
+## 1. Setup & Basics
+
+### Directives
+
+Must be present in the main CSS file.
+
+```css
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+```
+
+### Arbitrary Values (JIT Mode)
+
+Use square brackets `[]` for custom values not available in the default theme.
+
+- `w-[350px]` (Specific pixel width)
+- `bg-[#1da1f2]` (Custom Hex color)
+- `top-[17px]` (Specific position)
+- `grid-cols-[200px_1fr]` (Custom Grid)
+- `content-['hello']` (Pseudo-element content)
+
+---
+
+## 2. Layout & Position
+
+| Feature                  | Class                                                       | Description                                                           |
+| ------------------------ | ----------------------------------------------------------- | --------------------------------------------------------------------- |
+| **Container**            | `container`                                                 | Sets max-width based on breakpoints (usually needs `mx-auto`).        |
+| **Display**              | `block`, `inline`, `inline-block`, `flex`, `grid`, `hidden` | Sets the element's display type.                                      |
+| **Position**             | `static`, `fixed`, `absolute`, `relative`, `sticky`         | Sets the element's positioning.                                       |
+| **Top/Right/Btm/Left**   | `top-0`, `right-4`, `bottom-auto`, `inset-0`                | Coordinate positions (if absolute/fixed/relative).                    |
+| **Z-Index**              | `z-0`, `z-10`, `z-50`, `z-auto`                             | Controls the stacking order (layering).                               |
+| **Overflow**             | `overflow-auto`, `overflow-hidden`, `overflow-x-scroll`     | Manages overflowing content.                                          |
+
+---
+
+## 3. Sizing
+
+| Type               | Class                                                   | Description                             |
+| ------------------ | ------------------------------------------------------- | --------------------------------------- |
+| **Width**          | `w-0`, `w-full`, `w-screen`, `w-1/2`, `w-auto`          | Element width (scale 0-96, %, viewport).|
+| **Height**         | `h-0`, `h-full`, `h-screen`, `h-1/2`, `h-auto`          | Element height.                         |
+| **Min Width**      | `min-w-0`, `min-w-full`, `min-w-min`                    | Minimum width limit.                    |
+| **Max Width**      | `max-w-xs`, `max-w-md`, `max-w-full`, `max-w-screen-xl` | Maximum width limit.                    |
+| **Min/Max Height** | `min-h-screen`, `max-h-full`                            | Minimum/maximum height limits.          |
+
+---
+
+## 4. Flexbox & Grid
+
+### Flexbox
+
+- **Container**: `flex`, `inline-flex`
+- **Direction**: `flex-row`, `flex-row-reverse`, `flex-col`, `flex-col-reverse`
+- **Wrap**: `flex-wrap`, `flex-wrap-reverse`, `flex-nowrap`
+- **Grow/Shrink**: `grow`, `grow-0`, `shrink`, `shrink-0`
+- **Justify (Main Axis)**: `justify-start`, `justify-center`, `justify-between`, `justify-around`, `justify-end`
+- **Items (Cross Axis)**: `items-start`, `items-center`, `items-end`, `items-baseline`, `items-stretch`
+
+### Grid
+
+- **Container**: `grid`
+- **Columns**: `grid-cols-1`, `grid-cols-4`, `grid-cols-12`, `grid-cols-none`
+- **Rows**: `grid-rows-1`, `grid-rows-4`, `grid-rows-none`
+- **Span**: `col-span-1`, `col-span-2`, `col-span-full`, `row-span-2`
+- **Gap**: `gap-1`, `gap-4`, `gap-x-2`, `gap-y-4`
+
+---
+
+## 5. Spacing
+
+> **Formula:** 1 unit = 0.25rem (4px). Example: `4` = 16px.
+
+| Type              | Class                                          | Example                                     |
+| ----------------- | ---------------------------------------------- | ------------------------------------------- |
+| **Padding**       | `p-`, `px-`, `py-`, `pt-`, `pr-`, `pb-`, `pl-` | `p-4` (all sides), `px-2` (left-right)      |
+| **Margin**        | `m-`, `mx-`, `my-`, `mt-`, `mr-`, `mb-`, `ml-` | `m-auto` (center), `-mt-4` (negative margin)|
+| **Space Between** | `space-x-`, `space-y-`                         | `space-x-4` (spacing between child elements)|
+
+---
+
+## 6. Typography
+
+| Feature            | Class                                                                                       | Description                                   |
+| ------------------ | ------------------------------------------------------------------------------------------- | --------------------------------------------- |
+| **Size**           | `text-xs`, `text-sm`, `text-base`, `text-lg` ... `text-9xl`                                 | Font size.                                    |
+| **Weight**         | `font-thin`, `font-light`, `font-normal`, `font-medium`, `font-bold`, `font-black`          | Font weight.                                  |
+| **Color**          | `text-blue-500`, `text-slate-900/50`                                                        | Text color (can use opacity modifier `/`).    |
+| **Alignment**      | `text-left`, `text-center`, `text-right`, `text-justify`                                    | Text alignment.                               |
+| **Decoration**     | `underline`, `no-underline`, `line-through`, `overline`                                     | Text decoration lines.                        |
+| **Transform**      | `uppercase`, `lowercase`, `capitalize`, `normal-case`                                       | Text capitalization.                          |
+| **Line Height**    | `leading-none`, `leading-tight`, `leading-normal`, `leading-loose`                          | Spacing between lines.                        |
+| **Letter Spacing** | `tracking-tighter`, `tracking-tight`, `tracking-normal`, `tracking-wide`, `tracking-widest` | Spacing between letters.                      |
+| **Lists**          | `list-disc`, `list-decimal`, `list-none`, `list-inside`                                     | List styles (ul/ol).                          |
+| **Truncate**       | `truncate`                                                                                  | Cuts off long text in one line with `...`     |
+| **Whitespace**     | `whitespace-nowrap`, `whitespace-pre`, `whitespace-pre-line`                                | Manages spaces and line breaks.               |
+
+---
+
+## 7. Responsive Design (Breakpoints)
+
+Use prefixes to apply styles on specific screen sizes and up (**Mobile-First**).
+
+| Prefix | Min-Width | Common Devices          |
+| ------ | --------- | ----------------------- |
+| `sm:`  | 640px     | Large Phone / Small Tablet |
+| `md:`  | 768px     | Tablet                  |
+| `lg:`  | 1024px    | Laptop                  |
+| `xl:`  | 1280px    | Desktop                 |
+| `2xl:` | 1536px    | Wide Screen             |
+
+**Example:**
+
+```html
+<div class="w-full md:w-1/2 lg:w-1/3"></div>
+```
+
+---
+
+## 8. Background & Borders
+
+### Background
+
+- **Color**: `bg-white`, `bg-red-500`, `bg-transparent`, `bg-current`
+- **Gradient**: `bg-gradient-to-r`, `bg-gradient-to-b`, `from-blue-500`, `via-purple-500`, `to-pink-500`
+- **Image**: `bg-[url('/img/hero.jpg')]`
+- **Size**: `bg-cover`, `bg-contain`, `bg-auto`
+- **Position**: `bg-center`, `bg-top`, `bg-left-bottom`
+- **Repeat**: `bg-no-repeat`, `bg-repeat`, `bg-repeat-x`
+
+### Border & Radius
+
+- **Width**: `border`, `border-0`, `border-2`, `border-4`, `border-t-4`
+- **Color**: `border-gray-200`, `border-red-500`, `border-transparent`
+- **Style**: `border-solid`, `border-dashed`, `border-dotted`, `border-double`, `border-none`
+- **Radius**: `rounded-none`, `rounded-sm`, `rounded`, `rounded-md`, `rounded-lg`, `rounded-full` (circle)
+- **Divide**: `divide-y`, `divide-x`, `divide-gray-200` (Lines between child elements)
+
+### Ring & Outline
+
+- **Ring**: `ring-0`, `ring-2`, `ring-blue-500`, `ring-offset-2` (Glow effect/Focus ring)
+- **Outline**: `outline-none`, `outline-dashed`, `outline-offset-2`
+
+---
+
+## 9. State & Interactivity
+
+Change styles based on element state conditions.
+
+- **Hover**: `hover:bg-blue-700` (Cursor over element)
+- **Focus**: `focus:ring-2`, `focus:outline-none` (Input active/selected)
+- **Active**: `active:scale-95` (When clicked/pressed)
+- **Disabled**: `disabled:opacity-50`, `disabled:cursor-not-allowed`
+- **Visited**: `visited:text-purple-600` (Links already visited)
+- **Group**: Add `group` class to parent, then `group-hover:text-white` on child.
+- **Peer**: Add `peer` class to a previous element, then `peer-checked:bg-blue-500` on the following element (great for custom checkboxes).
+- **Dark Mode**: `dark:bg-slate-900`, `dark:text-white` (Active when system dark mode/class is on).
+
+---
+
+## 10. Media & Images
+
+- **Object Fit**: `object-cover` (Crop to fit), `object-contain` (Full image), `object-fill`
+- **Object Position**: `object-center`, `object-top`, `object-left-bottom`
+- **Aspect Ratio**: `aspect-auto`, `aspect-square` (1:1), `aspect-video` (16:9)
+
+---
+
+## 11. Effects & Filters
+
+### Effects
+
+- **Shadow**: `shadow-sm`, `shadow-md`, `shadow-lg`, `shadow-xl`, `shadow-2xl`, `shadow-inner`, `shadow-none`
+- **Opacity**: `opacity-0`, `opacity-25`, `opacity-50`, `opacity-75`, `opacity-100`
+- **Cursor**: `cursor-auto`, `cursor-default`, `cursor-pointer`, `cursor-wait`, `cursor-text`, `cursor-move`, `cursor-not-allowed`
+
+### Filters
+
+- **Blur**: `blur-none`, `blur-sm`, `blur-md`, `blur-lg`
+- **Brightness**: `brightness-50`, `brightness-100`, `brightness-150`
+- **Contrast**: `contrast-50`, `contrast-125`
+- **Grayscale**: `grayscale`, `grayscale-0`
+- **Sepia**: `sepia`, `sepia-0`
+- **Backdrop**: `backdrop-blur-md`, `backdrop-brightness-75` (Frosted glass effect on transparent elements)
+
+---
+
+## 12. Transitions, Transforms & Animations
+
+### Transitions
+
+- **Property**: `transition`, `transition-all`, `transition-colors`, `transition-opacity`, `transition-none`
+- **Duration**: `duration-75`, `duration-300`, `duration-500`, `duration-1000` (ms)
+- **Timing**: `ease-linear`, `ease-in`, `ease-out`, `ease-in-out`
+- **Delay**: `delay-150`, `delay-300`
+
+### Transforms
+
+- **Scale**: `scale-0`, `scale-90`, `scale-100`, `scale-110`
+- **Rotate**: `rotate-0`, `rotate-45`, `rotate-90`, `rotate-180`
+- **Translate**: `translate-x-4`, `translate-y-1/2`
+- **Skew**: `skew-x-6`, `skew-y-3`
+- **Origin**: `origin-center`, `origin-top-left`
+
+### Animations
+
+- `animate-none`
+- `animate-spin` (Loading)
+- `animate-ping` (Badge notifications)
+- `animate-pulse` (Skeleton loading)
+- `animate-bounce` (Bouncing notifications)
+
+---
+
+## 13. Tables
+
+- **Layout**: `table-auto`, `table-fixed`
+- **Border Collapse**: `border-collapse`, `border-separate`
+- **Spacing**: `border-spacing-2`
+
+---
+
+## 14. SVG Styling
+
+- **Fill**: `fill-current` (Follows text color)
+- **Stroke**: `stroke-current`
+- **Stroke Width**: `stroke-0`, `stroke-1`, `stroke-2`
+
+---
+
+## 15. Accessibility (Screen Readers)
+
+- `sr-only`: Visually hides the element but keeps it readable by screen readers (Crucial for accessibility and SEO).
+- `not-sr-only`: Cancels the `sr-only` effect.
+
+```
+
+```
