@@ -1,6 +1,5 @@
 import type {
   About,
-  Blog,
   Licenses,
   Home,
   Newsletter,
@@ -127,6 +126,16 @@ const about: About = {
     display: true, // set to false to hide this section
     title: "Organization & Work Experience",
     experiences: [
+      {
+        company: "Rumio.id",
+        timeframe: "Juni 2026 - Present",
+        role: "Full-stack Web Developer",
+        achievements: [
+          "Mengembangkan platform eksplorasi dan pemasaran properti komprehensif menggunakan Next.js (App Router), Prisma ORM, dan Tailwind CSS.",
+          "Mengimplementasikan fitur Virtual Tour 360° interaktif, sistem autentikasi aman dengan NextAuth, dashboard admin terintegrasi, dan CMS blog.",
+          "Melakukan optimasi performa database untuk menghilangkan masalah N+1 query, serta menerapkan rate-limiting dan sanitasi XSS untuk meningkatkan keamanan platform.",
+        ],
+      },
       {
         company: "Panggih Sedulur",
         timeframe: "April 2026 - Present",
@@ -392,14 +401,7 @@ const about: About = {
   },
 };
 
-const blog: Blog = {
-  path: "/blog",
-  label: "Blog",
-  title: "Writing about design and tech...",
-  description: `Read what ${person.name} has been up to recently`,
-  // Create new blog posts by adding a new .mdx file to app/blog/posts
-  // All posts will be listed on the /blog route
-};
+
 
 const project: Work = {
   path: "/project",
@@ -462,4 +464,4 @@ const licenses: Licenses = {
   ],
 };
 
-export { person, social, newsletter, home, about, blog, project, licenses };
+export { person, social, newsletter, home, about, project, licenses };

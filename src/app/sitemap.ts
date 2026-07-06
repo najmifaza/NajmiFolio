@@ -6,10 +6,6 @@ export default async function sitemap() {
     ? baseURL.slice(0, -1)
     : baseURL;
 
-  const blogs = getPosts(["src", "app", "blog", "posts"]).map((post) => ({
-    url: `${normalizedBaseURL}/blog/${post.slug}`,
-    lastModified: post.metadata.publishedAt,
-  }));
   const projectRoutes = getPosts(["src", "app", "project", "projects"]).map(
     (post) => ({
       url: `${normalizedBaseURL}/project/${post.slug}`,
@@ -25,5 +21,5 @@ export default async function sitemap() {
     lastModified: new Date().toISOString().split("T")[0],
   }));
 
-  return [...routes, ...blogs, ...projectRoutes];
+  return [...routes, ...projectRoutes];
 }
