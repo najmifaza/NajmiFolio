@@ -22,13 +22,7 @@ import { ScrollToHash, CustomMDX } from "@/components";
 import { Metadata } from "next";
 import { Projects } from "@/components/project/Projects";
 
-export async function generateStaticParams(): Promise<{ slug: string }[]> {
-  // For static params, use plain .mdx files (no locale filtering at build time)
-  const posts = getPosts(["src", "app", "[locale]", "project", "projects"]);
-  return posts.map((post) => ({
-    slug: post.slug,
-  }));
-}
+
 
 export async function generateMetadata({
   params,
@@ -51,7 +45,7 @@ export async function generateMetadata({
     description: post.metadata.summary,
     baseURL: baseURL,
     image:
-      post.metadata.image || `/api/og/generate?title=${post.metadata.title}`,
+      post.metadata.image || `/api/og/generate?title=${encodeURIComponent(post.metadata.title)}`,
     path: `${project.path}/${post.slug}`,
   });
 }
