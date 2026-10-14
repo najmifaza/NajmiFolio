@@ -40,14 +40,25 @@ export async function generateMetadata({
 
   if (!post) return {};
 
-  return Meta.generate({
-    title: post.metadata.title,
-    description: post.metadata.summary,
-    baseURL: baseURL,
-    image:
-      post.metadata.image || `/api/og/generate?title=${encodeURIComponent(post.metadata.title)}`,
-    path: `${project.path}/${post.slug}`,
-  });
+  const basePath = `/project/${post.slug}`;
+  return {
+    ...Meta.generate({
+      title: post.metadata.title,
+      description: post.metadata.summary,
+      baseURL: baseURL,
+      image:
+        post.metadata.image || `/api/og/generate?title=${encodeURIComponent(post.metadata.title)}`,
+      path: basePath,
+    }),
+    alternates: {
+      canonical: `${baseURL}${basePath}`,
+      languages: {
+        "id-ID": `${baseURL}${basePath}`,
+        "en-US": `${baseURL}/en${basePath}`,
+        "x-default": `${baseURL}/en${basePath}`,
+      },
+    },
+  };
 }
 
 export default async function Project({

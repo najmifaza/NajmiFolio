@@ -2,21 +2,46 @@ import { Flex, Meta, Schema, Heading } from "@once-ui-system/core";
 import LicensesView from "@/components/licenses/LicensesView";
 import { baseURL } from "@/resources";
 import { getDictionary } from "@/resources/i18n";
+import type { Locale } from "@/resources/i18n";
 import styles from "@/components/about/about.module.scss";
 
-export async function generateMetadata() {
-  const { licenses } = await getDictionary();
-  return Meta.generate({
-    title: licenses.title,
-    description: licenses.description,
-    baseURL: baseURL,
-    image: `/api/og/generate?title=${encodeURIComponent(licenses.title)}`,
-    path: licenses.path,
-  });
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
+  const { locale: routeLocale = "id" } = (await params) || {};
+  const locale: Locale = routeLocale === "en" ? "en" : "id";
+  const { licenses } = await getDictionary(locale);
+  const basePath = locale === "en" ? "/en/licenses" : "/licenses";
+
+  return {
+    ...Meta.generate({
+      title: licenses.title,
+      description: licenses.description,
+      baseURL: baseURL,
+      image: `/api/og/generate?title=${encodeURIComponent(licenses.title)}`,
+      path: basePath,
+    }),
+    alternates: {
+      canonical: `${baseURL}${basePath}`,
+      languages: {
+        "id-ID": `${baseURL}/licenses`,
+        "en-US": `${baseURL}/en/licenses`,
+        "x-default": `${baseURL}/en/licenses`,
+      },
+    },
+  };
 }
 
-export default async function Licenses() {
-  const dict = await getDictionary();
+export default async function Licenses({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
+  const { locale: routeLocale = "id" } = (await params) || {};
+  const locale: Locale = routeLocale === "en" ? "en" : "id";
+  const dict = await getDictionary(locale);
   const { licenses, person } = dict;
 
   return (
@@ -26,11 +51,11 @@ export default async function Licenses() {
         baseURL={baseURL}
         title={licenses.title}
         description={licenses.description}
-        path={licenses.path}
+        path={locale === "en" ? "/en/licenses" : licenses.path}
         image={`/api/og/generate?title=${encodeURIComponent(licenses.title)}`}
         author={{
           name: person.name,
-          url: `${baseURL}${licenses.path}`,
+          url: `${baseURL}${locale === "en" ? "/en/licenses" : licenses.path}`,
           image: `${baseURL}${person.avatar}`,
         }}
       />

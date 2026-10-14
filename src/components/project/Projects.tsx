@@ -1,14 +1,30 @@
 import { getPostsForCurrentLocale } from "@/utils/utils";
 import { Column } from "@once-ui-system/core";
 import { ProjectCard } from "@/components";
+import { cookies } from "next/headers";
+import type { Locale } from "@/resources/i18n";
 
 interface ProjectsProps {
   range?: [number, number?];
   exclude?: string[];
+  locale?: Locale;
 }
 
-export async function Projects({ range, exclude }: ProjectsProps) {
-  let allProjects = await getPostsForCurrentLocale(["src", "app", "project", "projects"]);
+export async function Projects({ range, exclude, locale: propLocale }: ProjectsProps) {
+  let locale: Locale = propLocale || "id";
+  if (!propLocale) {
+    try {
+      const cookieStore = await cookies();
+      locale = (cookieStore.get("NEXT_LOCALE")?.value as Locale) ?? "id";
+    } catch {
+      locale = "id";
+    }
+  }
+
+  let allProjects = await getPostsForCurrentLocale(
+    ["src", "app", "project", "projects"],
+    locale
+  );
 
   // Exclude by slug (exact match)
   if (exclude && exclude.length > 0) {
@@ -26,13 +42,15 @@ export async function Projects({ range, exclude }: ProjectsProps) {
     ? sortedProjects.slice(range[0] - 1, range[1] ?? sortedProjects.length)
     : sortedProjects;
 
+  const projectHrefPrefix = locale === "en" ? "/en/project" : "/project";
+
   return (
     <Column fillWidth gap="l" marginBottom="40" paddingX="l">
       {displayedProjects.map((post, index) => (
         <ProjectCard
           key={post.slug}
           priority={index < 2}
-          href={`/project/${post.slug}`}
+          href={`${projectHrefPrefix}/${post.slug}`}
           images={post.metadata.images}
           title={post.metadata.title}
           description={post.metadata.summary}

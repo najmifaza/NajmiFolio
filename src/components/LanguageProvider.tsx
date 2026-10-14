@@ -1,7 +1,7 @@
 "use client";
 
-import React, { createContext, useContext, useState } from "react";
-import { useRouter } from "next/navigation";
+import React, { createContext, useContext, useEffect, useState } from "react";
+import { useRouter, usePathname } from "next/navigation";
 import type { Locale, Dictionary } from "@/resources/i18n";
 
 interface LanguageContextType {
@@ -21,13 +21,39 @@ export function LanguageProvider({
   initialLanguage: Locale;
   initialDictionary: Dictionary;
 }) {
-  const [language, setLangState] = useState<Locale>(initialLanguage);
+  const pathname = usePathname() || "/";
   const router = useRouter();
+
+  // Detect language from URL path if present
+  const derivedLang: Locale = pathname.startsWith("/en") ? "en" : initialLanguage;
+  const [language, setLangState] = useState<Locale>(derivedLang);
+
+  useEffect(() => {
+    if (pathname.startsWith("/en")) {
+      setLangState("en");
+    } else {
+      setLangState(initialLanguage);
+    }
+  }, [pathname, initialLanguage]);
 
   const setLanguage = (lang: Locale) => {
     setLangState(lang);
-    // Save in cookie (1 year)
     document.cookie = `NEXT_LOCALE=${lang}; path=/; max-age=31536000`;
+
+    let newPath = pathname;
+    if (lang === "en") {
+      if (!pathname.startsWith("/en")) {
+        newPath = pathname === "/" ? "/en" : `/en${pathname}`;
+      }
+    } else {
+      if (pathname.startsWith("/en")) {
+        const stripped = pathname.slice(3);
+        newPath = stripped.startsWith("/") ? stripped : `/${stripped}`;
+        if (!newPath) newPath = "/";
+      }
+    }
+
+    router.push(newPath);
     router.refresh();
   };
 

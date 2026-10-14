@@ -8,7 +8,7 @@ import { Fade, Flex, Line, Row, ToggleButton } from "@once-ui-system/core";
 import { routes, display } from "@/resources";
 import { ThemeToggle } from "./ThemeToggle";
 import { LanguageToggle } from "./LanguageToggle";
-import { useDictionary } from "./LanguageProvider";
+import { useDictionary, useLanguage } from "./LanguageProvider";
 import styles from "./Header.module.scss";
 
 type TimeDisplayProps = {
@@ -50,7 +50,31 @@ export default TimeDisplay;
 export const Header = () => {
   const pathname = usePathname() ?? "";
   const dict = useDictionary();
+  const { language } = useLanguage();
   const { person, about, project, licenses } = dict;
+
+  const isEn = language === "en" || pathname.startsWith("/en");
+  const homeHref = isEn ? "/en" : "/";
+  const aboutHref = isEn ? "/en/about" : "/about";
+  const projectHref = isEn ? "/en/project" : "/project";
+  const licensesHref = isEn ? "/en/licenses" : "/licenses";
+
+  const isHomeSelected = pathname === "/" || pathname === "/en";
+  const isAboutSelected = pathname === "/about" || pathname === "/en/about";
+  const isProjectSelected =
+    pathname === "/project" ||
+    pathname.startsWith("/project/") ||
+    pathname === "/en/project" ||
+    pathname.startsWith("/en/project/");
+  const isLicensesSelected =
+    pathname === "/licenses" ||
+    pathname.startsWith("/licenses/") ||
+    pathname === "/en/licenses" ||
+    pathname.startsWith("/en/licenses/");
+
+  if (pathname.startsWith("/admin")) {
+    return null;
+  }
 
   return (
     <>
@@ -113,8 +137,8 @@ export const Header = () => {
               {routes["/"] && (
                 <ToggleButton
                   prefixIcon="home"
-                  href="/"
-                  selected={pathname === "/"}
+                  href={homeHref}
+                  selected={isHomeSelected}
                 />
               )}
               <Line background="neutral-alpha-medium" vert maxHeight="24" />
@@ -123,16 +147,16 @@ export const Header = () => {
                   <Row s={{ hide: true }}>
                     <ToggleButton
                       prefixIcon="person"
-                      href="/about"
+                      href={aboutHref}
                       label={about.label}
-                      selected={pathname === "/about"}
+                      selected={isAboutSelected}
                     />
                   </Row>
                   <Row hide s={{ hide: false }}>
                     <ToggleButton
                       prefixIcon="person"
-                      href="/about"
-                      selected={pathname === "/about"}
+                      href={aboutHref}
+                      selected={isAboutSelected}
                     />
                   </Row>
                 </>
@@ -142,16 +166,16 @@ export const Header = () => {
                   <Row s={{ hide: true }}>
                     <ToggleButton
                       prefixIcon="grid"
-                      href="/project"
+                      href={projectHref}
                       label={project.label}
-                      selected={pathname.startsWith("/project")}
+                      selected={isProjectSelected}
                     />
                   </Row>
                   <Row hide s={{ hide: false }}>
                     <ToggleButton
                       prefixIcon="grid"
-                      href="/project"
-                      selected={pathname.startsWith("/project")}
+                      href={projectHref}
+                      selected={isProjectSelected}
                     />
                   </Row>
                 </>
@@ -162,16 +186,16 @@ export const Header = () => {
                   <Row s={{ hide: true }}>
                     <ToggleButton
                       prefixIcon="document"
-                      href="/licenses"
+                      href={licensesHref}
                       label={licenses.label}
-                      selected={pathname.startsWith("/licenses")}
+                      selected={isLicensesSelected}
                     />
                   </Row>
                   <Row hide s={{ hide: false }}>
                     <ToggleButton
                       prefixIcon="document"
-                      href="/licenses"
-                      selected={pathname.startsWith("/licenses")}
+                      href={licensesHref}
+                      selected={isLicensesSelected}
                     />
                   </Row>
                 </>

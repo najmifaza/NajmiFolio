@@ -91,13 +91,33 @@ function getMDXData(dir: string, locale?: string) {
   });
 }
 
+import { getProjectsFromDB } from "@/services/projectService";
+import type { Locale } from "@/resources/i18n";
+
 export function getPosts(customPath = ["", "", "", ""], locale?: string) {
   const postsDir = path.join(process.cwd(), ...customPath);
   return getMDXData(postsDir, locale);
 }
 
-export async function getPostsForCurrentLocale(customPath = ["", "", "", ""]) {
-  const cookieStore = await cookies();
-  const locale = cookieStore.get("NEXT_LOCALE")?.value ?? "id";
+export async function getPostsForCurrentLocale(customPath = ["", "", "", ""], forcedLocale?: Locale) {
+  let locale: Locale = forcedLocale || "id";
+  if (!forcedLocale) {
+    try {
+      const cookieStore = await cookies();
+      locale = (cookieStore.get("NEXT_LOCALE")?.value as Locale) ?? "id";
+    } catch {
+      locale = "id";
+    }
+  }
+
+  try {
+    const dbProjects = await getProjectsFromDB(locale);
+    if (dbProjects && dbProjects.length > 0) {
+      return dbProjects;
+    }
+  } catch (err) {
+    console.error("DB query failed in getPostsForCurrentLocale, fallback to MDX files:", err);
+  }
+
   return getPosts(customPath, locale);
 }

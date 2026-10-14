@@ -16,38 +16,49 @@ import {
   dataStyle,
 } from "@/resources";
 import { getDictionary } from "@/resources/i18n";
+import { getDynamicDictionary } from "@/services/contentService";
 import { cookies } from "next/headers";
 import type { Locale } from "@/resources/i18n";
 
-export async function generateMetadata() {
-  const dict = await getDictionary();
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
+  const { locale: routeLocale = "id" } = (await params) || {};
+  const validLocale: Locale = routeLocale === "en" ? "en" : "id";
+  const dict = await getDictionary(validLocale);
   const { home } = dict;
   const normalizedBaseURL = baseURL.endsWith("/")
     ? baseURL.slice(0, -1)
     : baseURL;
 
-  const cookieStore = await cookies();
-  const locale = (cookieStore.get("NEXT_LOCALE")?.value as Locale) ?? "id";
-  const ogLocale = locale === "en" ? "en_US" : "id_ID";
+  const basePath = validLocale === "en" ? "/en" : "/";
+  const ogLocale = validLocale === "en" ? "en_US" : "id_ID";
 
   return {
     ...Meta.generate({
       title: home.title,
       description: home.description,
       baseURL: baseURL,
-      path: home.path,
+      path: basePath,
       image: home.image,
     }),
     applicationName: "Najmi Folio",
     metadataBase: new URL(baseURL),
     alternates: {
-      canonical: "/",
+      canonical: `${normalizedBaseURL}${basePath}`,
+      languages: {
+        "id-ID": `${normalizedBaseURL}/`,
+        "en-US": `${normalizedBaseURL}/en`,
+        "x-default": `${normalizedBaseURL}/en`,
+      },
     },
     openGraph: {
       siteName: "Najmi Folio",
       type: "website",
       locale: ogLocale,
-      url: normalizedBaseURL,
+      url: `${normalizedBaseURL}${basePath}`,
       title: home.title,
       description: home.description,
       images: [
@@ -89,12 +100,14 @@ export async function generateMetadata() {
 
 export default async function RootLayout({
   children,
+  params,
 }: Readonly<{
   children: React.ReactNode;
+  params: Promise<{ locale: string }>;
 }>) {
-  const cookieStore = await cookies();
-  const locale = (cookieStore.get("NEXT_LOCALE")?.value as Locale) ?? "id";
-  const dict = await getDictionary();
+  const { locale: routeLocale = "id" } = (await params) || {};
+  const locale: Locale = routeLocale === "en" ? "en" : "id";
+  const dict = await getDynamicDictionary(locale);
   const { person, social } = dict;
 
   const normalizedBaseURL = baseURL.endsWith("/")

@@ -19,8 +19,8 @@ export async function POST(request: NextRequest) {
       cookie.serialize("authToken", "authenticated", {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
-        maxAge: 60 * 60,
-        sameSite: "strict",
+        maxAge: 60 * 60 * 24 * 7, // 7 days
+        sameSite: "lax",
         path: "/",
       }),
     );
@@ -29,4 +29,19 @@ export async function POST(request: NextRequest) {
   } else {
     return NextResponse.json({ message: "Incorrect password" }, { status: 401 });
   }
+}
+
+export async function DELETE() {
+  const response = NextResponse.json({ success: true }, { status: 200 });
+  response.headers.set(
+    "Set-Cookie",
+    cookie.serialize("authToken", "", {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      maxAge: 0,
+      sameSite: "lax",
+      path: "/",
+    }),
+  );
+  return response;
 }

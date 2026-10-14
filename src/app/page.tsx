@@ -17,13 +17,23 @@ import { Projects } from "@/components/project/Projects";
 
 export async function generateMetadata() {
   const { home } = await getDictionary();
-  return Meta.generate({
-    title: home.title,
-    description: home.description,
-    baseURL: baseURL,
-    path: home.path,
-    image: home.image,
-  });
+  return {
+    ...Meta.generate({
+      title: home.title,
+      description: home.description,
+      baseURL: baseURL,
+      path: home.path,
+      image: home.image,
+    }),
+    alternates: {
+      canonical: `${baseURL}/`,
+      languages: {
+        "id-ID": `${baseURL}/`,
+        "en-US": `${baseURL}/en`,
+        "x-default": `${baseURL}/en`,
+      },
+    },
+  };
 }
 
 export default async function Home() {

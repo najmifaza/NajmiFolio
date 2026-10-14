@@ -1,0 +1,163 @@
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+// 1. Profil & Person Data
+model Profile {
+  id           String               @id @default("default")
+  avatar       String               // URL avatar (bisa CDN assets.najmifaza.my.id)
+  email        String
+  location     String               // "Asia/Jakarta"
+  languages    Json                 // ["English", "Indonesian", "Arabic"]
+  createdAt    DateTime             @default(now())
+  updatedAt    DateTime             @updatedAt
+  translations ProfileTranslation[]
+  socialLinks  SocialLink[]
+  experiences  Experience[]
+  studies      Study[]
+  skills       SkillGroup[]
+  certificates Certificate[]
+}
+
+model ProfileTranslation {
+  id          String   @id @default(cuid())
+  profileId   String
+  locale      String   // "id" | "en"
+  name        String
+  role        String   // "Web Developer"
+  headline    String   @db.Text // "Passionate about EdTech & Social Impact"
+  subline     String   @db.Text
+  intro       String   @db.LongText
+  aboutTitle  String?
+  aboutDesc   String?  @db.Text
+  profile     Profile  @relation(fields: [profileId], references: [id], onDelete: Cascade)
+
+  @@unique([profileId, locale])
+  @@index([locale])
+}
+
+// 2. Social Links
+model SocialLink {
+  id        String   @id @default(cuid())
+  profileId String
+  name      String   // "GitHub", "LinkedIn", "Instagram", "Email"
+  icon      String   // "github", "linkedin", "instagram", "email"
+  link      String
+  essential Boolean  @default(true)
+  order     Int      @default(0)
+  profile   Profile  @relation(fields: [profileId], references: [id], onDelete: Cascade)
+}
+
+// 3. Experience (Organisasi / Kerja)
+model Experience {
+  id           String                  @id @default(cuid())
+  profileId    String
+  company      String
+  timeframe    String                  // "Juni 2026 - Present"
+  order        Int                     @default(0)
+  images       Json?                   // array gambar cover/dokumentasi
+  profile      Profile                 @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  translations ExperienceTranslation[]
+}
+
+model ExperienceTranslation {
+  id           String     @id @default(cuid())
+  experienceId String
+  locale       String     // "id" | "en"
+  role         String
+  achievements Json       // array string poin pencapaian
+  experience   Experience @relation(fields: [experienceId], references: [id], onDelete: Cascade)
+
+  @@unique([experienceId, locale])
+}
+
+// 4. Studies / Edukasi
+model Study {
+  id           String             @id @default(cuid())
+  profileId    String
+  institution  String             // "Universitas Jenderal Soedirman"
+  timeframe    String             // "2024 - Sekarang"
+  order        Int                @default(0)
+  images       Json?
+  profile      Profile            @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  translations StudyTranslation[]
+}
+
+model StudyTranslation {
+  id          String   @id @default(cuid())
+  studyId     String
+  locale      String   // "id" | "en"
+  degree      String   // "S1 Informatika"
+  description String   @db.Text
+  study       Study    @relation(fields: [studyId], references: [id], onDelete: Cascade)
+
+  @@unique([studyId, locale])
+}
+
+// 5. Technical Skills
+model SkillGroup {
+  id           String                  @id @default(cuid())
+  profileId    String
+  title        String                  // Reference title
+  order        Int                     @default(0)
+  skills       Json                    // [{ name: "Next.js", icon: "nextjs" }]
+  profile      Profile                 @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  translations SkillGroupTranslation[]
+}
+
+model SkillGroupTranslation {
+  id           String     @id @default(cuid())
+  skillGroupId String
+  locale       String     // "id" | "en"
+  title        String
+  description  String?    @db.Text
+  skillGroup   SkillGroup @relation(fields: [skillGroupId], references: [id], onDelete: Cascade)
+
+  @@unique([skillGroupId, locale])
+}
+
+// 6. Certificates & Licenses
+model Certificate {
+  id        String   @id @default(cuid())
+  profileId String
+  title     String
+  issuer    String
+  date      String
+  image     String
+  url       String?
+  order     Int      @default(0)
+  profile   Profile  @relation(fields: [profileId], references: [id], onDelete: Cascade)
+}
+
+// 7. Projects & Translations
+model Project {
+  id           String               @id @default(cuid())
+  slug         String               @unique
+  link         String?
+  github       String?
+  featured     Boolean              @default(false)
+  order        Int                  @default(0)
+  images       Json                 // Array URL gambar
+  publishedAt  DateTime
+  createdAt    DateTime             @default(now())
+  updatedAt    DateTime             @updatedAt
+  translations ProjectTranslation[]
+}
+
+model ProjectTranslation {
+  id        String   @id @default(cuid())
+  projectId String
+  locale    String   // "id" | "en"
+  title     String
+  summary   String   @db.Text
+  content   String   @db.LongText // MDX / Markdown
+  project   Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@unique([projectId, locale])
+  @@index([locale])
+}

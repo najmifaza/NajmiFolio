@@ -1,70 +1,87 @@
 import { notFound } from "next/navigation";
-import { getPostsForCurrentLocale, getPosts } from "@/utils/utils";
+import { getPostsForCurrentLocale } from "@/utils/utils";
+import { getProjectBySlugFromDB } from "@/services/projectService";
 import {
   Meta,
   Schema,
   AvatarGroup,
-  Button,
   Column,
-  Flex,
   Heading,
   Media,
   Text,
   SmartLink,
   Row,
-  Avatar,
   Line,
 } from "@once-ui-system/core";
 import { baseURL } from "@/resources";
 import { getDictionary } from "@/resources/i18n";
+import type { Locale } from "@/resources/i18n";
 import { formatDate } from "@/utils/formatDate";
 import { ScrollToHash, CustomMDX } from "@/components";
 import { Metadata } from "next";
 import { Projects } from "@/components/project/Projects";
 
-
-
 export async function generateMetadata({
   params,
 }: {
-  params: Promise<{ slug: string | string[] }>;
+  params: Promise<{ locale: string; slug: string | string[] }>;
 }): Promise<Metadata> {
   const routeParams = await params;
+  const locale: Locale = routeParams.locale === "en" ? "en" : "id";
   const slugPath = Array.isArray(routeParams.slug)
     ? routeParams.slug.join("/")
     : routeParams.slug || "";
 
-  const { project } = await getDictionary();
-  const posts = await getPostsForCurrentLocale(["src", "app", "[locale]", "project", "projects"]);
-  let post = posts.find((post) => post.slug === slugPath);
+  let post = await getProjectBySlugFromDB(slugPath, locale);
+  if (!post) {
+    const posts = await getPostsForCurrentLocale(["src", "app", "project", "projects"], locale);
+    post = posts.find((p) => p.slug === slugPath) || null;
+  }
 
   if (!post) return {};
 
-  return Meta.generate({
-    title: post.metadata.title,
-    description: post.metadata.summary,
-    baseURL: baseURL,
-    image:
-      post.metadata.image || `/api/og/generate?title=${encodeURIComponent(post.metadata.title)}`,
-    path: `${project.path}/${post.slug}`,
-  });
+  const basePath = `/project/${post.slug}`;
+  const canonicalPath = locale === "en" ? `/en${basePath}` : basePath;
+
+  return {
+    ...Meta.generate({
+      title: post.metadata.title,
+      description: post.metadata.summary,
+      baseURL: baseURL,
+      image:
+        post.metadata.image || `/api/og/generate?title=${encodeURIComponent(post.metadata.title)}`,
+      path: canonicalPath,
+    }),
+    alternates: {
+      canonical: `${baseURL}${canonicalPath}`,
+      languages: {
+        "id-ID": `${baseURL}${basePath}`,
+        "en-US": `${baseURL}/en${basePath}`,
+        "x-default": `${baseURL}/en${basePath}`,
+      },
+    },
+  };
 }
 
 export default async function Project({
   params,
 }: {
-  params: Promise<{ slug: string | string[] }>;
+  params: Promise<{ locale: string; slug: string | string[] }>;
 }) {
   const routeParams = await params;
+  const locale: Locale = routeParams.locale === "en" ? "en" : "id";
   const slugPath = Array.isArray(routeParams.slug)
     ? routeParams.slug.join("/")
     : routeParams.slug || "";
 
-  const dict = await getDictionary();
+  const dict = await getDictionary(locale);
   const { about, person, project } = dict;
 
-  const posts = await getPostsForCurrentLocale(["src", "app", "[locale]", "project", "projects"]);
-  let post = posts.find((post) => post.slug === slugPath);
+  let post = await getProjectBySlugFromDB(slugPath, locale);
+  if (!post) {
+    const posts = await getPostsForCurrentLocale(["src", "app", "project", "projects"], locale);
+    post = posts.find((p) => p.slug === slugPath) || null;
+  }
 
   if (!post) {
     notFound();
@@ -75,12 +92,14 @@ export default async function Project({
       src: person.avatar,
     })) || [];
 
+  const projectListHref = locale === "en" ? "/en/project" : "/project";
+
   return (
     <Column as="section" maxWidth="m" horizontal="center" gap="l">
       <Schema
         as="blogPosting"
         baseURL={baseURL}
-        path={`${project.path}/${post.slug}`}
+        path={locale === "en" ? `/en/project/${post.slug}` : `${project.path}/${post.slug}`}
         title={post.metadata.title}
         description={post.metadata.summary}
         datePublished={post.metadata.publishedAt}
@@ -96,7 +115,7 @@ export default async function Project({
         }}
       />
       <Column maxWidth="s" gap="16" horizontal="center" align="center">
-        <SmartLink href="/project">
+        <SmartLink href={projectListHref}>
           <Text variant="label-strong-m">Projects</Text>
         </SmartLink>
         <Text
@@ -144,7 +163,7 @@ export default async function Project({
         <Heading as="h2" variant="heading-strong-l" marginBottom="24">
           Related projects
         </Heading>
-        <Projects exclude={[post.slug]} range={[2]} />
+        <Projects exclude={[post.slug]} range={[2]} locale={locale} />
       </Column>
       <ScrollToHash />
     </Column>

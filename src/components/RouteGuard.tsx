@@ -36,6 +36,10 @@ const RouteGuard: React.FC<RouteGuardProps> = ({ children }) => {
       const checkRouteEnabled = () => {
         if (!pathname) return false;
 
+        if (pathname.startsWith("/admin")) {
+          return true;
+        }
+
         if (pathname in routes) {
           return routes[pathname as keyof typeof routes];
         }

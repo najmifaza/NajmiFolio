@@ -1,0 +1,188 @@
+import { cache } from "react";
+import { prisma } from "@/lib/prisma";
+import * as idDict from "@/resources/i18n/id";
+import * as enDict from "@/resources/i18n/en";
+import type { Dictionary, Locale } from "@/resources/i18n";
+import type { IANATimeZone } from "@/types";
+import type { IconName } from "@/resources/icons";
+
+const idPlain = { ...idDict };
+const enPlain = { ...enDict };
+
+// In-memory cache for fast dev/prod responses without spamming DB
+const memCache: {
+  [key in Locale]?: { data: Dictionary; timestamp: number };
+} = {};
+const CACHE_TTL_MS = 30_000; // 30 seconds
+
+export function invalidateContentCache() {
+  memCache.id = undefined;
+  memCache.en = undefined;
+}
+
+export const getDynamicDictionary = cache(async (locale: Locale = "id"): Promise<Dictionary> => {
+  const baseDict = locale === "en" ? enPlain : idPlain;
+  const now = Date.now();
+
+  if (memCache[locale] && now - memCache[locale]!.timestamp < CACHE_TTL_MS) {
+    return memCache[locale]!.data;
+  }
+
+  try {
+    const profile = await prisma.profile.findUnique({
+      where: { id: "default" },
+      include: {
+        translations: true,
+        socialLinks: { orderBy: { order: "asc" } },
+        experiences: {
+          include: { translations: true },
+          orderBy: { order: "asc" },
+        },
+        studies: {
+          include: { translations: true },
+          orderBy: { order: "asc" },
+        },
+        skills: {
+          include: { translations: true },
+          orderBy: { order: "asc" },
+        },
+        certificates: { orderBy: { order: "asc" } },
+      },
+    });
+
+    if (!profile) return baseDict;
+
+    const pTrans =
+      profile.translations.find((t) => t.locale === locale) ||
+      profile.translations.find((t) => t.locale === "id") ||
+      profile.translations[0];
+
+    const person = {
+      ...baseDict.person,
+      name: pTrans?.name || baseDict.person.name,
+      role: pTrans?.role || baseDict.person.role,
+      avatar: profile.avatar || baseDict.person.avatar,
+      email: profile.email || baseDict.person.email,
+      location: (profile.location as IANATimeZone) || baseDict.person.location,
+      languages: (profile.languages as string[]) || baseDict.person.languages,
+    };
+
+    const social =
+      profile.socialLinks.length > 0
+        ? profile.socialLinks.map((s) => ({
+            name: s.name,
+            icon: s.icon as IconName,
+            link: s.link,
+            essential: s.essential,
+          }))
+        : baseDict.social;
+
+    const home = {
+      ...baseDict.home,
+      title: pTrans ? `${pTrans.name} | Portfolio` : baseDict.home.title,
+      headline: pTrans?.headline || baseDict.home.headline,
+      subline: pTrans?.subline || baseDict.home.subline,
+    };
+
+    // Split experiences: 1-8 are work, 9+ are committee / organization
+    const workExps = profile.experiences.filter((e) => e.order <= 8);
+    const orgExps = profile.experiences.filter((e) => e.order > 8);
+
+    const mapExp = (e: (typeof profile.experiences)[0]) => {
+      const eTrans =
+        e.translations.find((t) => t.locale === locale) ||
+        e.translations.find((t) => t.locale === "id") ||
+        e.translations[0];
+      return {
+        company: e.company,
+        timeframe: e.timeframe,
+        role: eTrans?.role || "",
+        achievements: (eTrans?.achievements as string[]) || [],
+        images: (e.images as any) || undefined,
+      };
+    };
+
+    const about = {
+      ...baseDict.about,
+      title: pTrans?.aboutTitle || baseDict.about.title,
+      description: pTrans?.aboutDesc || baseDict.about.description,
+      intro: {
+        ...baseDict.about.intro,
+        description: pTrans?.intro || baseDict.about.intro.description,
+      },
+      work: {
+        ...baseDict.about.work,
+        experiences: workExps.length > 0 ? workExps.map(mapExp) : baseDict.about.work.experiences,
+      },
+      Organization: {
+        ...baseDict.about.Organization,
+        experiences: orgExps.length > 0 ? orgExps.map(mapExp) : baseDict.about.Organization.experiences,
+      },
+      studies: {
+        ...baseDict.about.studies,
+        institutions:
+          profile.studies.length > 0
+            ? profile.studies.map((st) => {
+                const stTrans =
+                  st.translations.find((t) => t.locale === locale) ||
+                  st.translations.find((t) => t.locale === "id") ||
+                  st.translations[0];
+                return {
+                  name: st.institution,
+                  description: stTrans?.degree || stTrans?.description || "",
+                };
+              })
+            : baseDict.about.studies.institutions,
+      },
+      technical: {
+        ...baseDict.about.technical,
+        skills:
+          profile.skills.length > 0
+            ? profile.skills.map((sg) => {
+                const sgTrans =
+                  sg.translations.find((t) => t.locale === locale) ||
+                  sg.translations.find((t) => t.locale === "id") ||
+                  sg.translations[0];
+                return {
+                  title: sgTrans?.title || sg.title,
+                  description: sgTrans?.description || "",
+                  tags: (sg.skills as any) || [],
+                };
+              })
+            : baseDict.about.technical.skills,
+      },
+    };
+
+    const licenses = {
+      ...baseDict.licenses,
+      certificates:
+        profile.certificates.length > 0
+          ? profile.certificates.map((c) => ({
+              title: c.title,
+              issuer: c.issuer,
+              date: c.date,
+              image: c.image,
+              url: c.url || undefined,
+            }))
+          : baseDict.licenses.certificates,
+    };
+
+    const result = {
+      ...baseDict,
+      person,
+      social,
+      home,
+      about,
+      licenses,
+    };
+
+    memCache[locale] = { data: result, timestamp: now };
+    return result;
+  } catch (err) {
+    // If DB is temporarily busy/exhausted, serve previous cached data or static fallback
+    if (memCache[locale]) {
+      return memCache[locale]!.data;
+    }
+    return baseDict;
+  }
+});

@@ -1,11 +1,17 @@
 "use client";
+import { usePathname } from "next/navigation";
 import { Row, IconButton, Text } from "@once-ui-system/core";
 import { useDictionary } from "./LanguageProvider";
 import styles from "./Footer.module.scss";
 
 export const Footer = () => {
+  const pathname = usePathname() ?? "";
   const { person, social } = useDictionary();
   const currentYear = new Date().getFullYear();
+
+  if (pathname.startsWith("/admin")) {
+    return null;
+  }
 
   return (
     <Row

@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "skills": {
+    "logic-auditor": {
+      "source": "tkogut/agents-os-core",
+      "sourceType": "github",
+      "skillPath": "global_skills/logic-auditor/SKILL.md",
+      "computedHash": "8634ab914bf51d933e4f94314f8889540c10ef9276aecb9baef526ceacdacc19"
+    }
+  }
+}

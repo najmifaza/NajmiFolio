@@ -6,13 +6,23 @@ import styles from "@/components/about/about.module.scss";
 
 export async function generateMetadata() {
   const { licenses } = await getDictionary();
-  return Meta.generate({
-    title: licenses.title,
-    description: licenses.description,
-    baseURL: baseURL,
-    image: `/api/og/generate?title=${encodeURIComponent(licenses.title)}`,
-    path: licenses.path,
-  });
+  return {
+    ...Meta.generate({
+      title: licenses.title,
+      description: licenses.description,
+      baseURL: baseURL,
+      image: `/api/og/generate?title=${encodeURIComponent(licenses.title)}`,
+      path: licenses.path,
+    }),
+    alternates: {
+      canonical: `${baseURL}/licenses`,
+      languages: {
+        "id-ID": `${baseURL}/licenses`,
+        "en-US": `${baseURL}/en/licenses`,
+        "x-default": `${baseURL}/en/licenses`,
+      },
+    },
+  };
 }
 
 export default async function Licenses() {

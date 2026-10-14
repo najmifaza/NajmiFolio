@@ -16,19 +16,45 @@ import { getDictionary } from "@/resources/i18n";
 import { Mailchimp, GitHubContribution } from "@/components";
 import { Projects } from "@/components/project/Projects";
 
-export async function generateMetadata() {
-  const { home } = await getDictionary();
-  return Meta.generate({
-    title: home.title,
-    description: home.description,
-    baseURL: baseURL,
-    path: home.path,
-    image: home.image,
-  });
+import { Locale } from "@/resources/i18n";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
+  const { locale: routeLocale = "id" } = (await params) || {};
+  const locale: Locale = routeLocale === "en" ? "en" : "id";
+  const { home } = await getDictionary(locale);
+  const basePath = locale === "en" ? "/en" : "/";
+
+  return {
+    ...Meta.generate({
+      title: home.title,
+      description: home.description,
+      baseURL: baseURL,
+      path: basePath,
+      image: home.image,
+    }),
+    alternates: {
+      canonical: `${baseURL}${basePath}`,
+      languages: {
+        "id-ID": `${baseURL}/`,
+        "en-US": `${baseURL}/en`,
+        "x-default": `${baseURL}/en`,
+      },
+    },
+  };
 }
 
-export default async function Home() {
-  const dict = await getDictionary();
+export default async function Home({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
+  const { locale: routeLocale = "id" } = (await params) || {};
+  const locale: Locale = routeLocale === "en" ? "en" : "id";
+  const dict = await getDictionary(locale);
   const { home, about, person } = dict;
 
   return (
@@ -103,7 +129,7 @@ export default async function Home() {
             <Button
               id="about"
               data-border="rounded"
-              href={about.path}
+              href={locale === "en" ? "/en/about" : about.path}
               variant="secondary"
               size="m"
               weight="default"
@@ -126,10 +152,10 @@ export default async function Home() {
       </Column>
 
       <RevealFx translateY="16" delay={0.6}>
-        <Projects range={[1, 1]} />
+        <Projects range={[1, 1]} locale={locale} />
       </RevealFx>
 
-      <Projects range={[2]} />
+      <Projects range={[2]} locale={locale} />
       <Mailchimp />
     </Column>
   );

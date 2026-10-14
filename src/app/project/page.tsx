@@ -5,13 +5,23 @@ import { Projects } from "@/components/project/Projects";
 
 export async function generateMetadata() {
   const { project } = await getDictionary();
-  return Meta.generate({
-    title: project.title,
-    description: project.description,
-    baseURL: baseURL,
-    image: `/api/og/generate?title=${encodeURIComponent(project.title)}`,
-    path: project.path,
-  });
+  return {
+    ...Meta.generate({
+      title: project.title,
+      description: project.description,
+      baseURL: baseURL,
+      image: `/api/og/generate?title=${encodeURIComponent(project.title)}`,
+      path: project.path,
+    }),
+    alternates: {
+      canonical: `${baseURL}/project`,
+      languages: {
+        "id-ID": `${baseURL}/project`,
+        "en-US": `${baseURL}/en/project`,
+        "x-default": `${baseURL}/en/project`,
+      },
+    },
+  };
 }
 
 export default async function ProjectPage() {

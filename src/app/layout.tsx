@@ -41,7 +41,12 @@ export async function generateMetadata() {
     applicationName: "Najmi Folio",
     metadataBase: new URL(baseURL),
     alternates: {
-      canonical: "/",
+      canonical: `${normalizedBaseURL}/`,
+      languages: {
+        "id-ID": `${normalizedBaseURL}/`,
+        "en-US": `${normalizedBaseURL}/en`,
+        "x-default": `${normalizedBaseURL}/en`,
+      },
     },
     openGraph: {
       siteName: "Najmi Folio",
