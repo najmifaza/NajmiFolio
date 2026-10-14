@@ -82,7 +82,7 @@ export default function AdminDashboard({
             <div className={styles.brandText}>
               <span>Najmi CMS</span>
               <span>
-                <span className={styles.statusDot}></span>
+                <span className={styles.statusDot} />
                 MySQL Live
               </span>
             </div>
@@ -99,7 +99,7 @@ export default function AdminDashboard({
               }}
             >
               <div className={styles.navItemLeft}>
-                <span>📁</span>
+                <span className={styles.navDash}>—</span>
                 <span>Projects</span>
               </div>
               <span className={styles.navBadge}>{projects.length}</span>
@@ -111,7 +111,7 @@ export default function AdminDashboard({
               onClick={() => setActiveTab("profile")}
             >
               <div className={styles.navItemLeft}>
-                <span>👤</span>
+                <span className={styles.navDash}>—</span>
                 <span>Profile & Bio</span>
               </div>
             </button>
@@ -126,7 +126,7 @@ export default function AdminDashboard({
               }}
             >
               <div className={styles.navItemLeft}>
-                <span>💼</span>
+                <span className={styles.navDash}>—</span>
                 <span>Experiences</span>
               </div>
               <span className={styles.navBadge}>{experiences.length}</span>
@@ -142,7 +142,7 @@ export default function AdminDashboard({
               }}
             >
               <div className={styles.navItemLeft}>
-                <span>🏆</span>
+                <span className={styles.navDash}>—</span>
                 <span>Certificates</span>
               </div>
               <span className={styles.navBadge}>{certificates.length}</span>
@@ -159,10 +159,10 @@ export default function AdminDashboard({
             style={{ textDecoration: "none" }}
           >
             <div className={styles.navItemLeft}>
-              <span>🌐</span>
+              <span className={styles.navDash}>←</span>
               <span>Lihat Website</span>
             </div>
-            <span>↗</span>
+            <span style={{ fontSize: 11, opacity: 0.5 }}>↗</span>
           </a>
           <button
             type="button"
@@ -171,7 +171,7 @@ export default function AdminDashboard({
             onClick={handleLogout}
           >
             <div className={styles.navItemLeft}>
-              <span>🚪</span>
+              <span className={styles.navDash}>×</span>
               <span>Keluar</span>
             </div>
           </button>
@@ -191,17 +191,7 @@ export default function AdminDashboard({
               {!isCreatingProject && !editingProject && (
                 <button
                   type="button"
-                  style={{
-                    padding: "9px 16px",
-                    borderRadius: "8px",
-                    background: "linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)",
-                    color: "#fff",
-                    fontWeight: 600,
-                    fontSize: "13.5px",
-                    border: "none",
-                    cursor: "pointer",
-                    boxShadow: "0 4px 12px rgba(59, 130, 246, 0.3)",
-                  }}
+                  className={styles.primaryButton}
                   onClick={() => {
                     setEditingProject(null);
                     setIsCreatingProject(true);
@@ -237,17 +227,34 @@ export default function AdminDashboard({
                     <div key={proj.id} className={styles.itemCard}>
                       <div style={{ display: "flex", alignItems: "center", gap: "16px", minWidth: 0 }}>
                         {coverImg ? (
-                          <img
-                            src={coverImg}
-                            alt={proj.slug}
-                            style={{
-                              width: 80,
-                              height: 52,
-                              objectFit: "cover",
-                              borderRadius: 6,
-                              flexShrink: 0,
-                            }}
-                          />
+                          coverImg.endsWith(".webm") ? (
+                            <video
+                              src={coverImg}
+                              muted
+                              autoPlay
+                              loop
+                              playsInline
+                              style={{
+                                width: 80,
+                                height: 52,
+                                objectFit: "cover",
+                                borderRadius: 6,
+                                flexShrink: 0,
+                              }}
+                            />
+                          ) : (
+                            <img
+                              src={coverImg}
+                              alt={proj.slug}
+                              style={{
+                                width: 80,
+                                height: 52,
+                                objectFit: "cover",
+                                borderRadius: 6,
+                                flexShrink: 0,
+                              }}
+                            />
+                          )
                         ) : (
                           <div
                             style={{
@@ -375,16 +382,7 @@ export default function AdminDashboard({
               {!isCreatingExperience && !editingExperience && (
                 <button
                   type="button"
-                  style={{
-                    padding: "9px 16px",
-                    borderRadius: "8px",
-                    background: "linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)",
-                    color: "#fff",
-                    fontWeight: 600,
-                    fontSize: "13.5px",
-                    border: "none",
-                    cursor: "pointer",
-                  }}
+                  className={styles.primaryButton}
                   onClick={() => {
                     setEditingExperience(null);
                     setIsCreatingExperience(true);
@@ -484,16 +482,7 @@ export default function AdminDashboard({
               {!isCreatingCertificate && !editingCertificate && (
                 <button
                   type="button"
-                  style={{
-                    padding: "9px 16px",
-                    borderRadius: "8px",
-                    background: "linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)",
-                    color: "#fff",
-                    fontWeight: 600,
-                    fontSize: "13.5px",
-                    border: "none",
-                    cursor: "pointer",
-                  }}
+                  className={styles.primaryButton}
                   onClick={() => {
                     setEditingCertificate(null);
                     setIsCreatingCertificate(true);
@@ -919,17 +908,7 @@ function ProjectForm({
           <button
             type="submit"
             disabled={saving}
-            style={{
-              padding: "10px 22px",
-              borderRadius: "8px",
-              background: "linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)",
-              color: "#fff",
-              border: "none",
-              fontSize: "13.5px",
-              fontWeight: 600,
-              cursor: saving ? "not-allowed" : "pointer",
-              boxShadow: "0 4px 14px rgba(59, 130, 246, 0.3)",
-            }}
+            className={styles.primaryButton}
           >
             {saving ? "Menyimpan..." : "Simpan Project"}
           </button>
@@ -1222,16 +1201,7 @@ function ProfileForm({ profile, onSave }: { profile: any; onSave: () => void }) 
           <button
             type="submit"
             disabled={saving}
-            style={{
-              padding: "10px 22px",
-              borderRadius: "8px",
-              background: "linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)",
-              color: "#fff",
-              border: "none",
-              fontSize: "13.5px",
-              fontWeight: 600,
-              cursor: saving ? "not-allowed" : "pointer",
-            }}
+            className={styles.primaryButton}
           >
             {saving ? "Menyimpan..." : "Simpan Profil"}
           </button>
@@ -1424,16 +1394,7 @@ function ExperienceForm({ experience, onCancel, onSave }: any) {
           <button
             type="submit"
             disabled={saving}
-            style={{
-              padding: "10px 22px",
-              borderRadius: "8px",
-              background: "linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)",
-              color: "#fff",
-              border: "none",
-              fontSize: "13.5px",
-              fontWeight: 600,
-              cursor: saving ? "not-allowed" : "pointer",
-            }}
+            className={styles.primaryButton}
           >
             {saving ? "Menyimpan..." : "Simpan Pengalaman"}
           </button>
@@ -1620,16 +1581,7 @@ function CertificateForm({ cert, onCancel, onSave }: any) {
           <button
             type="submit"
             disabled={saving}
-            style={{
-              padding: "10px 22px",
-              borderRadius: "8px",
-              background: "linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)",
-              color: "#fff",
-              border: "none",
-              fontSize: "13.5px",
-              fontWeight: 600,
-              cursor: saving ? "not-allowed" : "pointer",
-            }}
+            className={styles.primaryButton}
           >
             {saving ? "Menyimpan..." : "Simpan Sertifikat"}
           </button>

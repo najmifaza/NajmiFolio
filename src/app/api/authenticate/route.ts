@@ -1,5 +1,6 @@
-import { NextRequest, NextResponse } from "next/server";
+import { createAuthToken } from "@/lib/auth";
 import * as cookie from "cookie";
+import { type NextRequest, NextResponse } from "next/server";
 
 export async function POST(request: NextRequest) {
   const body = await request.json();
@@ -12,11 +13,12 @@ export async function POST(request: NextRequest) {
   }
 
   if (password === correctPassword) {
+    const token = await createAuthToken();
     const response = NextResponse.json({ success: true }, { status: 200 });
 
     response.headers.set(
       "Set-Cookie",
-      cookie.serialize("authToken", "authenticated", {
+      cookie.serialize("authToken", token, {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
         maxAge: 60 * 60 * 24 * 7, // 7 days
@@ -26,9 +28,9 @@ export async function POST(request: NextRequest) {
     );
 
     return response;
-  } else {
-    return NextResponse.json({ message: "Incorrect password" }, { status: 401 });
   }
+
+  return NextResponse.json({ message: "Incorrect password" }, { status: 401 });
 }
 
 export async function DELETE() {

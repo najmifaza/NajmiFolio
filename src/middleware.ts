@@ -1,7 +1,8 @@
+import { verifyAuthToken } from "@/lib/auth";
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
-export function middleware(request: NextRequest) {
+export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   // 1. Skip Next.js internals, API routes, and static assets
@@ -18,11 +19,12 @@ export function middleware(request: NextRequest) {
   if (pathname.startsWith("/admin")) {
     const isLoginPage = pathname === "/admin/login";
     const authToken = request.cookies.get("authToken")?.value;
+    const isValid = await verifyAuthToken(authToken);
 
-    if (!isLoginPage && authToken !== "authenticated") {
+    if (!isLoginPage && !isValid) {
       return NextResponse.redirect(new URL("/admin/login", request.url));
     }
-    if (isLoginPage && authToken === "authenticated") {
+    if (isLoginPage && isValid) {
       return NextResponse.redirect(new URL("/admin", request.url));
     }
     return NextResponse.next();

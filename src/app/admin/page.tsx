@@ -1,3 +1,4 @@
+import { verifyAuthToken } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
@@ -6,8 +7,9 @@ import AdminDashboard from "./AdminDashboard";
 export default async function AdminPage() {
   const cookieStore = await cookies();
   const authToken = cookieStore.get("authToken")?.value;
+  const isValid = await verifyAuthToken(authToken);
 
-  if (authToken !== "authenticated") {
+  if (!isValid) {
     redirect("/admin/login");
   }
 

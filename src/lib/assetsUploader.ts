@@ -7,7 +7,7 @@ interface UploadResponse {
 
 export async function uploadAsset(
   fileBlob: Blob,
-  fileName: string
+  fileName: string,
 ): Promise<{ success: boolean; url?: string; error?: string }> {
   const uploadUrl = process.env.ASSETS_UPLOAD_URL;
   const token = process.env.ASSETS_BEARER_TOKEN;

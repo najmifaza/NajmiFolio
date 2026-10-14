@@ -1,8 +1,9 @@
 "use client";
 
-import React, { createContext, useContext, useEffect, useState } from "react";
-import { useRouter, usePathname } from "next/navigation";
-import type { Locale, Dictionary } from "@/resources/i18n";
+import type { Dictionary, Locale } from "@/resources/i18n";
+import { usePathname, useRouter } from "next/navigation";
+import type React from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 
 interface LanguageContextType {
   language: Locale;
@@ -16,10 +17,12 @@ export function LanguageProvider({
   children,
   initialLanguage,
   initialDictionary,
+  dictionaries,
 }: {
   children: React.ReactNode;
   initialLanguage: Locale;
   initialDictionary: Dictionary;
+  dictionaries?: { id: Dictionary; en: Dictionary };
 }) {
   const pathname = usePathname() || "/";
   const router = useRouter();
@@ -57,8 +60,10 @@ export function LanguageProvider({
     router.refresh();
   };
 
+  const activeDict = dictionaries ? dictionaries[language] || initialDictionary : initialDictionary;
+
   return (
-    <LanguageContext.Provider value={{ language, setLanguage, dict: initialDictionary }}>
+    <LanguageContext.Provider value={{ language, setLanguage, dict: activeDict }}>
       {children}
     </LanguageContext.Provider>
   );

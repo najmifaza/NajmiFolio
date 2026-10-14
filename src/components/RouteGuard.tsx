@@ -1,17 +1,10 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { usePathname } from "next/navigation";
-import { routes, protectedRoutes } from "@/resources";
-import {
-  Flex,
-  Spinner,
-  Button,
-  Heading,
-  Column,
-  PasswordInput,
-} from "@once-ui-system/core";
 import NotFound from "@/app/not-found";
+import { protectedRoutes, routes } from "@/resources";
+import { Button, Column, Flex, Heading, PasswordInput, Spinner } from "@once-ui-system/core";
+import { usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
 
 interface RouteGuardProps {
   children: React.ReactNode;
@@ -40,13 +33,20 @@ const RouteGuard: React.FC<RouteGuardProps> = ({ children }) => {
           return true;
         }
 
-        if (pathname in routes) {
-          return routes[pathname as keyof typeof routes];
+        let normalizedPath = pathname;
+        if (normalizedPath === "/en") {
+          normalizedPath = "/";
+        } else if (normalizedPath.startsWith("/en/")) {
+          normalizedPath = normalizedPath.slice(3);
+        }
+
+        if (normalizedPath in routes) {
+          return routes[normalizedPath as keyof typeof routes];
         }
 
         const dynamicRoutes = ["/blog", "/project"] as const;
         for (const route of dynamicRoutes) {
-          if (pathname?.startsWith(route) && routes[route]) {
+          if (normalizedPath.startsWith(route) && routes[route]) {
             return true;
           }
         }
@@ -57,7 +57,17 @@ const RouteGuard: React.FC<RouteGuardProps> = ({ children }) => {
       const routeEnabled = checkRouteEnabled();
       setIsRouteEnabled(routeEnabled);
 
-      if (protectedRoutes[pathname as keyof typeof protectedRoutes]) {
+      let normalizedPath = pathname;
+      if (normalizedPath === "/en") {
+        normalizedPath = "/";
+      } else if (normalizedPath.startsWith("/en/")) {
+        normalizedPath = normalizedPath.slice(3);
+      }
+
+      if (
+        protectedRoutes[pathname as keyof typeof protectedRoutes] ||
+        protectedRoutes[normalizedPath as keyof typeof protectedRoutes]
+      ) {
         setIsPasswordRequired(true);
 
         const response = await fetch("/api/check-auth");

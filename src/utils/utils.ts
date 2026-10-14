@@ -1,5 +1,5 @@
-import fs from "fs";
-import path from "path";
+import fs from "node:fs";
+import path from "node:path";
 import matter from "gray-matter";
 import { cookies } from "next/headers";
 
@@ -91,15 +91,24 @@ function getMDXData(dir: string, locale?: string) {
   });
 }
 
-import { getProjectsFromDB } from "@/services/projectService";
 import type { Locale } from "@/resources/i18n";
+import { getProjectsFromDB } from "@/services/projectService";
 
 export function getPosts(customPath = ["", "", "", ""], locale?: string) {
-  const postsDir = path.join(process.cwd(), ...customPath);
+  let postsDir = path.join(process.cwd(), ...customPath);
+  if (!fs.existsSync(postsDir)) {
+    const altDir = path.join(process.cwd(), "src", "app", "[locale]", "project", "projects");
+    if (fs.existsSync(altDir)) {
+      postsDir = altDir;
+    }
+  }
   return getMDXData(postsDir, locale);
 }
 
-export async function getPostsForCurrentLocale(customPath = ["", "", "", ""], forcedLocale?: Locale) {
+export async function getPostsForCurrentLocale(
+  customPath = ["", "", "", ""],
+  forcedLocale?: Locale,
+) {
   let locale: Locale = forcedLocale || "id";
   if (!forcedLocale) {
     try {

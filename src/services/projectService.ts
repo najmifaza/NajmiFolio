@@ -1,6 +1,6 @@
-import { cache } from "react";
 import { prisma } from "@/lib/prisma";
 import type { Locale } from "@/resources/i18n";
+import { cache } from "react";
 
 export interface ProjectData {
   slug: string;
@@ -27,6 +27,23 @@ export interface ProjectData {
 const projectsMemCache: { [key in Locale]?: { data: ProjectData[]; timestamp: number } } = {};
 const projectSlugMemCache: { [key: string]: { data: ProjectData | null; timestamp: number } } = {};
 const CACHE_TTL_MS = 30_000;
+const MAX_SLUG_CACHE_ENTRIES = 200;
+
+function setSlugCache(key: string, value: { data: ProjectData | null; timestamp: number }) {
+  const keys = Object.keys(projectSlugMemCache);
+  if (keys.length >= MAX_SLUG_CACHE_ENTRIES) {
+    let oldestKey = keys[0];
+    let oldestTime = projectSlugMemCache[oldestKey].timestamp;
+    for (const k of keys) {
+      if (projectSlugMemCache[k].timestamp < oldestTime) {
+        oldestTime = projectSlugMemCache[k].timestamp;
+        oldestKey = k;
+      }
+    }
+    delete projectSlugMemCache[oldestKey];
+  }
+  projectSlugMemCache[key] = value;
+}
 
 export function invalidateProjectCache() {
   projectsMemCache.id = undefined;
@@ -38,8 +55,8 @@ export function invalidateProjectCache() {
 
 export const getProjectsFromDB = cache(async (locale: Locale = "id"): Promise<ProjectData[]> => {
   const now = Date.now();
-  if (projectsMemCache[locale] && now - projectsMemCache[locale]!.timestamp < CACHE_TTL_MS) {
-    return projectsMemCache[locale]!.data;
+  if (projectsMemCache[locale] && now - projectsMemCache[locale]?.timestamp < CACHE_TTL_MS) {
+    return projectsMemCache[locale]?.data;
   }
 
   try {
@@ -87,7 +104,7 @@ export const getProjectsFromDB = cache(async (locale: Locale = "id"): Promise<Pr
     return mapped;
   } catch (error) {
     if (projectsMemCache[locale]) {
-      return projectsMemCache[locale]!.data;
+      return projectsMemCache[locale]?.data;
     }
     return [];
   }
@@ -98,7 +115,10 @@ export const getProjectBySlugFromDB = cache(
     const cacheKey = `${slug}_${locale}`;
     const now = Date.now();
 
-    if (projectSlugMemCache[cacheKey] && now - projectSlugMemCache[cacheKey].timestamp < CACHE_TTL_MS) {
+    if (
+      projectSlugMemCache[cacheKey] &&
+      now - projectSlugMemCache[cacheKey].timestamp < CACHE_TTL_MS
+    ) {
       return projectSlugMemCache[cacheKey].data;
     }
 
@@ -141,7 +161,7 @@ export const getProjectBySlugFromDB = cache(
         },
       };
 
-      projectSlugMemCache[cacheKey] = { data: result, timestamp: now };
+      setSlugCache(cacheKey, { data: result, timestamp: now });
       return result;
     } catch (error) {
       if (projectSlugMemCache[cacheKey]) {
@@ -149,5 +169,5 @@ export const getProjectBySlugFromDB = cache(
       }
       return null;
     }
-  }
+  },
 );

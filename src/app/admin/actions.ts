@@ -1,29 +1,32 @@
 "use server";
 
-import { prisma } from "@/lib/prisma";
-import { autoTranslate } from "@/services/translatorService";
 import { uploadAsset } from "@/lib/assetsUploader";
+import { verifyAuthToken } from "@/lib/auth";
+import { prisma } from "@/lib/prisma";
 import { invalidateContentCache } from "@/services/contentService";
 import { invalidateProjectCache } from "@/services/projectService";
-import { cookies } from "next/headers";
+import { autoTranslate } from "@/services/translatorService";
+import type { Prisma } from "@prisma/client";
 import { revalidatePath } from "next/cache";
+import { cookies } from "next/headers";
 
 // 1. Auth check helper
 export async function verifyAuth(): Promise<boolean> {
   const cookieStore = await cookies();
-  return cookieStore.get("authToken")?.value === "authenticated";
+  const token = cookieStore.get("authToken")?.value;
+  return verifyAuthToken(token);
 }
 
 // 2. Translate text helper action
 export async function translateAction(
   text: string,
-  from: string = "id",
-  to: string = "en"
+  from = "id",
+  to = "en",
 ): Promise<{ success: boolean; result: string }> {
   try {
     const res = await autoTranslate(text, from, to);
     return { success: true, result: res };
-  } catch (err: any) {
+  } catch (_err) {
     return { success: false, result: text };
   }
 }
@@ -80,81 +83,85 @@ export async function saveProjectAction(data: SaveProjectInput) {
     }
   }
 
-  let project;
-  if (data.id) {
-    project = await prisma.project.update({
-      where: { id: data.id },
-      data: {
-        slug: data.slug,
-        link: data.link || null,
-        github: data.github || null,
-        featured: data.featured || false,
-        order: data.order ?? 0,
-        images: data.images,
+  const savedProject = await prisma.$transaction(async (tx) => {
+    let p: { id: string; slug: string };
+    if (data.id) {
+      p = await tx.project.update({
+        where: { id: data.id },
+        data: {
+          slug: data.slug,
+          link: data.link || null,
+          github: data.github || null,
+          featured: data.featured || false,
+          order: data.order ?? 0,
+          images: data.images,
+        },
+      });
+    } else {
+      p = await tx.project.create({
+        data: {
+          slug: data.slug,
+          link: data.link || null,
+          github: data.github || null,
+          featured: data.featured || false,
+          order: data.order ?? 0,
+          images: data.images,
+          publishedAt: new Date(),
+        },
+      });
+    }
+
+    // Save Indonesian translation
+    await tx.projectTranslation.upsert({
+      where: {
+        projectId_locale: { projectId: p.id, locale: "id" },
+      },
+      update: {
+        title: data.idTitle,
+        summary: data.idSummary,
+        content: data.idContent,
+      },
+      create: {
+        projectId: p.id,
+        locale: "id",
+        title: data.idTitle,
+        summary: data.idSummary,
+        content: data.idContent,
       },
     });
-  } else {
-    project = await prisma.project.create({
-      data: {
-        slug: data.slug,
-        link: data.link || null,
-        github: data.github || null,
-        featured: data.featured || false,
-        order: data.order ?? 0,
-        images: data.images,
-        publishedAt: new Date(),
+
+    // Save English translation
+    await tx.projectTranslation.upsert({
+      where: {
+        projectId_locale: { projectId: p.id, locale: "en" },
+      },
+      update: {
+        title: enTitle || data.idTitle,
+        summary: enSummary || data.idSummary,
+        content: enContent || data.idContent,
+      },
+      create: {
+        projectId: p.id,
+        locale: "en",
+        title: enTitle || data.idTitle,
+        summary: enSummary || data.idSummary,
+        content: enContent || data.idContent,
       },
     });
-  }
 
-  // Save Indonesian translation
-  await prisma.projectTranslation.upsert({
-    where: {
-      projectId_locale: { projectId: project.id, locale: "id" },
-    },
-    update: {
-      title: data.idTitle,
-      summary: data.idSummary,
-      content: data.idContent,
-    },
-    create: {
-      projectId: project.id,
-      locale: "id",
-      title: data.idTitle,
-      summary: data.idSummary,
-      content: data.idContent,
-    },
-  });
-
-  // Save English translation
-  await prisma.projectTranslation.upsert({
-    where: {
-      projectId_locale: { projectId: project.id, locale: "en" },
-    },
-    update: {
-      title: enTitle || data.idTitle,
-      summary: enSummary || data.idSummary,
-      content: enContent || data.idContent,
-    },
-    create: {
-      projectId: project.id,
-      locale: "en",
-      title: enTitle || data.idTitle,
-      summary: enSummary || data.idSummary,
-      content: enContent || data.idContent,
-    },
+    return p;
   });
 
   invalidateProjectCache();
 
   revalidatePath("/");
   revalidatePath("/project");
-  revalidatePath(`/project/${project.slug}`);
+  revalidatePath(`/project/${savedProject.slug}`);
   revalidatePath("/en");
   revalidatePath("/en/project");
-  revalidatePath(`/en/project/${project.slug}`);
+  revalidatePath(`/en/project/${savedProject.slug}`);
 
-  return { success: true, project };
+  return { success: true, project: savedProject };
 }
 
 export async function deleteProjectAction(id: string) {
@@ -192,7 +199,7 @@ export interface SaveProfileInput {
 export async function saveProfileAction(data: SaveProfileInput) {
   if (!(await verifyAuth())) throw new Error("Unauthorized");
 
-  let enName = data.enName || data.idName;
+  const enName = data.enName || data.idName;
   let enRole = data.enRole || data.idRole;
   let enHeadline = data.enHeadline || "";
   let enSubline = data.enSubline || "";
@@ -205,61 +212,63 @@ export async function saveProfileAction(data: SaveProfileInput) {
     enIntro = await autoTranslate(data.idIntro, "id", "en");
   }
 
-  const profile = await prisma.profile.upsert({
-    where: { id: "default" },
-    update: {
-      avatar: data.avatar,
-      email: data.email,
-      location: data.location,
-      languages: data.languages,
-    },
-    create: {
-      id: "default",
-      avatar: data.avatar,
-      email: data.email,
-      location: data.location,
-      languages: data.languages,
-    },
-  });
+  await prisma.$transaction(async (tx) => {
+    const profile = await tx.profile.upsert({
+      where: { id: "default" },
+      update: {
+        avatar: data.avatar,
+        email: data.email,
+        location: data.location,
+        languages: data.languages,
+      },
+      create: {
+        id: "default",
+        avatar: data.avatar,
+        email: data.email,
+        location: data.location,
+        languages: data.languages,
+      },
+    });
 
-  await prisma.profileTranslation.upsert({
-    where: { profileId_locale: { profileId: profile.id, locale: "id" } },
-    update: {
-      name: data.idName,
-      role: data.idRole,
-      headline: data.idHeadline,
-      subline: data.idSubline,
-      intro: data.idIntro,
-    },
-    create: {
-      profileId: profile.id,
-      locale: "id",
-      name: data.idName,
-      role: data.idRole,
-      headline: data.idHeadline,
-      subline: data.idSubline,
-      intro: data.idIntro,
-    },
-  });
+    await tx.profileTranslation.upsert({
+      where: { profileId_locale: { profileId: profile.id, locale: "id" } },
+      update: {
+        name: data.idName,
+        role: data.idRole,
+        headline: data.idHeadline,
+        subline: data.idSubline,
+        intro: data.idIntro,
+      },
+      create: {
+        profileId: profile.id,
+        locale: "id",
+        name: data.idName,
+        role: data.idRole,
+        headline: data.idHeadline,
+        subline: data.idSubline,
+        intro: data.idIntro,
+      },
+    });
 
-  await prisma.profileTranslation.upsert({
-    where: { profileId_locale: { profileId: profile.id, locale: "en" } },
-    update: {
-      name: enName,
-      role: enRole,
-      headline: enHeadline,
-      subline: enSubline,
-      intro: enIntro,
-    },
-    create: {
-      profileId: profile.id,
-      locale: "en",
-      name: enName,
-      role: enRole,
-      headline: enHeadline,
-      subline: enSubline,
-      intro: enIntro,
-    },
+    await tx.profileTranslation.upsert({
+      where: { profileId_locale: { profileId: profile.id, locale: "en" } },
+      update: {
+        name: enName,
+        role: enRole,
+        headline: enHeadline,
+        subline: enSubline,
+        intro: enIntro,
+      },
+      create: {
+        profileId: profile.id,
+        locale: "en",
+        name: enName,
+        role: enRole,
+        headline: enHeadline,
+        subline: enSubline,
+        intro: enIntro,
+      },
+    });
   });
 
   invalidateContentCache();
@@ -277,7 +286,7 @@ export interface SaveExperienceInput {
   company: string;
   timeframe: string;
   order: number;
-  images?: any;
+  images?: unknown;
   idRole: string;
   idAchievements: string[];
   enRole?: string;
@@ -294,44 +303,51 @@ export async function saveExperienceAction(data: SaveExperienceInput) {
   if (data.autoTranslateEn || enAchievements.length === 0) {
     enRole = await autoTranslate(data.idRole, "id", "en");
     enAchievements = await Promise.all(
-      data.idAchievements.map((item) => autoTranslate(item, "id", "en"))
+      data.idAchievements.map((item) => autoTranslate(item, "id", "en")),
     );
   }
 
-  let expId = data.id;
-  if (expId) {
-    await prisma.experience.update({
-      where: { id: expId },
-      data: {
-        company: data.company,
-        timeframe: data.timeframe,
-        order: data.order,
-        images: data.images || null,
+  await prisma.$transaction(async (tx) => {
+    let expId = data.id;
+    if (expId) {
+      await tx.experience.update({
+        where: { id: expId },
+        data: {
+          company: data.company,
+          timeframe: data.timeframe,
+          order: data.order,
+          images: data.images ? (data.images as Prisma.InputJsonValue) : undefined,
+        },
+      });
+    } else {
+      const created = await tx.experience.create({
+        data: {
+          profileId: "default",
+          company: data.company,
+          timeframe: data.timeframe,
+          order: data.order,
+          images: data.images ? (data.images as Prisma.InputJsonValue) : undefined,
+        },
+      });
+      expId = created.id;
+    }
+
+    await tx.experienceTranslation.upsert({
+      where: { experienceId_locale: { experienceId: expId, locale: "id" } },
+      update: { role: data.idRole, achievements: data.idAchievements },
+      create: {
+        experienceId: expId,
+        locale: "id",
+        role: data.idRole,
+        achievements: data.idAchievements,
       },
     });
-  } else {
-    const created = await prisma.experience.create({
-      data: {
-        profileId: "default",
-        company: data.company,
-        timeframe: data.timeframe,
-        order: data.order,
-        images: data.images || null,
-      },
+
+    await tx.experienceTranslation.upsert({
+      where: { experienceId_locale: { experienceId: expId, locale: "en" } },
+      update: { role: enRole, achievements: enAchievements },
+      create: { experienceId: expId, locale: "en", role: enRole, achievements: enAchievements },
     });
-    expId = created.id;
-  }
-
-  await prisma.experienceTranslation.upsert({
-    where: { experienceId_locale: { experienceId: expId, locale: "id" } },
-    update: { role: data.idRole, achievements: data.idAchievements },
-    create: { experienceId: expId, locale: "id", role: data.idRole, achievements: data.idAchievements },
-  });
-
-  await prisma.experienceTranslation.upsert({
-    where: { experienceId_locale: { experienceId: expId, locale: "en" } },
-    update: { role: enRole, achievements: enAchievements },
-    create: { experienceId: expId, locale: "en", role: enRole, achievements: enAchievements },
   });
 
   invalidateContentCache();

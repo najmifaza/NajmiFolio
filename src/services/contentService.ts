@@ -1,10 +1,10 @@
-import { cache } from "react";
 import { prisma } from "@/lib/prisma";
-import * as idDict from "@/resources/i18n/id";
-import * as enDict from "@/resources/i18n/en";
 import type { Dictionary, Locale } from "@/resources/i18n";
-import type { IANATimeZone } from "@/types";
+import * as enDict from "@/resources/i18n/en";
+import * as idDict from "@/resources/i18n/id";
 import type { IconName } from "@/resources/icons";
+import type { IANATimeZone } from "@/types";
+import { cache } from "react";
 
 const idPlain = { ...idDict };
 const enPlain = { ...enDict };
@@ -24,8 +24,8 @@ export const getDynamicDictionary = cache(async (locale: Locale = "id"): Promise
   const baseDict = locale === "en" ? enPlain : idPlain;
   const now = Date.now();
 
-  if (memCache[locale] && now - memCache[locale]!.timestamp < CACHE_TTL_MS) {
-    return memCache[locale]!.data;
+  if (memCache[locale] && now - memCache[locale]?.timestamp < CACHE_TTL_MS) {
+    return memCache[locale]?.data;
   }
 
   try {
@@ -98,7 +98,21 @@ export const getDynamicDictionary = cache(async (locale: Locale = "id"): Promise
         timeframe: e.timeframe,
         role: eTrans?.role || "",
         achievements: (eTrans?.achievements as string[]) || [],
-        images: (e.images as any) || undefined,
+        images: e.images
+          ? (
+              e.images as Array<{
+                src: string;
+                alt?: string;
+                width?: number;
+                height?: number;
+              }>
+            ).map((img) => ({
+              src: typeof img === "string" ? img : img.src,
+              alt: (typeof img === "object" && img.alt) || e.company,
+              width: (typeof img === "object" && img.width) || 600,
+              height: (typeof img === "object" && img.height) || 400,
+            }))
+          : undefined,
       };
     };
 
@@ -116,7 +130,8 @@ export const getDynamicDictionary = cache(async (locale: Locale = "id"): Promise
       },
       Organization: {
         ...baseDict.about.Organization,
-        experiences: orgExps.length > 0 ? orgExps.map(mapExp) : baseDict.about.Organization.experiences,
+        experiences:
+          orgExps.length > 0 ? orgExps.map(mapExp) : baseDict.about.Organization.experiences,
       },
       studies: {
         ...baseDict.about.studies,
@@ -146,7 +161,11 @@ export const getDynamicDictionary = cache(async (locale: Locale = "id"): Promise
                 return {
                   title: sgTrans?.title || sg.title,
                   description: sgTrans?.description || "",
-                  tags: (sg.skills as any) || [],
+                  tags: Array.isArray(sg.skills)
+                    ? (sg.skills as Array<string | { name: string; icon?: string }>).map((t) =>
+                        typeof t === "string" ? { name: t } : { name: t.name, icon: t.icon },
+                      )
+                    : [],
                 };
               })
             : baseDict.about.technical.skills,
@@ -181,7 +200,7 @@ export const getDynamicDictionary = cache(async (locale: Locale = "id"): Promise
   } catch (err) {
     // If DB is temporarily busy/exhausted, serve previous cached data or static fallback
     if (memCache[locale]) {
-      return memCache[locale]!.data;
+      return memCache[locale]?.data;
     }
     return baseDict;
   }

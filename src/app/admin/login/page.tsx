@@ -1,7 +1,8 @@
 "use client";
 
-import React, { useState } from "react";
 import { useRouter } from "next/navigation";
+import type React from "react";
+import { useState } from "react";
 import styles from "../admin.module.scss";
 
 export default function AdminLoginPage() {
@@ -43,33 +44,53 @@ export default function AdminLoginPage() {
         alignItems: "center",
         justifyContent: "center",
         padding: "24px",
-        background: "radial-gradient(ellipse at 50% 20%, rgba(59, 130, 246, 0.12), transparent 70%), #050508",
+        background:
+          "radial-gradient(ellipse at 50% 20%, rgba(16, 185, 129, 0.08), transparent 70%), #050508",
       }}
     >
       <div
         className={styles.glassCard}
         style={{
           width: "100%",
-          maxWidth: "400px",
-          padding: "36px 32px",
+          maxWidth: "380px",
+          padding: "36px 30px",
           display: "flex",
           flexDirection: "column",
           gap: "24px",
         }}
       >
-        <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "10px", textAlign: "center" }}>
-          <div className={styles.brandLogo} style={{ width: 44, height: 44, fontSize: 22 }}>
-            ⚡
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            gap: "10px",
+            textAlign: "center",
+          }}
+        >
+          <div className={styles.brandLogo} style={{ width: 40, height: 40, fontSize: 16 }}>
+            N
           </div>
-          <h1 style={{ fontSize: "20px", fontWeight: 700, margin: 0, letterSpacing: "-0.02em" }}>
-            Najmi Folio CMS
+          <h1
+            style={{
+              fontSize: "18px",
+              fontWeight: 600,
+              margin: 0,
+              letterSpacing: "-0.02em",
+              color: "#fff",
+            }}
+          >
+            Najmi CMS
           </h1>
-          <p style={{ fontSize: "13px", color: "rgba(255, 255, 255, 0.45)", margin: 0 }}>
+          <p style={{ fontSize: "12.5px", color: "rgba(255, 255, 255, 0.45)", margin: 0 }}>
             Panel kontrol konten dinamis & media
           </p>
         </div>
 
-        <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
+        <form
+          onSubmit={handleSubmit}
+          style={{ display: "flex", flexDirection: "column", gap: "16px" }}
+        >
           <div className={styles.formGroup}>
             <label htmlFor="admin-pass">Password Akses</label>
             <input
@@ -79,7 +100,6 @@ export default function AdminLoginPage() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="Masukkan password admin"
-              autoFocus
               required
             />
           </div>
@@ -89,10 +109,10 @@ export default function AdminLoginPage() {
               style={{
                 padding: "8px 12px",
                 borderRadius: "6px",
-                background: "rgba(239, 68, 68, 0.15)",
-                border: "1px solid rgba(239, 68, 68, 0.3)",
+                background: "rgba(239, 68, 68, 0.12)",
+                border: "1px solid rgba(239, 68, 68, 0.25)",
                 color: "#fca5a5",
-                fontSize: "12.5px",
+                fontSize: "12px",
               }}
             >
               {error}
@@ -102,34 +122,27 @@ export default function AdminLoginPage() {
           <button
             type="submit"
             disabled={loading}
-            style={{
-              padding: "11px 16px",
-              borderRadius: "8px",
-              background: "linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)",
-              color: "#ffffff",
-              border: "none",
-              fontSize: "14px",
-              fontWeight: 600,
-              cursor: loading ? "not-allowed" : "pointer",
-              transition: "all 0.2s ease",
-              boxShadow: "0 4px 14px rgba(59, 130, 246, 0.3)",
-            }}
+            className={styles.primaryButton}
+            style={{ width: "100%", justifyContent: "center", padding: "10px 16px" }}
           >
             {loading ? "Memverifikasi..." : "Masuk ke Dashboard →"}
           </button>
         </form>
 
-        <div style={{ textAlign: "center", paddingTop: "8px", borderTop: "1px solid rgba(255,255,255,0.06)" }}>
+        <div
+          style={{
+            textAlign: "center",
+            paddingTop: "8px",
+            borderTop: "1px solid rgba(255,255,255,0.06)",
+          }}
+        >
           <a
             href="/"
             style={{
               fontSize: "12px",
-              color: "rgba(255,255,255,0.4)",
+              color: "rgba(255,255,255,0.5)",
               textDecoration: "none",
-              transition: "color 0.15s ease",
             }}
-            onMouseOver={(e) => (e.currentTarget.style.color = "#fff")}
-            onMouseOut={(e) => (e.currentTarget.style.color = "rgba(255,255,255,0.4)")}
           >
             ← Kembali ke Website Utama
           </a>

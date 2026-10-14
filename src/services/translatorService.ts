@@ -1,10 +1,6 @@
 import translate from "@iamtraction/google-translate";
 
-export async function autoTranslate(
-  text: string,
-  from: string = "id",
-  to: string = "en"
-): Promise<string> {
+export async function autoTranslate(text: string, from = "id", to = "en"): Promise<string> {
   if (!text || !text.trim()) return text;
   try {
     const res = await translate(text, { from, to });

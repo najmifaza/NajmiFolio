@@ -1,3 +1,4 @@
+import { isSafePublicUrl } from "@/lib/ssrf";
 import { NextResponse } from "next/server";
 
 export const runtime = "edge";
@@ -18,8 +19,8 @@ function decodeHTMLEntities(text: string): string {
 
     if (entity.startsWith("#")) {
       const code = entity.startsWith("#x")
-        ? parseInt(entity.slice(2), 16)
-        : parseInt(entity.slice(1), 10);
+        ? Number.parseInt(entity.slice(2), 16)
+        : Number.parseInt(entity.slice(1), 10);
       return String.fromCharCode(code);
     }
 
@@ -51,9 +52,7 @@ async function extractMetadata(html: string) {
   const descMatch =
     html.match(/<meta[^>]*name="description"[^>]*content="([^"]+)"[^>]*>/i) ||
     html.match(/<meta[^>]*content="([^"]+)"[^>]*name="description"[^>]*>/i) ||
-    html.match(
-      /<meta[^>]*property="og:description"[^>]*content="([^"]+)"[^>]*>/i
-    );
+    html.match(/<meta[^>]*property="og:description"[^>]*content="([^"]+)"[^>]*>/i);
   const imageMatch =
     html.match(/<meta[^>]*property="og:image"[^>]*content="([^"]+)"[^>]*>/i) ||
     html.match(/<meta[^>]*content="([^"]+)"[^>]*property="og:image"[^>]*>/i);
@@ -77,6 +76,10 @@ export async function GET(request: Request) {
     return NextResponse.json({ error: "URL is required" }, { status: 400 });
   }
 
+  if (!isSafePublicUrl(url)) {
+    return NextResponse.json({ error: "Forbidden or invalid target URL" }, { status: 403 });
+  }
+
   try {
     const response = await fetchWithTimeout(url);
 
@@ -94,16 +97,15 @@ export async function GET(request: Request) {
   } catch (error) {
     console.error(
       "Error fetching metadata:",
-      error instanceof Error ? error.message : String(error)
+      error instanceof Error ? error.message : String(error),
     );
 
     return NextResponse.json(
       {
         error: "Failed to fetch metadata",
-        message:
-          error instanceof Error ? error.message : "Unknown error occurred",
+        message: error instanceof Error ? error.message : "Unknown error occurred",
       },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

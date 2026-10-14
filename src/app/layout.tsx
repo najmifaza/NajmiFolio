@@ -16,6 +16,7 @@ import {
   dataStyle,
 } from "@/resources";
 import { getDictionary } from "@/resources/i18n";
+import { getDynamicDictionary } from "@/services/contentService";
 import { cookies } from "next/headers";
 import type { Locale } from "@/resources/i18n";
 
@@ -99,7 +100,9 @@ export default async function RootLayout({
 }>) {
   const cookieStore = await cookies();
   const locale = (cookieStore.get("NEXT_LOCALE")?.value as Locale) ?? "id";
-  const dict = await getDictionary();
+  const dictId = await getDynamicDictionary("id");
+  const dictEn = await getDynamicDictionary("en");
+  const dict = locale === "en" ? dictEn : dictId;
   const { person, social } = dict;
 
   const normalizedBaseURL = baseURL.endsWith("/")
@@ -214,7 +217,11 @@ export default async function RootLayout({
             `}</script>
       </head>
       <Providers>
-        <LanguageProvider initialLanguage={locale} initialDictionary={dict}>
+        <LanguageProvider
+          initialLanguage={locale}
+          initialDictionary={dict}
+          dictionaries={{ id: dictId, en: dictEn }}
+        >
           <Column
             as="body"
             background="page"
