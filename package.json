@@ -11,7 +11,7 @@
     "biome-write": "npx @biomejs/biome format --write .",
     "start": "next start",
     "lint": "next lint",
-    "postinstall": "patch-package"
+    "postinstall": "prisma generate && patch-package"
   },
   "dependencies": {
     "@iamtraction/google-translate": "^3.0.0",
