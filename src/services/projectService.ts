@@ -61,7 +61,7 @@ export const getProjectsFromDB = cache(async (locale: Locale = "id"): Promise<Pr
 
   try {
     const projects = await prisma.project.findMany({
-      orderBy: { order: "asc" },
+      orderBy: [{ order: "asc" }, { publishedAt: "desc" }],
       include: {
         translations: true,
       },

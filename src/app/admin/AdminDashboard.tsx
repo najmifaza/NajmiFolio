@@ -1,6 +1,6 @@
 "use client";
 
-import { iconLibrary } from "@/resources/icons";
+import { UniversalIcon, resolveIconifyName } from "@/resources/icons";
 import { useRouter } from "next/navigation";
 import type React from "react";
 import { useState } from "react";
@@ -48,32 +48,7 @@ const SOCIAL_ICON_OPTIONS = [
 ];
 
 function getSkillIconName(rawName: string): string {
-  const norm = rawName.toLowerCase().replace(/[\s\.\-_]/g, "");
-  if (norm.includes("javascript") || norm === "js") return "javascript";
-  if (norm.includes("next")) return "nextjs";
-  if (norm.includes("python")) return "python";
-  if (norm.includes("html")) return "html";
-  if (norm.includes("css")) return "css";
-  if (norm === "c" || norm === "cpp" || norm === "cplusplus") return "c";
-  if (norm.includes("postgres")) return "postgree";
-  if (norm.includes("mysql") || norm.includes("sql")) return "sql";
-  if (norm.includes("mongo")) return "mongodb";
-  if (norm.includes("supabase")) return "supabase";
-  if (norm.includes("figma")) return "figma";
-  if (norm.includes("wordpress") || norm === "wp") return "wordpress";
-  if (norm.includes("elementor")) return "elementor";
-  if (norm.includes("woocommerce")) return "woocommerce";
-  if (norm.includes("photoshop")) return "Adobephotoshop";
-  if (norm.includes("premiere")) return "Adobepremierepro";
-  if (norm.includes("lightroom")) return "Adobelightroom";
-  if (norm.includes("corel")) return "Coreldraw";
-  return "project";
-}
-
-function DynamicIcon({ name, size = 16, color }: { name: string; size?: number; color?: string }) {
-  const IconComp = iconLibrary[name] || iconLibrary.globe;
-  if (!IconComp) return null;
-  return <IconComp size={size} color={color} style={{ flexShrink: 0 }} />;
+  return resolveIconifyName(rawName);
 }
 
 interface AdminDashboardProps {
@@ -411,7 +386,10 @@ export default function AdminDashboard({
                             )}
                           </div>
                           <span style={{ fontSize: "12.5px", color: "rgba(255,255,255,0.45)" }}>
-                            <code>/{proj.slug}</code> {enTrans.title && `• EN: ${enTrans.title}`}
+                            <code>#{proj.order ?? 0}</code> • <code>/{proj.slug}</code>{" "}
+                            {proj.publishedAt &&
+                              `• ${new Date(proj.publishedAt).toISOString().split("T")[0]}`}{" "}
+                            {enTrans.title && `• EN: ${enTrans.title}`}
                           </span>
                         </div>
                       </div>
@@ -740,7 +718,11 @@ export default function AdminDashboard({
                               className={styles.langPill}
                               style={{ display: "inline-flex", alignItems: "center", gap: "6px" }}
                             >
-                              <DynamicIcon name={getSkillIconName(tag)} size={14} color="#34d399" />
+                              <UniversalIcon
+                                name={getSkillIconName(tag)}
+                                size={14}
+                                color="#34d399"
+                              />
                               {tag}
                             </span>
                           ))}
@@ -921,6 +903,12 @@ function ProjectForm({
   const enTrans = project?.translations?.find((t: any) => t.locale === "en") || {};
 
   const [slug, setSlug] = useState(project?.slug || "");
+  const [order, setOrder] = useState<number>(project?.order ?? 1);
+  const [publishedAt, setPublishedAt] = useState<string>(
+    project?.publishedAt
+      ? new Date(project.publishedAt).toISOString().split("T")[0]
+      : new Date().toISOString().split("T")[0],
+  );
   const [link, setLink] = useState(project?.link || "");
   const [github, setGithub] = useState(project?.github || "");
   const [featured, setFeatured] = useState(project?.featured || false);
@@ -999,6 +987,8 @@ function ProjectForm({
         link: link || undefined,
         github: github || undefined,
         featured,
+        order: Number(order) || 0,
+        publishedAt: publishedAt || undefined,
         images,
         idTitle,
         idSummary,
@@ -1038,6 +1028,27 @@ function ProjectForm({
               value={slug}
               onChange={(e) => setSlug(e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, "-"))}
               placeholder="contoh: platform-properti-rumio"
+              required
+            />
+          </div>
+          <div className={styles.formGroup}>
+            <label>Urutan Tampil (Order) *</label>
+            <input
+              type="number"
+              className={styles.formInput}
+              value={order}
+              onChange={(e) => setOrder(Number(e.target.value))}
+              min={1}
+              required
+            />
+          </div>
+          <div className={styles.formGroup}>
+            <label>Tanggal Rilis / Publikasi *</label>
+            <input
+              type="date"
+              className={styles.formInput}
+              value={publishedAt}
+              onChange={(e) => setPublishedAt(e.target.value)}
               required
             />
           </div>
@@ -1607,12 +1618,12 @@ function ProfileForm({ profile, onSave }: { profile: any; onSave: () => void }) 
               <div style={{ fontSize: "12.5px", color: "rgba(255,255,255,0.45)", marginTop: 2 }}>
                 Dikelola dinamis dan tampil di header, bio profil, serta footer. •{" "}
                 <a
-                  href="https://react-icons.github.io/react-icons/icons/fa6/"
+                  href="https://icon-sets.iconify.design/"
                   target="_blank"
                   rel="noreferrer"
                   style={{ color: "#34d399", textDecoration: "underline" }}
                 >
-                  Katalog React Icons ↗
+                  Katalog 200.000+ Iconify ↗
                 </a>
               </div>
             </div>
@@ -1698,28 +1709,26 @@ function ProfileForm({ profile, onSave }: { profile: any; onSave: () => void }) 
                         flexShrink: 0,
                       }}
                     >
-                      <DynamicIcon name={item.icon || "globe"} size={18} color="#34d399" />
+                      <UniversalIcon name={item.icon || "globe"} size={18} color="#34d399" />
                     </div>
-                    <select
+                    <input
                       className={styles.formInput}
-                      value={item.icon || "globe"}
+                      list={`icon-suggestions-${idx}`}
+                      value={item.icon || ""}
+                      placeholder="Pilih atau ketik icon..."
                       onChange={(e) => {
                         const updated = [...socialLinks];
                         updated[idx].icon = e.target.value;
                         setSocialLinks(updated);
                       }}
-                      style={{ cursor: "pointer" }}
-                    >
+                    />
+                    <datalist id={`icon-suggestions-${idx}`}>
                       {SOCIAL_ICON_OPTIONS.map((opt) => (
-                        <option
-                          key={opt.value}
-                          value={opt.value}
-                          style={{ background: "#0c0d12", color: "#fff" }}
-                        >
+                        <option key={opt.value} value={opt.value}>
                           {opt.label}
                         </option>
                       ))}
-                    </select>
+                    </datalist>
                   </div>
                 </div>
                 <div>
@@ -2506,7 +2515,7 @@ function SkillGroupForm({ skillGroup, onCancel, onSave }: any) {
                   className={styles.langPill}
                   style={{ display: "inline-flex", alignItems: "center", gap: "6px" }}
                 >
-                  <DynamicIcon name={getSkillIconName(name)} size={13} color="#34d399" />
+                  <UniversalIcon name={getSkillIconName(name)} size={13} color="#34d399" />
                   {name}
                 </span>
               ))}
@@ -2517,13 +2526,13 @@ function SkillGroupForm({ skillGroup, onCancel, onSave }: any) {
           <div
             style={{
               marginTop: 10,
-              padding: "10px 14px",
+              padding: "12px 14px",
               borderRadius: "8px",
               background: "rgba(255, 255, 255, 0.02)",
               border: "1px solid rgba(255, 255, 255, 0.06)",
               fontSize: "12px",
               lineHeight: 1.6,
-              color: "rgba(255, 255, 255, 0.5)",
+              color: "rgba(255, 255, 255, 0.6)",
             }}
           >
             <div
@@ -2531,47 +2540,52 @@ function SkillGroupForm({ skillGroup, onCancel, onSave }: any) {
                 display: "flex",
                 justifyContent: "space-between",
                 alignItems: "center",
-                marginBottom: 6,
+                marginBottom: 8,
                 flexWrap: "wrap",
                 gap: "8px",
               }}
             >
               <span style={{ fontWeight: 600, color: "#fff" }}>
-                📖 Dokumentasi & Referensi Icon:
+                📖 Dokumentasi & Pencarian 200.000+ Icon (Iconify):
               </span>
               <div style={{ display: "flex", gap: "12px" }}>
+                <a
+                  href="https://icon-sets.iconify.design/"
+                  target="_blank"
+                  rel="noreferrer"
+                  style={{ color: "#34d399", textDecoration: "underline", fontWeight: 500 }}
+                >
+                  Iconify Search Engine ↗
+                </a>
                 <a
                   href="https://simpleicons.org/"
                   target="_blank"
                   rel="noreferrer"
-                  style={{ color: "#34d399", textDecoration: "underline" }}
+                  style={{ color: "#34d399", textDecoration: "underline", fontWeight: 500 }}
                 >
-                  Simple Icons ↗
-                </a>
-                <a
-                  href="https://react-icons.github.io/react-icons/icons/si/"
-                  target="_blank"
-                  rel="noreferrer"
-                  style={{ color: "#34d399", textDecoration: "underline" }}
-                >
-                  React Icons (Si) ↗
+                  Simple Icons (Brand & Tech) ↗
                 </a>
               </div>
             </div>
             <div>
-              <strong>Icon terdaftar otomatis:</strong> JavaScript (<code>SiJavascript</code>),
-              Next.js (<code>SiNextdotjs</code>), Python (<code>SiPython</code>), HTML (
-              <code>SiHtml5</code>), CSS (<code>SiCss3</code>), C/C++ (<code>SiC</code>), SQL/MySQL
-              (<code>SiMysql</code>), PostgreSQL (<code>SiPostgresql</code>), MongoDB (
-              <code>SiMongodb</code>), Supabase (<code>SiSupabase</code>), Figma (
-              <code>SiFigma</code>), WordPress (<code>SiWordpress</code>), Elementor (
-              <code>SiElementor</code>), WooCommerce (<code>SiWoocommerce</code>), Photoshop (
-              <code>SiAdobephotoshop</code>), Premiere (<code>SiAdobepremierepro</code>), Lightroom
-              (<code>SiAdobelightroom</code>), CorelDraw (<code>SiCoreldraw</code>).
+              <strong>Cara Pakai:</strong>
+              <ul style={{ margin: "4px 0 0 16px", padding: 0 }}>
+                <li>
+                  <strong>Nama teknologi umum:</strong> Langsung ketik namanya (misal:{" "}
+                  <code>React</code>, <code>Docker</code>, <code>Rust</code>,{" "}
+                  <code>Kubernetes</code>, <code>Vue</code>, <code>FastAPI</code>,{" "}
+                  <code>Redis</code>, <code>PostgreSQL</code>, <code>Prisma</code>,{" "}
+                  <code>Tailwind CSS</code>, <code>Figma</code>) — icon otomatis terpasang.
+                </li>
+                <li>
+                  <strong>Spesifik set Iconify:</strong> Bisa ketik ID icon apa pun dari katalog
+                  Iconify (misal: <code>simple-icons:docker</code>, <code>lucide:cpu</code>,{" "}
+                  <code>fa6-solid:server</code>, <code>tabler:terminal-2</code>).
+                </li>
+              </ul>
             </div>
-            <div style={{ marginTop: 4, color: "rgba(255,255,255,0.35)", fontSize: "11px" }}>
-              💡 Untuk mendaftarkan icon baru di luar daftar di atas, tambahkan import di berkas{" "}
-              <code>src/resources/icons.ts</code>.
+            <div style={{ marginTop: 6, color: "#34d399", fontSize: "11px" }}>
+              ✨ Seluruh icon diunduh on-demand tanpa perlu konfigurasi atau mendaftarkan kode lagi.
             </div>
           </div>
         </div>

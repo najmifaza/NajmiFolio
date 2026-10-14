@@ -15,7 +15,7 @@ export default async function AdminPage() {
 
   const [projects, profile, experiences, certificates, studies, skills] = await Promise.all([
     prisma.project.findMany({
-      orderBy: { order: "asc" },
+      orderBy: [{ order: "asc" }, { publishedAt: "desc" }],
       include: { translations: true },
     }),
     prisma.profile.findUnique({

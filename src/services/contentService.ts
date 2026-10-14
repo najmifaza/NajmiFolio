@@ -162,9 +162,11 @@ export const getDynamicDictionary = cache(async (locale: Locale = "id"): Promise
                   title: sgTrans?.title || sg.title,
                   description: sgTrans?.description || "",
                   tags: Array.isArray(sg.skills)
-                    ? (sg.skills as Array<string | { name: string; icon?: string }>).map((t) =>
-                        typeof t === "string" ? { name: t } : { name: t.name, icon: t.icon },
-                      )
+                    ? (sg.skills as Array<string | { name: string; icon?: string }>).map((t) => {
+                        const name = typeof t === "string" ? t : t.name;
+                        const icon = typeof t === "object" && t.icon ? t.icon : name;
+                        return { name, icon };
+                      })
                     : [],
                 };
               })

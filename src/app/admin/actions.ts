@@ -50,6 +50,55 @@ export async function uploadMediaAction(formData: FormData): Promise<{
   return res;
 }
 
+// Helper: Auto-shift orders to prevent collision when an order index is inserted/updated
+async function reorderEntities(
+  model: any,
+  currentId: string | undefined,
+  newOrder: number,
+  extraWhere: Record<string, unknown> = {},
+) {
+  if (currentId) {
+    const existing = await model.findUnique({
+      where: { id: currentId },
+      select: { order: true },
+    });
+    if (existing && existing.order !== undefined) {
+      const oldOrder = existing.order;
+      if (oldOrder === newOrder) return;
+      if (newOrder < oldOrder) {
+        await model.updateMany({
+          where: {
+            ...extraWhere,
+            id: { not: currentId },
+            order: { gte: newOrder, lt: oldOrder },
+          },
+          data: { order: { increment: 1 } },
+        });
+      } else {
+        await model.updateMany({
+          where: {
+            ...extraWhere,
+            id: { not: currentId },
+            order: { gt: oldOrder, lte: newOrder },
+          },
+          data: { order: { decrement: 1 } },
+        });
+      }
+      return;
+    }
+  }
+
+  // New insertion at newOrder: shift all existing items >= newOrder up by 1
+  await model.updateMany({
+    where: {
+      ...extraWhere,
+      ...(currentId ? { id: { not: currentId } } : {}),
+      order: { gte: newOrder },
+    },
+    data: { order: { increment: 1 } },
+  });
+}
+
 // 4. Project CRUD
 export interface SaveProjectInput {
   id?: string;
@@ -58,6 +107,7 @@ export interface SaveProjectInput {
   github?: string;
   featured?: boolean;
   order?: number;
+  publishedAt?: string;
   images: string[];
   idTitle: string;
   idSummary: string;
@@ -83,7 +133,12 @@ export async function saveProjectAction(data: SaveProjectInput) {
     }
   }
 
+  const targetOrder = data.order ?? 0;
+  const pubDate = data.publishedAt ? new Date(data.publishedAt) : undefined;
+
   const savedProject = await prisma.$transaction(async (tx) => {
+    await reorderEntities(tx.project, data.id, targetOrder);
+
     let p: { id: string; slug: string };
     if (data.id) {
       p = await tx.project.update({
@@ -93,8 +148,9 @@ export async function saveProjectAction(data: SaveProjectInput) {
           link: data.link || null,
           github: data.github || null,
           featured: data.featured || false,
-          order: data.order ?? 0,
+          order: targetOrder,
           images: data.images,
+          ...(pubDate ? { publishedAt: pubDate } : {}),
         },
       });
     } else {
@@ -104,9 +160,9 @@ export async function saveProjectAction(data: SaveProjectInput) {
           link: data.link || null,
           github: data.github || null,
           featured: data.featured || false,
-          order: data.order ?? 0,
+          order: targetOrder,
           images: data.images,
-          publishedAt: new Date(),
+          publishedAt: pubDate || new Date(),
         },
       });
     }
@@ -308,6 +364,8 @@ export async function saveExperienceAction(data: SaveExperienceInput) {
   }
 
   await prisma.$transaction(async (tx) => {
+    await reorderEntities(tx.experience, data.id, data.order);
+
     let expId = data.id;
     if (expId) {
       await tx.experience.update({
@@ -382,31 +440,37 @@ export interface SaveCertificateInput {
 export async function saveCertificateAction(data: SaveCertificateInput) {
   if (!(await verifyAuth())) throw new Error("Unauthorized");
 
-  if (data.id) {
-    await prisma.certificate.update({
-      where: { id: data.id },
-      data: {
-        title: data.title,
-        issuer: data.issuer,
-        date: data.date,
-        image: data.image,
-        url: data.url || null,
-        order: data.order ?? 0,
-      },
-    });
-  } else {
-    await prisma.certificate.create({
-      data: {
-        profileId: "default",
-        title: data.title,
-        issuer: data.issuer,
-        date: data.date,
-        image: data.image,
-        url: data.url || null,
-        order: data.order ?? 0,
-      },
-    });
-  }
+  const targetOrder = data.order ?? 0;
+
+  await prisma.$transaction(async (tx) => {
+    await reorderEntities(tx.certificate, data.id, targetOrder);
+
+    if (data.id) {
+      await tx.certificate.update({
+        where: { id: data.id },
+        data: {
+          title: data.title,
+          issuer: data.issuer,
+          date: data.date,
+          image: data.image,
+          url: data.url || null,
+          order: targetOrder,
+        },
+      });
+    } else {
+      await tx.certificate.create({
+        data: {
+          profileId: "default",
+          title: data.title,
+          issuer: data.issuer,
+          date: data.date,
+          image: data.image,
+          url: data.url || null,
+          order: targetOrder,
+        },
+      });
+    }
+  });
 
   invalidateContentCache();
 
@@ -494,6 +558,8 @@ export async function saveStudyAction(data: SaveStudyInput) {
   }
 
   await prisma.$transaction(async (tx) => {
+    await reorderEntities(tx.study, data.id, data.order);
+
     let studyId = data.id;
     if (studyId) {
       await tx.study.update({
@@ -584,6 +650,8 @@ export async function saveSkillGroupAction(data: SaveSkillGroupInput) {
   }
 
   await prisma.$transaction(async (tx) => {
+    await reorderEntities(tx.skillGroup, data.id, data.order);
+
     let groupId = data.id;
     if (groupId) {
       await tx.skillGroup.update({
