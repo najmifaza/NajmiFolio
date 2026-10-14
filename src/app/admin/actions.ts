@@ -425,3 +425,222 @@ export async function deleteCertificateAction(id: string) {
   revalidatePath("/en/licenses");
   return { success: true };
 }
+
+// 8. Social Links CRUD
+export interface SocialLinkItem {
+  id?: string;
+  name: string;
+  icon: string;
+  link: string;
+  essential: boolean;
+  order: number;
+}
+
+export async function saveSocialLinksAction(links: SocialLinkItem[]) {
+  if (!(await verifyAuth())) throw new Error("Unauthorized");
+
+  await prisma.$transaction(async (tx) => {
+    // Delete existing social links for profile default and recreate or replace
+    await tx.socialLink.deleteMany({ where: { profileId: "default" } });
+    if (links.length > 0) {
+      await tx.socialLink.createMany({
+        data: links.map((item, idx) => ({
+          profileId: "default",
+          name: item.name,
+          icon: item.icon || "globe",
+          link: item.link,
+          essential: item.essential ?? true,
+          order: item.order ?? idx,
+        })),
+      });
+    }
+  });
+
+  invalidateContentCache();
+  revalidatePath("/");
+  revalidatePath("/about");
+  revalidatePath("/en");
+  revalidatePath("/en/about");
+  return { success: true };
+}
+
+// 9. Studies CRUD
+export interface SaveStudyInput {
+  id?: string;
+  institution: string;
+  timeframe: string;
+  order: number;
+  images?: unknown;
+  idDegree: string;
+  idDescription: string;
+  enDegree?: string;
+  enDescription?: string;
+  autoTranslateEn?: boolean;
+}
+
+export async function saveStudyAction(data: SaveStudyInput) {
+  if (!(await verifyAuth())) throw new Error("Unauthorized");
+
+  let enDegree = data.enDegree || data.idDegree;
+  let enDescription = data.enDescription || data.idDescription;
+
+  if (data.autoTranslateEn || !enDegree || !enDescription) {
+    if (!data.enDegree && data.idDegree) {
+      enDegree = await autoTranslate(data.idDegree, "id", "en");
+    }
+    if (!data.enDescription && data.idDescription) {
+      enDescription = await autoTranslate(data.idDescription, "id", "en");
+    }
+  }
+
+  await prisma.$transaction(async (tx) => {
+    let studyId = data.id;
+    if (studyId) {
+      await tx.study.update({
+        where: { id: studyId },
+        data: {
+          institution: data.institution,
+          timeframe: data.timeframe,
+          order: data.order,
+          images: data.images ? (data.images as Prisma.InputJsonValue) : undefined,
+        },
+      });
+    } else {
+      const created = await tx.study.create({
+        data: {
+          profileId: "default",
+          institution: data.institution,
+          timeframe: data.timeframe,
+          order: data.order,
+          images: data.images ? (data.images as Prisma.InputJsonValue) : undefined,
+        },
+      });
+      studyId = created.id;
+    }
+
+    await tx.studyTranslation.upsert({
+      where: { studyId_locale: { studyId, locale: "id" } },
+      update: { degree: data.idDegree, description: data.idDescription },
+      create: {
+        studyId,
+        locale: "id",
+        degree: data.idDegree,
+        description: data.idDescription,
+      },
+    });
+
+    await tx.studyTranslation.upsert({
+      where: { studyId_locale: { studyId, locale: "en" } },
+      update: { degree: enDegree, description: enDescription },
+      create: {
+        studyId,
+        locale: "en",
+        degree: enDegree,
+        description: enDescription,
+      },
+    });
+  });
+
+  invalidateContentCache();
+  revalidatePath("/about");
+  revalidatePath("/en/about");
+  return { success: true };
+}
+
+export async function deleteStudyAction(id: string) {
+  if (!(await verifyAuth())) throw new Error("Unauthorized");
+  await prisma.study.delete({ where: { id } });
+
+  invalidateContentCache();
+  revalidatePath("/about");
+  revalidatePath("/en/about");
+  return { success: true };
+}
+
+// 10. Technical Skills CRUD
+export interface SaveSkillGroupInput {
+  id?: string;
+  title: string;
+  order: number;
+  skills: Array<{ name: string; icon?: string }>;
+  idTitle: string;
+  idDescription?: string;
+  enTitle?: string;
+  enDescription?: string;
+  autoTranslateEn?: boolean;
+}
+
+export async function saveSkillGroupAction(data: SaveSkillGroupInput) {
+  if (!(await verifyAuth())) throw new Error("Unauthorized");
+
+  let enTitle = data.enTitle || data.idTitle;
+  let enDescription = data.enDescription || data.idDescription || "";
+
+  if (data.autoTranslateEn || !enTitle) {
+    enTitle = await autoTranslate(data.idTitle, "id", "en");
+    if (data.idDescription) {
+      enDescription = await autoTranslate(data.idDescription, "id", "en");
+    }
+  }
+
+  await prisma.$transaction(async (tx) => {
+    let groupId = data.id;
+    if (groupId) {
+      await tx.skillGroup.update({
+        where: { id: groupId },
+        data: {
+          title: data.title,
+          order: data.order,
+          skills: data.skills as unknown as Prisma.InputJsonValue,
+        },
+      });
+    } else {
+      const created = await tx.skillGroup.create({
+        data: {
+          profileId: "default",
+          title: data.title,
+          order: data.order,
+          skills: data.skills as unknown as Prisma.InputJsonValue,
+        },
+      });
+      groupId = created.id;
+    }
+
+    await tx.skillGroupTranslation.upsert({
+      where: { skillGroupId_locale: { skillGroupId: groupId, locale: "id" } },
+      update: { title: data.idTitle, description: data.idDescription },
+      create: {
+        skillGroupId: groupId,
+        locale: "id",
+        title: data.idTitle,
+        description: data.idDescription,
+      },
+    });
+
+    await tx.skillGroupTranslation.upsert({
+      where: { skillGroupId_locale: { skillGroupId: groupId, locale: "en" } },
+      update: { title: enTitle, description: enDescription },
+      create: {
+        skillGroupId: groupId,
+        locale: "en",
+        title: enTitle,
+        description: enDescription,
+      },
+    });
+  });
+
+  invalidateContentCache();
+  revalidatePath("/about");
+  revalidatePath("/en/about");
+  return { success: true };
+}
+
+export async function deleteSkillGroupAction(id: string) {
+  if (!(await verifyAuth())) throw new Error("Unauthorized");
+  await prisma.skillGroup.delete({ where: { id } });
+
+  invalidateContentCache();
+  revalidatePath("/about");
+  revalidatePath("/en/about");
+  return { success: true };
+}

@@ -15,6 +15,7 @@
   },
   "dependencies": {
     "@iamtraction/google-translate": "^3.0.0",
+    "@iconify/react": "^6.0.2",
     "@mdx-js/loader": "^3.1.0",
     "@next/mdx": "^16.0.10",
     "@once-ui-system/core": "^1.5.6",

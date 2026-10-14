@@ -1,29 +1,88 @@
 "use client";
 
-import React, { useState } from "react";
+import { iconLibrary } from "@/resources/icons";
 import { useRouter } from "next/navigation";
-import styles from "./admin.module.scss";
+import type React from "react";
+import { useState } from "react";
 import {
-  saveProjectAction,
-  deleteProjectAction,
-  saveProfileAction,
-  saveExperienceAction,
-  deleteExperienceAction,
-  saveCertificateAction,
+  type SaveCertificateInput,
+  type SaveExperienceInput,
+  type SaveProfileInput,
+  type SaveProjectInput,
+  type SaveSkillGroupInput,
+  type SaveStudyInput,
+  type SocialLinkItem,
   deleteCertificateAction,
-  uploadMediaAction,
+  deleteExperienceAction,
+  deleteProjectAction,
+  deleteSkillGroupAction,
+  deleteStudyAction,
+  saveCertificateAction,
+  saveExperienceAction,
+  saveProfileAction,
+  saveProjectAction,
+  saveSkillGroupAction,
+  saveSocialLinksAction,
+  saveStudyAction,
   translateAction,
-  SaveProjectInput,
-  SaveProfileInput,
-  SaveExperienceInput,
-  SaveCertificateInput,
+  uploadMediaAction,
 } from "./actions";
+import styles from "./admin.module.scss";
+
+const SOCIAL_ICON_OPTIONS = [
+  { value: "github", label: "GitHub" },
+  { value: "linkedin", label: "LinkedIn" },
+  { value: "instagram", label: "Instagram" },
+  { value: "email", label: "Email" },
+  { value: "x", label: "X (Twitter)" },
+  { value: "twitter", label: "Twitter" },
+  { value: "threads", label: "Threads" },
+  { value: "discord", label: "Discord" },
+  { value: "telegram", label: "Telegram" },
+  { value: "whatsapp", label: "WhatsApp" },
+  { value: "facebook", label: "Facebook" },
+  { value: "globe", label: "Website / Globe" },
+  { value: "document", label: "Document / Resume" },
+  { value: "rocket", label: "Product / Rocket" },
+  { value: "openLink", label: "External Link" },
+];
+
+function getSkillIconName(rawName: string): string {
+  const norm = rawName.toLowerCase().replace(/[\s\.\-_]/g, "");
+  if (norm.includes("javascript") || norm === "js") return "javascript";
+  if (norm.includes("next")) return "nextjs";
+  if (norm.includes("python")) return "python";
+  if (norm.includes("html")) return "html";
+  if (norm.includes("css")) return "css";
+  if (norm === "c" || norm === "cpp" || norm === "cplusplus") return "c";
+  if (norm.includes("postgres")) return "postgree";
+  if (norm.includes("mysql") || norm.includes("sql")) return "sql";
+  if (norm.includes("mongo")) return "mongodb";
+  if (norm.includes("supabase")) return "supabase";
+  if (norm.includes("figma")) return "figma";
+  if (norm.includes("wordpress") || norm === "wp") return "wordpress";
+  if (norm.includes("elementor")) return "elementor";
+  if (norm.includes("woocommerce")) return "woocommerce";
+  if (norm.includes("photoshop")) return "Adobephotoshop";
+  if (norm.includes("premiere")) return "Adobepremierepro";
+  if (norm.includes("lightroom")) return "Adobelightroom";
+  if (norm.includes("corel")) return "Coreldraw";
+  return "project";
+}
+
+function DynamicIcon({ name, size = 16, color }: { name: string; size?: number; color?: string }) {
+  const IconComp = iconLibrary[name] || iconLibrary.globe;
+  if (!IconComp) return null;
+  return <IconComp size={size} color={color} style={{ flexShrink: 0 }} />;
+}
 
 interface AdminDashboardProps {
   initialProjects: any[];
   initialProfile: any;
   initialExperiences: any[];
   initialCertificates: any[];
+  initialStudies?: any[];
+  initialSkills?: any[];
 }
 
 export default function AdminDashboard({
@@ -31,10 +90,12 @@ export default function AdminDashboard({
   initialProfile,
   initialExperiences,
   initialCertificates,
+  initialStudies = [],
+  initialSkills = [],
 }: AdminDashboardProps) {
   const router = useRouter();
   const [activeTab, setActiveTab] = useState<
-    "projects" | "profile" | "experiences" | "certificates"
+    "projects" | "profile" | "experiences" | "studies" | "skills" | "certificates"
   >("projects");
 
   const [projects, setProjects] = useState<any[]>(initialProjects);
@@ -46,6 +107,14 @@ export default function AdminDashboard({
   const [experiences, setExperiences] = useState<any[]>(initialExperiences);
   const [editingExperience, setEditingExperience] = useState<any | null>(null);
   const [isCreatingExperience, setIsCreatingExperience] = useState(false);
+
+  const [studies, setStudies] = useState<any[]>(initialStudies);
+  const [editingStudy, setEditingStudy] = useState<any | null>(null);
+  const [isCreatingStudy, setIsCreatingStudy] = useState(false);
+
+  const [skills, setSkills] = useState<any[]>(initialSkills);
+  const [editingSkill, setEditingSkill] = useState<any | null>(null);
+  const [isCreatingSkill, setIsCreatingSkill] = useState(false);
 
   const [certificates, setCertificates] = useState<any[]>(initialCertificates);
   const [editingCertificate, setEditingCertificate] = useState<any | null>(null);
@@ -134,6 +203,38 @@ export default function AdminDashboard({
 
             <button
               type="button"
+              className={`${styles.navItem} ${activeTab === "studies" ? styles.active : ""}`}
+              onClick={() => {
+                setActiveTab("studies");
+                setIsCreatingStudy(false);
+                setEditingStudy(null);
+              }}
+            >
+              <div className={styles.navItemLeft}>
+                <span className={styles.navDash}>—</span>
+                <span>Studies</span>
+              </div>
+              <span className={styles.navBadge}>{studies.length}</span>
+            </button>
+
+            <button
+              type="button"
+              className={`${styles.navItem} ${activeTab === "skills" ? styles.active : ""}`}
+              onClick={() => {
+                setActiveTab("skills");
+                setIsCreatingSkill(false);
+                setEditingSkill(null);
+              }}
+            >
+              <div className={styles.navItemLeft}>
+                <span className={styles.navDash}>—</span>
+                <span>Technical Skills</span>
+              </div>
+              <span className={styles.navBadge}>{skills.length}</span>
+            </button>
+
+            <button
+              type="button"
               className={`${styles.navItem} ${activeTab === "certificates" ? styles.active : ""}`}
               onClick={() => {
                 setActiveTab("certificates");
@@ -202,7 +303,7 @@ export default function AdminDashboard({
               )}
             </div>
 
-            {(isCreatingProject || editingProject) ? (
+            {isCreatingProject || editingProject ? (
               <ProjectForm
                 project={editingProject}
                 onCancel={() => {
@@ -225,7 +326,9 @@ export default function AdminDashboard({
 
                   return (
                     <div key={proj.id} className={styles.itemCard}>
-                      <div style={{ display: "flex", alignItems: "center", gap: "16px", minWidth: 0 }}>
+                      <div
+                        style={{ display: "flex", alignItems: "center", gap: "16px", minWidth: 0 }}
+                      >
                         {coverImg ? (
                           coverImg.endsWith(".webm") ? (
                             <video
@@ -273,8 +376,22 @@ export default function AdminDashboard({
                             No Media
                           </div>
                         )}
-                        <div style={{ display: "flex", flexDirection: "column", gap: "4px", minWidth: 0 }}>
-                          <div style={{ display: "flex", alignItems: "center", gap: "8px", flexWrap: "wrap" }}>
+                        <div
+                          style={{
+                            display: "flex",
+                            flexDirection: "column",
+                            gap: "4px",
+                            minWidth: 0,
+                          }}
+                        >
+                          <div
+                            style={{
+                              display: "flex",
+                              alignItems: "center",
+                              gap: "8px",
+                              flexWrap: "wrap",
+                            }}
+                          >
                             <span style={{ fontSize: "14.5px", fontWeight: 600, color: "#fff" }}>
                               {idTrans.title || proj.slug}
                             </span>
@@ -299,7 +416,9 @@ export default function AdminDashboard({
                         </div>
                       </div>
 
-                      <div style={{ display: "flex", alignItems: "center", gap: "8px", flexShrink: 0 }}>
+                      <div
+                        style={{ display: "flex", alignItems: "center", gap: "8px", flexShrink: 0 }}
+                      >
                         <button
                           type="button"
                           style={{
@@ -393,7 +512,7 @@ export default function AdminDashboard({
               )}
             </div>
 
-            {(isCreatingExperience || editingExperience) ? (
+            {isCreatingExperience || editingExperience ? (
               <ExperienceForm
                 experience={editingExperience}
                 onCancel={() => {
@@ -417,7 +536,13 @@ export default function AdminDashboard({
                         <div style={{ fontSize: "14.5px", fontWeight: 600, color: "#fff" }}>
                           {exp.company}
                         </div>
-                        <div style={{ fontSize: "12.5px", color: "rgba(255,255,255,0.45)", marginTop: 2 }}>
+                        <div
+                          style={{
+                            fontSize: "12.5px",
+                            color: "rgba(255,255,255,0.45)",
+                            marginTop: 2,
+                          }}
+                        >
                           {idTrans.role} • {exp.timeframe} (Urutan: {exp.order})
                         </div>
                       </div>
@@ -471,7 +596,192 @@ export default function AdminDashboard({
           </div>
         )}
 
-        {/* TAB 4: CERTIFICATES */}
+        {/* TAB 4: STUDIES */}
+        {activeTab === "studies" && (
+          <div>
+            <div className={styles.contentHeader}>
+              <div className={styles.pageTitleGroup}>
+                <h1>Studies & Education</h1>
+                <p>Kelola riwayat pendidikan formal dan institusi.</p>
+              </div>
+              {!isCreatingStudy && !editingStudy && (
+                <button
+                  type="button"
+                  className={styles.primaryButton}
+                  onClick={() => {
+                    setEditingStudy(null);
+                    setIsCreatingStudy(true);
+                  }}
+                >
+                  + Tambah Riwayat Studi
+                </button>
+              )}
+            </div>
+
+            {isCreatingStudy || editingStudy ? (
+              <StudyForm
+                study={editingStudy}
+                onCancel={() => {
+                  setIsCreatingStudy(false);
+                  setEditingStudy(null);
+                }}
+                onSave={() => {
+                  setIsCreatingStudy(false);
+                  setEditingStudy(null);
+                  showToast("success", "Riwayat studi berhasil disimpan!");
+                  router.refresh();
+                }}
+              />
+            ) : (
+              <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+                {studies.map((item: any) => {
+                  const idTrans = item.translations?.find((t: any) => t.locale === "id") || {};
+                  return (
+                    <div key={item.id} className={styles.itemCard}>
+                      <div>
+                        <div style={{ fontSize: "14.5px", fontWeight: 600, color: "#fff" }}>
+                          {item.institution}
+                        </div>
+                        <div style={{ fontSize: "13px", color: "#34d399", marginTop: 2 }}>
+                          {idTrans.degree || "Studi"} •{" "}
+                          <span style={{ color: "rgba(255,255,255,0.45)" }}>{item.timeframe}</span>
+                        </div>
+                      </div>
+
+                      <div style={{ display: "flex", gap: "8px" }}>
+                        <button
+                          type="button"
+                          className={styles.secondaryButton}
+                          onClick={() => {
+                            setIsCreatingStudy(false);
+                            setEditingStudy(item);
+                          }}
+                        >
+                          Edit
+                        </button>
+                        <button
+                          type="button"
+                          className={styles.dangerButton}
+                          onClick={async () => {
+                            if (confirm(`Hapus riwayat studi ${item.institution}?`)) {
+                              await deleteStudyAction(item.id);
+                              setStudies(studies.filter((s: any) => s.id !== item.id));
+                              showToast("success", "Riwayat studi dihapus");
+                              router.refresh();
+                            }
+                          }}
+                        >
+                          Hapus
+                        </button>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* TAB 5: SKILLS */}
+        {activeTab === "skills" && (
+          <div>
+            <div className={styles.contentHeader}>
+              <div className={styles.pageTitleGroup}>
+                <h1>Technical Skills</h1>
+                <p>Kelola kelompok keahlian teknologi dan tag skill.</p>
+              </div>
+              {!isCreatingSkill && !editingSkill && (
+                <button
+                  type="button"
+                  className={styles.primaryButton}
+                  onClick={() => {
+                    setEditingSkill(null);
+                    setIsCreatingSkill(true);
+                  }}
+                >
+                  + Tambah Kelompok Skill
+                </button>
+              )}
+            </div>
+
+            {isCreatingSkill || editingSkill ? (
+              <SkillGroupForm
+                skillGroup={editingSkill}
+                onCancel={() => {
+                  setIsCreatingSkill(false);
+                  setEditingSkill(null);
+                }}
+                onSave={() => {
+                  setIsCreatingSkill(false);
+                  setEditingSkill(null);
+                  showToast("success", "Kelompok skill berhasil disimpan!");
+                  router.refresh();
+                }}
+              />
+            ) : (
+              <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+                {skills.map((sg: any) => {
+                  const idTrans = sg.translations?.find((t: any) => t.locale === "id") || {};
+                  const skillList = Array.isArray(sg.skills)
+                    ? sg.skills.map((s: any) => (typeof s === "string" ? s : s.name))
+                    : [];
+                  return (
+                    <div key={sg.id} className={styles.itemCard}>
+                      <div>
+                        <div style={{ fontSize: "14.5px", fontWeight: 600, color: "#fff" }}>
+                          {idTrans.title || sg.title}
+                        </div>
+                        <div
+                          style={{ display: "flex", gap: "6px", flexWrap: "wrap", marginTop: 6 }}
+                        >
+                          {skillList.map((tag: string) => (
+                            <span
+                              key={tag}
+                              className={styles.langPill}
+                              style={{ display: "inline-flex", alignItems: "center", gap: "6px" }}
+                            >
+                              <DynamicIcon name={getSkillIconName(tag)} size={14} color="#34d399" />
+                              {tag}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+
+                      <div style={{ display: "flex", gap: "8px" }}>
+                        <button
+                          type="button"
+                          className={styles.secondaryButton}
+                          onClick={() => {
+                            setIsCreatingSkill(false);
+                            setEditingSkill(sg);
+                          }}
+                        >
+                          Edit
+                        </button>
+                        <button
+                          type="button"
+                          className={styles.dangerButton}
+                          onClick={async () => {
+                            if (confirm(`Hapus kelompok skill ${sg.title}?`)) {
+                              await deleteSkillGroupAction(sg.id);
+                              setSkills(skills.filter((s: any) => s.id !== sg.id));
+                              showToast("success", "Kelompok skill dihapus");
+                              router.refresh();
+                            }
+                          }}
+                        >
+                          Hapus
+                        </button>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* TAB 6: CERTIFICATES */}
         {activeTab === "certificates" && (
           <div>
             <div className={styles.contentHeader}>
@@ -493,7 +803,7 @@ export default function AdminDashboard({
               )}
             </div>
 
-            {(isCreatingCertificate || editingCertificate) ? (
+            {isCreatingCertificate || editingCertificate ? (
               <CertificateForm
                 cert={editingCertificate}
                 onCancel={() => {
@@ -530,7 +840,13 @@ export default function AdminDashboard({
                         <div style={{ fontSize: "14.5px", fontWeight: 600, color: "#fff" }}>
                           {cert.title}
                         </div>
-                        <div style={{ fontSize: "12.5px", color: "rgba(255,255,255,0.45)", marginTop: 2 }}>
+                        <div
+                          style={{
+                            fontSize: "12.5px",
+                            color: "rgba(255,255,255,0.45)",
+                            marginTop: 2,
+                          }}
+                        >
                           {cert.issuer} • {cert.date}
                         </div>
                       </div>
@@ -608,7 +924,9 @@ function ProjectForm({
   const [link, setLink] = useState(project?.link || "");
   const [github, setGithub] = useState(project?.github || "");
   const [featured, setFeatured] = useState(project?.featured || false);
-  const [images, setImages] = useState<string[]>(Array.isArray(project?.images) ? project.images : []);
+  const [images, setImages] = useState<string[]>(
+    Array.isArray(project?.images) ? project.images : [],
+  );
 
   const [idTitle, setIdTitle] = useState(idTrans.title || "");
   const [idSummary, setIdSummary] = useState(idTrans.summary || "");
@@ -634,7 +952,7 @@ function ProjectForm({
     if (res.success && res.url) {
       setImages([...images, res.url]);
     } else {
-      alert("Upload gagal: " + (res.error || "Unknown error"));
+      alert(`Upload gagal: ${res.error || "Unknown error"}`);
     }
     setUploading(false);
   };
@@ -660,7 +978,7 @@ function ProjectForm({
         if (res.success) setEnContent(res.result);
       }
     } catch (err: any) {
-      alert("Gagal translate: " + err.message);
+      alert(`Gagal translate: ${err.message}`);
     } finally {
       setTranslating(false);
     }
@@ -695,7 +1013,7 @@ function ProjectForm({
         onSave(res.project);
       }
     } catch (err: any) {
-      alert("Gagal menyimpan project: " + err.message);
+      alert(`Gagal menyimpan project: ${err.message}`);
     } finally {
       setSaving(false);
     }
@@ -703,7 +1021,10 @@ function ProjectForm({
 
   return (
     <div className={styles.glassCard}>
-      <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "24px" }}>
+      <form
+        onSubmit={handleSubmit}
+        style={{ display: "flex", flexDirection: "column", gap: "24px" }}
+      >
         <h2 style={{ fontSize: "17px", fontWeight: 700, margin: 0, color: "#fff" }}>
           {project ? `Edit Project: ${project.slug}` : "Tambah Project Baru"}
         </h2>
@@ -748,7 +1069,10 @@ function ProjectForm({
             onChange={(e) => setFeatured(e.target.checked)}
             style={{ width: 16, height: 16, cursor: "pointer" }}
           />
-          <label htmlFor="proj-featured" style={{ cursor: "pointer", fontSize: 13.5, color: "rgba(255,255,255,0.8)" }}>
+          <label
+            htmlFor="proj-featured"
+            style={{ cursor: "pointer", fontSize: 13.5, color: "rgba(255,255,255,0.8)" }}
+          >
             Jadikan Featured Project (tampil di badge teratas Halaman Utama)
           </label>
         </div>
@@ -776,9 +1100,15 @@ function ProjectForm({
           {images.length > 0 && (
             <div className={styles.mediaThumbGrid}>
               {images.map((url, idx) => (
-                <div key={idx} className={styles.mediaThumbItem}>
+                <div key={url || `img-${idx}`} className={styles.mediaThumbItem}>
                   {url.endsWith(".webm") ? (
-                    <video src={url} muted autoPlay loop style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                    <video
+                      src={url}
+                      muted
+                      autoPlay
+                      loop
+                      style={{ width: "100%", height: "100%", objectFit: "cover" }}
+                    />
                   ) : (
                     <img src={url} alt="thumbnail" />
                   )}
@@ -797,7 +1127,14 @@ function ProjectForm({
 
         {/* Bilingual Content Editor */}
         <div>
-          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 12 }}>
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              marginBottom: 12,
+            }}
+          >
             <span style={{ fontSize: "14px", fontWeight: 700, color: "#fff" }}>
               Konten & Deskripsi Bilingual
             </span>
@@ -888,7 +1225,15 @@ function ProjectForm({
         </div>
 
         {/* Actions */}
-        <div style={{ display: "flex", justifyContent: "flex-end", gap: "12px", borderTop: "1px solid rgba(255,255,255,0.08)", paddingTop: 18 }}>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "flex-end",
+            gap: "12px",
+            borderTop: "1px solid rgba(255,255,255,0.08)",
+            paddingTop: 18,
+          }}
+        >
           <button
             type="button"
             style={{
@@ -905,11 +1250,7 @@ function ProjectForm({
           >
             Batal
           </button>
-          <button
-            type="submit"
-            disabled={saving}
-            className={styles.primaryButton}
-          >
+          <button type="submit" disabled={saving} className={styles.primaryButton}>
             {saving ? "Menyimpan..." : "Simpan Project"}
           </button>
         </div>
@@ -929,7 +1270,9 @@ function ProfileForm({ profile, onSave }: { profile: any; onSave: () => void }) 
   const [email, setEmail] = useState(profile?.email || "");
   const [location, setLocation] = useState(profile?.location || "Asia/Jakarta");
   const [languagesStr, setLanguagesStr] = useState(
-    Array.isArray(profile?.languages) ? profile.languages.join(", ") : "English, Indonesian, Arabic"
+    Array.isArray(profile?.languages)
+      ? profile.languages.join(", ")
+      : "English, Indonesian, Arabic",
   );
 
   const [idName, setIdName] = useState(idTrans.name || "");
@@ -943,6 +1286,41 @@ function ProfileForm({ profile, onSave }: { profile: any; onSave: () => void }) 
   const [enHeadline, setEnHeadline] = useState(enTrans.headline || "");
   const [enSubline, setEnSubline] = useState(enTrans.subline || "");
   const [enIntro, setEnIntro] = useState(enTrans.intro || "");
+
+  const [socialLinks, setSocialLinks] = useState<SocialLinkItem[]>(
+    profile?.socialLinks?.length > 0
+      ? profile.socialLinks
+      : [
+          {
+            name: "GitHub",
+            icon: "github",
+            link: "https://github.com/najmifaza",
+            essential: true,
+            order: 1,
+          },
+          {
+            name: "LinkedIn",
+            icon: "linkedin",
+            link: "https://www.linkedin.com/in/adridinan-najmi-faza-80b88a301",
+            essential: true,
+            order: 2,
+          },
+          {
+            name: "Instagram",
+            icon: "instagram",
+            link: "https://www.instagram.com/najmi.zaa/",
+            essential: true,
+            order: 3,
+          },
+          {
+            name: "Email",
+            icon: "email",
+            link: "mailto:adridinan99@gmail.com",
+            essential: true,
+            order: 4,
+          },
+        ],
+  );
 
   const [uploadingAvatar, setUploadingAvatar] = useState(false);
   const [translating, setTranslating] = useState(false);
@@ -960,7 +1338,7 @@ function ProfileForm({ profile, onSave }: { profile: any; onSave: () => void }) 
     if (res.success && res.url) {
       setAvatar(res.url);
     } else {
-      alert("Upload avatar gagal: " + (res.error || "Unknown error"));
+      alert(`Upload avatar gagal: ${res.error || "Unknown error"}`);
     }
     setUploadingAvatar(false);
   };
@@ -985,7 +1363,10 @@ function ProfileForm({ profile, onSave }: { profile: any; onSave: () => void }) 
         avatar,
         email,
         location,
-        languages: languagesStr.split(",").map((s: string) => s.trim()).filter(Boolean),
+        languages: languagesStr
+          .split(",")
+          .map((s: string) => s.trim())
+          .filter(Boolean),
         idName,
         idRole,
         idHeadline,
@@ -999,9 +1380,10 @@ function ProfileForm({ profile, onSave }: { profile: any; onSave: () => void }) 
       };
 
       await saveProfileAction(payload);
+      await saveSocialLinksAction(socialLinks);
       onSave();
     } catch (err: any) {
-      alert("Gagal menyimpan profil: " + err.message);
+      alert(`Gagal menyimpan profil: ${err.message}`);
     } finally {
       setSaving(false);
     }
@@ -1009,7 +1391,10 @@ function ProfileForm({ profile, onSave }: { profile: any; onSave: () => void }) 
 
   return (
     <div className={styles.glassCard}>
-      <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "24px" }}>
+      <form
+        onSubmit={handleSubmit}
+        style={{ display: "flex", flexDirection: "column", gap: "24px" }}
+      >
         {/* Avatar & Identitas */}
         <div style={{ display: "flex", alignItems: "center", gap: "20px", flexWrap: "wrap" }}>
           {avatar && (
@@ -1080,7 +1465,14 @@ function ProfileForm({ profile, onSave }: { profile: any; onSave: () => void }) 
 
         {/* Bilingual Narrative */}
         <div>
-          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 12 }}>
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              marginBottom: 12,
+            }}
+          >
             <span style={{ fontSize: "14px", fontWeight: 700, color: "#fff" }}>
               Narasi & Informasi Pribadi
             </span>
@@ -1197,12 +1589,221 @@ function ProfileForm({ profile, onSave }: { profile: any; onSave: () => void }) 
           </div>
         </div>
 
-        <div style={{ display: "flex", justifyContent: "flex-end", borderTop: "1px solid rgba(255,255,255,0.08)", paddingTop: 18 }}>
-          <button
-            type="submit"
-            disabled={saving}
-            className={styles.primaryButton}
-          >
+        {/* Social Media Links */}
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            gap: "14px",
+            borderTop: "1px solid rgba(255,255,255,0.08)",
+            paddingTop: 20,
+          }}
+        >
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+            <div>
+              <div style={{ fontSize: "14.5px", fontWeight: 600, color: "#fff" }}>
+                Social Media Links
+              </div>
+              <div style={{ fontSize: "12.5px", color: "rgba(255,255,255,0.45)", marginTop: 2 }}>
+                Dikelola dinamis dan tampil di header, bio profil, serta footer. •{" "}
+                <a
+                  href="https://react-icons.github.io/react-icons/icons/fa6/"
+                  target="_blank"
+                  rel="noreferrer"
+                  style={{ color: "#34d399", textDecoration: "underline" }}
+                >
+                  Katalog React Icons ↗
+                </a>
+              </div>
+            </div>
+            <button
+              type="button"
+              className={styles.secondaryButton}
+              onClick={() => {
+                setSocialLinks([
+                  ...socialLinks,
+                  {
+                    name: "Platform",
+                    icon: "globe",
+                    link: "https://",
+                    essential: true,
+                    order: socialLinks.length + 1,
+                  },
+                ]);
+              }}
+            >
+              + Tambah Social Link
+            </button>
+          </div>
+
+          <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+            {socialLinks.map((item, idx) => (
+              <div
+                key={item.id || `${item.name}-${idx}`}
+                style={{
+                  display: "grid",
+                  gridTemplateColumns: "1.2fr 1.2fr 2fr 90px 45px",
+                  gap: "10px",
+                  alignItems: "center",
+                  background: "rgba(255,255,255,0.02)",
+                  padding: "10px 14px",
+                  borderRadius: "8px",
+                  border: "1px solid rgba(255,255,255,0.06)",
+                }}
+              >
+                <div>
+                  <label
+                    style={{
+                      fontSize: "11px",
+                      color: "rgba(255,255,255,0.4)",
+                      display: "block",
+                      marginBottom: 3,
+                    }}
+                  >
+                    Platform
+                  </label>
+                  <input
+                    className={styles.formInput}
+                    value={item.name}
+                    placeholder="GitHub"
+                    onChange={(e) => {
+                      const updated = [...socialLinks];
+                      updated[idx].name = e.target.value;
+                      setSocialLinks(updated);
+                    }}
+                  />
+                </div>
+                <div>
+                  <label
+                    style={{
+                      fontSize: "11px",
+                      color: "rgba(255,255,255,0.4)",
+                      display: "block",
+                      marginBottom: 3,
+                    }}
+                  >
+                    Icon
+                  </label>
+                  <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                    <div
+                      style={{
+                        width: 38,
+                        height: 38,
+                        borderRadius: "8px",
+                        background: "rgba(255,255,255,0.04)",
+                        border: "1px solid rgba(255,255,255,0.1)",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        flexShrink: 0,
+                      }}
+                    >
+                      <DynamicIcon name={item.icon || "globe"} size={18} color="#34d399" />
+                    </div>
+                    <select
+                      className={styles.formInput}
+                      value={item.icon || "globe"}
+                      onChange={(e) => {
+                        const updated = [...socialLinks];
+                        updated[idx].icon = e.target.value;
+                        setSocialLinks(updated);
+                      }}
+                      style={{ cursor: "pointer" }}
+                    >
+                      {SOCIAL_ICON_OPTIONS.map((opt) => (
+                        <option
+                          key={opt.value}
+                          value={opt.value}
+                          style={{ background: "#0c0d12", color: "#fff" }}
+                        >
+                          {opt.label}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
+                <div>
+                  <label
+                    style={{
+                      fontSize: "11px",
+                      color: "rgba(255,255,255,0.4)",
+                      display: "block",
+                      marginBottom: 3,
+                    }}
+                  >
+                    Target URL
+                  </label>
+                  <input
+                    className={styles.formInput}
+                    value={item.link}
+                    placeholder="https://..."
+                    onChange={(e) => {
+                      const updated = [...socialLinks];
+                      updated[idx].link = e.target.value;
+                      setSocialLinks(updated);
+                    }}
+                  />
+                </div>
+                <div>
+                  <label
+                    style={{
+                      fontSize: "11px",
+                      color: "rgba(255,255,255,0.4)",
+                      display: "block",
+                      marginBottom: 3,
+                    }}
+                  >
+                    Essential
+                  </label>
+                  <div style={{ display: "flex", alignItems: "center", height: 38 }}>
+                    <input
+                      type="checkbox"
+                      checked={item.essential}
+                      onChange={(e) => {
+                        const updated = [...socialLinks];
+                        updated[idx].essential = e.target.checked;
+                        setSocialLinks(updated);
+                      }}
+                      style={{ width: 18, height: 18, accentColor: "#10b981", cursor: "pointer" }}
+                    />
+                  </div>
+                </div>
+                <div>
+                  <label
+                    style={{
+                      fontSize: "11px",
+                      color: "transparent",
+                      display: "block",
+                      marginBottom: 3,
+                    }}
+                  >
+                    X
+                  </label>
+                  <button
+                    type="button"
+                    className={styles.dangerButton}
+                    style={{ padding: "8px 10px", width: "100%" }}
+                    onClick={() => {
+                      setSocialLinks(socialLinks.filter((_, i) => i !== idx));
+                    }}
+                  >
+                    ✕
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "flex-end",
+            borderTop: "1px solid rgba(255,255,255,0.08)",
+            paddingTop: 18,
+          }}
+        >
+          <button type="submit" disabled={saving} className={styles.primaryButton}>
             {saving ? "Menyimpan..." : "Simpan Profil"}
           </button>
         </div>
@@ -1224,12 +1825,12 @@ function ExperienceForm({ experience, onCancel, onSave }: any) {
 
   const [idRole, setIdRole] = useState(idTrans.role || "");
   const [idAchievementsStr, setIdAchievementsStr] = useState(
-    Array.isArray(idTrans.achievements) ? idTrans.achievements.join("\n") : ""
+    Array.isArray(idTrans.achievements) ? idTrans.achievements.join("\n") : "",
   );
 
   const [enRole, setEnRole] = useState(enTrans.role || "");
   const [enAchievementsStr, setEnAchievementsStr] = useState(
-    Array.isArray(enTrans.achievements) ? enTrans.achievements.join("\n") : ""
+    Array.isArray(enTrans.achievements) ? enTrans.achievements.join("\n") : "",
   );
 
   const [saving, setSaving] = useState(false);
@@ -1242,7 +1843,7 @@ function ExperienceForm({ experience, onCancel, onSave }: any) {
       if (idAchievementsStr) {
         const lines = idAchievementsStr.split("\n").filter((l: string) => l.trim().length > 0);
         const translatedLines = await Promise.all(
-          lines.map(async (line: string) => (await translateAction(line, "id", "en")).result)
+          lines.map(async (line: string) => (await translateAction(line, "id", "en")).result),
         );
         setEnAchievementsStr(translatedLines.join("\n"));
       }
@@ -1269,7 +1870,7 @@ function ExperienceForm({ experience, onCancel, onSave }: any) {
       await saveExperienceAction(payload);
       onSave();
     } catch (err: any) {
-      alert("Gagal simpan pengalaman: " + err.message);
+      alert(`Gagal simpan pengalaman: ${err.message}`);
     } finally {
       setSaving(false);
     }
@@ -1277,7 +1878,10 @@ function ExperienceForm({ experience, onCancel, onSave }: any) {
 
   return (
     <div className={styles.glassCard}>
-      <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
+      <form
+        onSubmit={handleSubmit}
+        style={{ display: "flex", flexDirection: "column", gap: "20px" }}
+      >
         <h2 style={{ fontSize: "17px", fontWeight: 700, margin: 0, color: "#fff" }}>
           {experience ? "Edit Pengalaman" : "Tambah Pengalaman Baru"}
         </h2>
@@ -1315,7 +1919,14 @@ function ExperienceForm({ experience, onCancel, onSave }: any) {
         </div>
 
         <div>
-          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 12 }}>
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              marginBottom: 12,
+            }}
+          >
             <span style={{ fontSize: "14px", fontWeight: 700, color: "#fff" }}>
               Peran & Poin Pencapaian
             </span>
@@ -1375,7 +1986,15 @@ function ExperienceForm({ experience, onCancel, onSave }: any) {
           </div>
         </div>
 
-        <div style={{ display: "flex", justifyContent: "flex-end", gap: "12px", borderTop: "1px solid rgba(255,255,255,0.08)", paddingTop: 18 }}>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "flex-end",
+            gap: "12px",
+            borderTop: "1px solid rgba(255,255,255,0.08)",
+            paddingTop: 18,
+          }}
+        >
           <button
             type="button"
             style={{
@@ -1391,11 +2010,7 @@ function ExperienceForm({ experience, onCancel, onSave }: any) {
           >
             Batal
           </button>
-          <button
-            type="submit"
-            disabled={saving}
-            className={styles.primaryButton}
-          >
+          <button type="submit" disabled={saving} className={styles.primaryButton}>
             {saving ? "Menyimpan..." : "Simpan Pengalaman"}
           </button>
         </div>
@@ -1430,7 +2045,7 @@ function CertificateForm({ cert, onCancel, onSave }: any) {
     if (res.success && res.url) {
       setImage(res.url);
     } else {
-      alert("Upload sertifikat gagal: " + (res.error || "Unknown error"));
+      alert(`Upload sertifikat gagal: ${res.error || "Unknown error"}`);
     }
     setUploading(false);
   };
@@ -1457,7 +2072,7 @@ function CertificateForm({ cert, onCancel, onSave }: any) {
       await saveCertificateAction(payload);
       onSave();
     } catch (err: any) {
-      alert("Gagal simpan sertifikat: " + err.message);
+      alert(`Gagal simpan sertifikat: ${err.message}`);
     } finally {
       setSaving(false);
     }
@@ -1465,7 +2080,10 @@ function CertificateForm({ cert, onCancel, onSave }: any) {
 
   return (
     <div className={styles.glassCard}>
-      <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
+      <form
+        onSubmit={handleSubmit}
+        style={{ display: "flex", flexDirection: "column", gap: "20px" }}
+      >
         <h2 style={{ fontSize: "17px", fontWeight: 700, margin: 0, color: "#fff" }}>
           {cert ? "Edit Sertifikat" : "Tambah Sertifikat Baru"}
         </h2>
@@ -1562,7 +2180,15 @@ function CertificateForm({ cert, onCancel, onSave }: any) {
           </div>
         </div>
 
-        <div style={{ display: "flex", justifyContent: "flex-end", gap: "12px", borderTop: "1px solid rgba(255,255,255,0.08)", paddingTop: 18 }}>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "flex-end",
+            gap: "12px",
+            borderTop: "1px solid rgba(255,255,255,0.08)",
+            paddingTop: 18,
+          }}
+        >
           <button
             type="button"
             style={{
@@ -1578,12 +2204,458 @@ function CertificateForm({ cert, onCancel, onSave }: any) {
           >
             Batal
           </button>
-          <button
-            type="submit"
-            disabled={saving}
-            className={styles.primaryButton}
-          >
+          <button type="submit" disabled={saving} className={styles.primaryButton}>
             {saving ? "Menyimpan..." : "Simpan Sertifikat"}
+          </button>
+        </div>
+      </form>
+    </div>
+  );
+}
+
+// ==========================================
+// FORM 5: STUDY FORM
+// ==========================================
+function StudyForm({ study, onCancel, onSave }: any) {
+  const idTrans = study?.translations?.find((t: any) => t.locale === "id") || {};
+  const enTrans = study?.translations?.find((t: any) => t.locale === "en") || {};
+
+  const [institution, setInstitution] = useState(study?.institution || "");
+  const [timeframe, setTimeframe] = useState(study?.timeframe || "");
+  const [order, setOrder] = useState(study?.order ?? 1);
+
+  const [idDegree, setIdDegree] = useState(idTrans.degree || "");
+  const [idDescription, setIdDescription] = useState(idTrans.description || "");
+
+  const [enDegree, setEnDegree] = useState(enTrans.degree || "");
+  const [enDescription, setEnDescription] = useState(enTrans.description || "");
+
+  const [translating, setTranslating] = useState(false);
+  const [saving, setSaving] = useState(false);
+
+  const handleAutoTranslate = async () => {
+    setTranslating(true);
+    try {
+      if (idDegree) setEnDegree((await translateAction(idDegree, "id", "en")).result);
+      if (idDescription)
+        setEnDescription((await translateAction(idDescription, "id", "en")).result);
+    } finally {
+      setTranslating(false);
+    }
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setSaving(true);
+    try {
+      const payload: SaveStudyInput = {
+        id: study?.id,
+        institution,
+        timeframe,
+        order: Number(order) || 0,
+        idDegree,
+        idDescription,
+        enDegree,
+        enDescription,
+      };
+
+      await saveStudyAction(payload);
+      onSave();
+    } catch (err: any) {
+      alert(`Gagal menyimpan riwayat studi: ${err.message}`);
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  return (
+    <div className={styles.glassCard}>
+      <form
+        onSubmit={handleSubmit}
+        style={{ display: "flex", flexDirection: "column", gap: "22px" }}
+      >
+        <div style={{ display: "grid", gridTemplateColumns: "1.5fr 1fr 100px", gap: "16px" }}>
+          <div className={styles.formGroup}>
+            <label>Institusi Pendidikan *</label>
+            <input
+              className={styles.formInput}
+              required
+              value={institution}
+              onChange={(e) => setInstitution(e.target.value)}
+              placeholder="Universitas Jenderal Soedirman"
+            />
+          </div>
+          <div className={styles.formGroup}>
+            <label>Periode Waktu *</label>
+            <input
+              className={styles.formInput}
+              required
+              value={timeframe}
+              onChange={(e) => setTimeframe(e.target.value)}
+              placeholder="2024 - Sekarang"
+            />
+          </div>
+          <div className={styles.formGroup}>
+            <label>Urutan</label>
+            <input
+              className={styles.formInput}
+              type="number"
+              value={order}
+              onChange={(e) => setOrder(Number(e.target.value))}
+            />
+          </div>
+        </div>
+
+        {/* Bilingual Content */}
+        <div style={{ display: "flex", flexDirection: "column", gap: "14px" }}>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+            <h3 style={{ fontSize: "14.5px", fontWeight: 600, color: "#fff", margin: 0 }}>
+              Gelar & Deskripsi Pendidikan (Bilingual)
+            </h3>
+            <button
+              type="button"
+              className={styles.actionButton}
+              onClick={handleAutoTranslate}
+              disabled={translating}
+            >
+              {translating ? "Menerjemahkan..." : "✨ Auto-Translate ID ke EN"}
+            </button>
+          </div>
+
+          <div className={styles.bilingualGrid}>
+            <div className={styles.bilingualColumn}>
+              <div className={styles.langPill}>🇮🇩 Bahasa Indonesia</div>
+              <div className={styles.formGroup}>
+                <label>Gelar / Program Studi *</label>
+                <input
+                  className={styles.formInput}
+                  required
+                  value={idDegree}
+                  onChange={(e) => setIdDegree(e.target.value)}
+                  placeholder="S1 Informatika"
+                />
+              </div>
+              <div className={styles.formGroup}>
+                <label>Deskripsi / Fokus Akademik</label>
+                <textarea
+                  className={styles.formTextarea}
+                  style={{ minHeight: 90 }}
+                  value={idDescription}
+                  onChange={(e) => setIdDescription(e.target.value)}
+                  placeholder="Fokus pada rekayasa perangkat lunak dan sistem informasi..."
+                />
+              </div>
+            </div>
+
+            <div className={styles.bilingualColumn}>
+              <div className={styles.langPill}>🇬🇧 English</div>
+              <div className={styles.formGroup}>
+                <label>Degree / Program</label>
+                <input
+                  className={styles.formInput}
+                  value={enDegree}
+                  onChange={(e) => setEnDegree(e.target.value)}
+                  placeholder="Bachelor of Informatics"
+                />
+              </div>
+              <div className={styles.formGroup}>
+                <label>Description / Academic Focus</label>
+                <textarea
+                  className={styles.formTextarea}
+                  style={{ minHeight: 90 }}
+                  value={enDescription}
+                  onChange={(e) => setEnDescription(e.target.value)}
+                  placeholder="Focusing on software engineering and information systems..."
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "flex-end",
+            gap: "12px",
+            borderTop: "1px solid rgba(255,255,255,0.08)",
+            paddingTop: 18,
+          }}
+        >
+          <button type="button" className={styles.secondaryButton} onClick={onCancel}>
+            Batal
+          </button>
+          <button type="submit" disabled={saving} className={styles.primaryButton}>
+            {saving ? "Menyimpan..." : "Simpan Riwayat Studi"}
+          </button>
+        </div>
+      </form>
+    </div>
+  );
+}
+
+// ==========================================
+// FORM 6: SKILL GROUP FORM
+// ==========================================
+function SkillGroupForm({ skillGroup, onCancel, onSave }: any) {
+  const idTrans = skillGroup?.translations?.find((t: any) => t.locale === "id") || {};
+  const enTrans = skillGroup?.translations?.find((t: any) => t.locale === "en") || {};
+
+  const [title, setTitle] = useState(skillGroup?.title || "");
+  const [order, setOrder] = useState(skillGroup?.order ?? 1);
+
+  const [idTitle, setIdTitle] = useState(idTrans.title || "");
+  const [idDescription, setIdDescription] = useState(idTrans.description || "");
+
+  const [enTitle, setEnTitle] = useState(enTrans.title || "");
+  const [enDescription, setEnDescription] = useState(enTrans.description || "");
+
+  const initialSkillsStr = Array.isArray(skillGroup?.skills)
+    ? skillGroup.skills.map((s: any) => (typeof s === "string" ? s : s.name)).join(", ")
+    : "Next.js, TypeScript, Tailwind CSS, PostgreSQL";
+
+  const [skillsStr, setSkillsStr] = useState(initialSkillsStr);
+  const [translating, setTranslating] = useState(false);
+  const [saving, setSaving] = useState(false);
+
+  const handleAutoTranslate = async () => {
+    setTranslating(true);
+    try {
+      if (idTitle) setEnTitle((await translateAction(idTitle, "id", "en")).result);
+      if (idDescription)
+        setEnDescription((await translateAction(idDescription, "id", "en")).result);
+    } finally {
+      setTranslating(false);
+    }
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setSaving(true);
+    try {
+      const skillsArray = skillsStr
+        .split(",")
+        .map((s: string) => s.trim())
+        .filter(Boolean)
+        .map((name: string) => ({ name, icon: getSkillIconName(name) }));
+
+      const payload: SaveSkillGroupInput = {
+        id: skillGroup?.id,
+        title: title || idTitle,
+        order: Number(order) || 0,
+        skills: skillsArray,
+        idTitle: idTitle || title,
+        idDescription,
+        enTitle,
+        enDescription,
+      };
+
+      await saveSkillGroupAction(payload);
+      onSave();
+    } catch (err: any) {
+      alert(`Gagal menyimpan skill: ${err.message}`);
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  return (
+    <div className={styles.glassCard}>
+      <form
+        onSubmit={handleSubmit}
+        style={{ display: "flex", flexDirection: "column", gap: "22px" }}
+      >
+        <div style={{ display: "grid", gridTemplateColumns: "2fr 100px", gap: "16px" }}>
+          <div className={styles.formGroup}>
+            <label>Identifier Nama Grup (Internal/Default) *</label>
+            <input
+              className={styles.formInput}
+              required
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              placeholder="Web Development"
+            />
+          </div>
+          <div className={styles.formGroup}>
+            <label>Urutan</label>
+            <input
+              className={styles.formInput}
+              type="number"
+              value={order}
+              onChange={(e) => setOrder(Number(e.target.value))}
+            />
+          </div>
+        </div>
+
+        <div className={styles.formGroup}>
+          <label>Daftar Skills / Teknologi (Pisahkan dengan koma) *</label>
+          <input
+            className={styles.formInput}
+            required
+            value={skillsStr}
+            onChange={(e) => setSkillsStr(e.target.value)}
+            placeholder="React, Next.js, TypeScript, Node.js, Prisma, MySQL"
+          />
+          <div style={{ display: "flex", gap: "6px", flexWrap: "wrap", marginTop: 8 }}>
+            {skillsStr
+              .split(",")
+              .map((s: string) => s.trim())
+              .filter(Boolean)
+              .map((name: string) => (
+                <span
+                  key={name}
+                  className={styles.langPill}
+                  style={{ display: "inline-flex", alignItems: "center", gap: "6px" }}
+                >
+                  <DynamicIcon name={getSkillIconName(name)} size={13} color="#34d399" />
+                  {name}
+                </span>
+              ))}
+          </div>
+          <div style={{ fontSize: "12px", color: "rgba(255,255,255,0.4)", marginTop: 6 }}>
+            Ketik nama teknologi, icon akan otomatis terdeteksi (Next.js, Python, Figma, SQL, dll).
+          </div>
+          <div
+            style={{
+              marginTop: 10,
+              padding: "10px 14px",
+              borderRadius: "8px",
+              background: "rgba(255, 255, 255, 0.02)",
+              border: "1px solid rgba(255, 255, 255, 0.06)",
+              fontSize: "12px",
+              lineHeight: 1.6,
+              color: "rgba(255, 255, 255, 0.5)",
+            }}
+          >
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                marginBottom: 6,
+                flexWrap: "wrap",
+                gap: "8px",
+              }}
+            >
+              <span style={{ fontWeight: 600, color: "#fff" }}>
+                📖 Dokumentasi & Referensi Icon:
+              </span>
+              <div style={{ display: "flex", gap: "12px" }}>
+                <a
+                  href="https://simpleicons.org/"
+                  target="_blank"
+                  rel="noreferrer"
+                  style={{ color: "#34d399", textDecoration: "underline" }}
+                >
+                  Simple Icons ↗
+                </a>
+                <a
+                  href="https://react-icons.github.io/react-icons/icons/si/"
+                  target="_blank"
+                  rel="noreferrer"
+                  style={{ color: "#34d399", textDecoration: "underline" }}
+                >
+                  React Icons (Si) ↗
+                </a>
+              </div>
+            </div>
+            <div>
+              <strong>Icon terdaftar otomatis:</strong> JavaScript (<code>SiJavascript</code>),
+              Next.js (<code>SiNextdotjs</code>), Python (<code>SiPython</code>), HTML (
+              <code>SiHtml5</code>), CSS (<code>SiCss3</code>), C/C++ (<code>SiC</code>), SQL/MySQL
+              (<code>SiMysql</code>), PostgreSQL (<code>SiPostgresql</code>), MongoDB (
+              <code>SiMongodb</code>), Supabase (<code>SiSupabase</code>), Figma (
+              <code>SiFigma</code>), WordPress (<code>SiWordpress</code>), Elementor (
+              <code>SiElementor</code>), WooCommerce (<code>SiWoocommerce</code>), Photoshop (
+              <code>SiAdobephotoshop</code>), Premiere (<code>SiAdobepremierepro</code>), Lightroom
+              (<code>SiAdobelightroom</code>), CorelDraw (<code>SiCoreldraw</code>).
+            </div>
+            <div style={{ marginTop: 4, color: "rgba(255,255,255,0.35)", fontSize: "11px" }}>
+              💡 Untuk mendaftarkan icon baru di luar daftar di atas, tambahkan import di berkas{" "}
+              <code>src/resources/icons.ts</code>.
+            </div>
+          </div>
+        </div>
+
+        {/* Bilingual Content */}
+        <div style={{ display: "flex", flexDirection: "column", gap: "14px" }}>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+            <h3 style={{ fontSize: "14.5px", fontWeight: 600, color: "#fff", margin: 0 }}>
+              Judul & Penjelasan Grup Skill (Bilingual)
+            </h3>
+            <button
+              type="button"
+              className={styles.actionButton}
+              onClick={handleAutoTranslate}
+              disabled={translating}
+            >
+              {translating ? "Menerjemahkan..." : "✨ Auto-Translate ID ke EN"}
+            </button>
+          </div>
+
+          <div className={styles.bilingualGrid}>
+            <div className={styles.bilingualColumn}>
+              <div className={styles.langPill}>🇮🇩 Bahasa Indonesia</div>
+              <div className={styles.formGroup}>
+                <label>Judul Kelompok *</label>
+                <input
+                  className={styles.formInput}
+                  required
+                  value={idTitle}
+                  onChange={(e) => setIdTitle(e.target.value)}
+                  placeholder="Pengembangan Web"
+                />
+              </div>
+              <div className={styles.formGroup}>
+                <label>Deskripsi Tambahan</label>
+                <textarea
+                  className={styles.formTextarea}
+                  style={{ minHeight: 70 }}
+                  value={idDescription}
+                  onChange={(e) => setIdDescription(e.target.value)}
+                  placeholder="Keahlian dalam membangun aplikasi web modern performa tinggi..."
+                />
+              </div>
+            </div>
+
+            <div className={styles.bilingualColumn}>
+              <div className={styles.langPill}>🇬🇧 English</div>
+              <div className={styles.formGroup}>
+                <label>Group Title</label>
+                <input
+                  className={styles.formInput}
+                  value={enTitle}
+                  onChange={(e) => setEnTitle(e.target.value)}
+                  placeholder="Web Development"
+                />
+              </div>
+              <div className={styles.formGroup}>
+                <label>Description</label>
+                <textarea
+                  className={styles.formTextarea}
+                  style={{ minHeight: 70 }}
+                  value={enDescription}
+                  onChange={(e) => setEnDescription(e.target.value)}
+                  placeholder="Proficiency in building high-performance modern web apps..."
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "flex-end",
+            gap: "12px",
+            borderTop: "1px solid rgba(255,255,255,0.08)",
+            paddingTop: 18,
+          }}
+        >
+          <button type="button" className={styles.secondaryButton} onClick={onCancel}>
+            Batal
+          </button>
+          <button type="submit" disabled={saving} className={styles.primaryButton}>
+            {saving ? "Menyimpan..." : "Simpan Kelompok Skill"}
           </button>
         </div>
       </form>

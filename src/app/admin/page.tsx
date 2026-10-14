@@ -13,7 +13,7 @@ export default async function AdminPage() {
     redirect("/admin/login");
   }
 
-  const [projects, profile, experiences, certificates] = await Promise.all([
+  const [projects, profile, experiences, certificates, studies, skills] = await Promise.all([
     prisma.project.findMany({
       orderBy: { order: "asc" },
       include: { translations: true },
@@ -32,6 +32,14 @@ export default async function AdminPage() {
     prisma.certificate.findMany({
       orderBy: { order: "asc" },
     }),
+    prisma.study.findMany({
+      orderBy: { order: "asc" },
+      include: { translations: true },
+    }),
+    prisma.skillGroup.findMany({
+      orderBy: { order: "asc" },
+      include: { translations: true },
+    }),
   ]);
 
   return (
@@ -40,6 +48,8 @@ export default async function AdminPage() {
       initialProfile={JSON.parse(JSON.stringify(profile))}
       initialExperiences={JSON.parse(JSON.stringify(experiences))}
       initialCertificates={JSON.parse(JSON.stringify(certificates))}
+      initialStudies={JSON.parse(JSON.stringify(studies))}
+      initialSkills={JSON.parse(JSON.stringify(skills))}
     />
   );
 }
