@@ -1,7 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 import fs from "fs";
 import path from "path";
-import matter from "gray-matter";
 
 const prisma = new PrismaClient();
 
@@ -418,34 +417,52 @@ async function main() {
     });
   }
 
-  // 7. Projects from MDX files
+  // 7. Projects from MDX files (if present during initial setup)
   const projectsDir = path.join(process.cwd(), "src", "app", "project", "projects");
-  const files = fs.readdirSync(projectsDir);
+  if (fs.existsSync(projectsDir)) {
+    const files = fs.readdirSync(projectsDir);
 
-  // Group files by base slug (e.g. 'CheatSheet-Tailwind' from 'CheatSheet-Tailwind.id.mdx')
-  const projectMap: Record<string, { idFile?: string; enFile?: string }> = {};
+    const parseFrontmatter = (raw: string) => {
+      const match = raw.match(/^---\r?\n([\s\S]*?)\r?\n---\r?\n([\s\S]*)$/);
+      if (!match) return { data: {} as Record<string, any>, content: raw };
+      const yaml = match[1];
+      const content = match[2];
+      const data: Record<string, any> = {};
+      for (const line of yaml.split("\n")) {
+        const colon = line.indexOf(":");
+        if (colon > 0) {
+          const key = line.slice(0, colon).trim();
+          const val = line.slice(colon + 1).trim().replace(/^["']|["']$/g, "");
+          data[key] = val;
+        }
+      }
+      return { data, content };
+    };
 
-  for (const file of files) {
-    if (!file.endsWith(".mdx")) continue;
-    if (file.endsWith(".id.mdx")) {
-      const slug = file.replace(".id.mdx", "");
-      projectMap[slug] = { ...projectMap[slug], idFile: file };
-    } else if (file.endsWith(".en.mdx")) {
-      const slug = file.replace(".en.mdx", "");
-      projectMap[slug] = { ...projectMap[slug], enFile: file };
+    // Group files by base slug (e.g. 'CheatSheet-Tailwind' from 'CheatSheet-Tailwind.id.mdx')
+    const projectMap: Record<string, { idFile?: string; enFile?: string }> = {};
+
+    for (const file of files) {
+      if (!file.endsWith(".mdx")) continue;
+      if (file.endsWith(".id.mdx")) {
+        const slug = file.replace(".id.mdx", "");
+        projectMap[slug] = { ...projectMap[slug], idFile: file };
+      } else if (file.endsWith(".en.mdx")) {
+        const slug = file.replace(".en.mdx", "");
+        projectMap[slug] = { ...projectMap[slug], enFile: file };
+      }
     }
-  }
 
-  let projectOrder = 1;
-  for (const [slug, pair] of Object.entries(projectMap)) {
-    const idPath = pair.idFile ? path.join(projectsDir, pair.idFile) : null;
-    const enPath = pair.enFile ? path.join(projectsDir, pair.enFile) : null;
+    let projectOrder = 1;
+    for (const [slug, pair] of Object.entries(projectMap)) {
+      const idPath = pair.idFile ? path.join(projectsDir, pair.idFile) : null;
+      const enPath = pair.enFile ? path.join(projectsDir, pair.enFile) : null;
 
-    const idContent = idPath ? fs.readFileSync(idPath, "utf-8") : null;
-    const enContent = enPath ? fs.readFileSync(enPath, "utf-8") : null;
+      const idContent = idPath ? fs.readFileSync(idPath, "utf-8") : null;
+      const enContent = enPath ? fs.readFileSync(enPath, "utf-8") : null;
 
-    const idParsed = idContent ? matter(idContent) : null;
-    const enParsed = enContent ? matter(enContent) : null;
+      const idParsed = idContent ? parseFrontmatter(idContent) : null;
+      const enParsed = enContent ? parseFrontmatter(enContent) : null;
 
     const metadata = idParsed?.data || enParsed?.data || {};
 
@@ -522,7 +539,8 @@ async function main() {
         },
       });
     }
-    console.log(`Seeded project: ${slug}`);
+      console.log(`Seeded project: ${slug}`);
+    }
   }
 
   console.log("Seeding complete!");

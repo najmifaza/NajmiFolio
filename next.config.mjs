@@ -1,13 +1,6 @@
-import mdx from "@next/mdx";
-
-const withMDX = mdx({
-  extension: /\.mdx?$/,
-  options: {},
-});
-
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  pageExtensions: ["ts", "tsx", "md", "mdx"],
+  pageExtensions: ["ts", "tsx"],
   transpilePackages: ["next-mdx-remote"],
   images: {
     unoptimized: true,
@@ -31,18 +24,18 @@ const nextConfig = {
   async redirects() {
     return [
       {
-        source: '/:path*',
+        source: "/:path*",
         has: [
           {
-            type: 'host',
-            value: 'najmifolio.vercel.app',
+            type: "host",
+            value: "najmifolio.vercel.app",
           },
         ],
-        destination: 'https://najmifaza.my.id/:path*',
+        destination: "https://najmifaza.my.id/:path*",
         permanent: true, // 301 redirect
       },
     ];
   },
 };
 
-export default withMDX(nextConfig);
+export default nextConfig;
