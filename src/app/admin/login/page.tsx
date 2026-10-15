@@ -1,12 +1,10 @@
 "use client";
 
-import { useRouter } from "next/navigation";
 import type React from "react";
 import { useState } from "react";
 import styles from "../admin.module.scss";
 
 export default function AdminLoginPage() {
-  const router = useRouter();
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
@@ -24,14 +22,14 @@ export default function AdminLoginPage() {
       });
 
       if (res.ok) {
-        router.push("/admin");
-        router.refresh();
-      } else {
-        setError("Password salah. Silakan coba lagi.");
+        window.location.href = "/admin";
+        return;
       }
+
+      setError("Password salah. Silakan coba lagi.");
+      setLoading(false);
     } catch {
       setError("Terjadi kesalahan koneksi server.");
-    } finally {
       setLoading(false);
     }
   };
@@ -125,7 +123,7 @@ export default function AdminLoginPage() {
             className={styles.primaryButton}
             style={{ width: "100%", justifyContent: "center", padding: "10px 16px" }}
           >
-            {loading ? "Memverifikasi..." : "Masuk ke Dashboard →"}
+            {loading ? "Memverifikasi & Masuk..." : "Masuk ke Dashboard →"}
           </button>
         </form>
 
