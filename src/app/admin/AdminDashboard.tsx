@@ -1344,11 +1344,11 @@ function ProjectForm({
 
         {/* Media Upload Area */}
         <div className={styles.formGroup}>
-          <label>Cover & Media Galeri (CDN assets.najmifaza.my.id)</label>
+          <label>Cover & Media Galeri (Supabase Storage)</label>
           <label className={styles.uploadZone}>
             <span style={{ fontSize: 24 }}>☁️</span>
             <span style={{ fontSize: 13.5, fontWeight: 600, color: "#93c5fd" }}>
-              {uploading ? "Sedang Mengunggah File ke CDN..." : "Klik untuk Upload Media Baru"}
+              {uploading ? "Sedang Mengunggah File ke Supabase..." : "Klik untuk Upload Media Baru"}
             </span>
             <span style={{ fontSize: 12, color: "rgba(255,255,255,0.4)" }}>
               Mendukung WebP, PNG, JPG, dan video WebM (maksimal 50MB)

@@ -11,7 +11,7 @@ generator client {
 // 1. Profil & Person Data
 model Profile {
   id           String               @id @default("default")
-  avatar       String               // URL avatar (bisa CDN assets.najmifaza.my.id)
+  avatar       String               // URL avatar (Supabase Storage)
   email        String
   location     String               // "Asia/Jakarta"
   languages    Json                 // ["English", "Indonesian", "Arabic"]

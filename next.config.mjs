@@ -12,11 +12,6 @@ const nextConfig = {
       },
       {
         protocol: "https",
-        hostname: "assets.najmifaza.my.id",
-        pathname: "**",
-      },
-      {
-        protocol: "https",
         hostname: "vfaivkobxxwuujvqdoei.supabase.co",
         pathname: "**",
       },

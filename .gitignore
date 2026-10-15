@@ -32,8 +32,7 @@ yarn-error.log*
 !.env.example
 
 # data backups
-scripts/mariadb-backup.json
-scripts/supabase-assets-map.json
+scripts/*.json
 
 # vercel
 .vercel

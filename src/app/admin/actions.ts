@@ -31,7 +31,7 @@ export async function translateAction(
   }
 }
 
-// 3. Media Upload Action (uploads directly to assets.najmifaza.my.id CDN)
+// 3. Media Upload Action (uploads directly to Supabase Storage)
 export async function uploadMediaAction(formData: FormData): Promise<{
   success: boolean;
   url?: string;
