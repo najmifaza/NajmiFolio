@@ -37,7 +37,15 @@ export function LanguageProvider({
     } else {
       setLangState(initialLanguage);
     }
-  }, [pathname, initialLanguage]);
+
+    // Prefetch alternate language route for instant switching
+    const targetPath = pathname.startsWith("/en")
+      ? pathname.slice(3) || "/"
+      : pathname === "/"
+        ? "/en"
+        : `/en${pathname}`;
+    router.prefetch(targetPath);
+  }, [pathname, initialLanguage, router]);
 
   const setLanguage = (lang: Locale) => {
     setLangState(lang);
@@ -57,7 +65,6 @@ export function LanguageProvider({
     }
 
     router.push(newPath);
-    router.refresh();
   };
 
   const activeDict = dictionaries ? dictionaries[language] || initialDictionary : initialDictionary;

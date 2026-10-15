@@ -45,25 +45,32 @@ export async function middleware(request: NextRequest) {
     return response;
   }
 
-  // 3. For root path '/', check for foreign visitor auto-detection
+  // 3. For root path '/', handle smart Geo IP detection for first-time visitors
   if (pathname === "/") {
-    // If user explicitly chose English before, redirect to /en
+    // If visitor already chose a locale before, respect it
     if (cookieLocale === "en") {
       return NextResponse.redirect(new URL("/en", request.url));
     }
-
-    // If no cookie set, inspect Accept-Language header for auto-detection
-    if (!cookieLocale) {
-      const acceptLanguage = request.headers.get("accept-language") || "";
-      const isIndonesian = acceptLanguage.toLowerCase().includes("id");
-
-      // Foreign visitor without ID preference -> redirect to /en
-      if (!isIndonesian && acceptLanguage.trim().length > 0) {
-        const response = NextResponse.redirect(new URL("/en", request.url));
-        response.cookies.set("NEXT_LOCALE", "en", { path: "/", maxAge: 31536000 });
-        return response;
-      }
+    if (cookieLocale === "id") {
+      return NextResponse.next();
     }
+
+    // First-time visitor without cookie: check Vercel Geo IP header
+    const country =
+      request.headers.get("x-vercel-ip-country") ||
+      (request as unknown as { geo?: { country?: string } }).geo?.country;
+
+    // Foreign visitor (IP outside Indonesia) -> redirect to /en
+    if (country && country.toUpperCase() !== "ID") {
+      const response = NextResponse.redirect(new URL("/en", request.url));
+      response.cookies.set("NEXT_LOCALE", "en", { path: "/", maxAge: 31536000 });
+      return response;
+    }
+
+    // Local visitor (ID) or local dev -> stay on Indonesian default '/'
+    const response = NextResponse.next();
+    response.cookies.set("NEXT_LOCALE", "id", { path: "/", maxAge: 31536000 });
+    return response;
   }
 
   // 4. If visiting /en or /en/*, ensure cookie is kept in sync
