@@ -3,7 +3,7 @@
 import { UniversalIcon, resolveIconifyName } from "@/resources/icons";
 import { useRouter } from "next/navigation";
 import type React from "react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   type SaveCertificateInput,
   type SaveExperienceInput,
@@ -94,6 +94,30 @@ export default function AdminDashboard({
   const [certificates, setCertificates] = useState<any[]>(initialCertificates);
   const [editingCertificate, setEditingCertificate] = useState<any | null>(null);
   const [isCreatingCertificate, setIsCreatingCertificate] = useState(false);
+
+  useEffect(() => {
+    setProjects(initialProjects);
+  }, [initialProjects]);
+
+  useEffect(() => {
+    setProfile(initialProfile);
+  }, [initialProfile]);
+
+  useEffect(() => {
+    setExperiences(initialExperiences);
+  }, [initialExperiences]);
+
+  useEffect(() => {
+    setStudies(initialStudies);
+  }, [initialStudies]);
+
+  useEffect(() => {
+    setSkills(initialSkills);
+  }, [initialSkills]);
+
+  useEffect(() => {
+    setCertificates(initialCertificates);
+  }, [initialCertificates]);
 
   const [toast, setToast] = useState<{ type: "success" | "error"; text: string } | null>(null);
 
@@ -1924,6 +1948,9 @@ function ExperienceForm({ experience, onCancel, onSave }: any) {
               onChange={(e) => setOrder(Number(e.target.value))}
               required
             />
+            <div style={{ fontSize: "11px", color: "rgba(255,255,255,0.4)", marginTop: 4 }}>
+              Urutan 1–8: Work Experience. Urutan 9+: Organization & Committee.
+            </div>
           </div>
         </div>
 
