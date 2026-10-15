@@ -1,3 +1,8 @@
+:root {
+  --font-heading: var(--font-body);
+  --font-label: var(--font-body);
+}
+
 /* :root {
   /*
   /* Example setup for custom colors */
