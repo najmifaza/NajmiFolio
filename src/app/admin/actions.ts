@@ -736,3 +736,63 @@ export async function deleteSkillGroupAction(id: string) {
   revalidatePath("/en/about");
   return { success: true };
 }
+
+export async function moveOrderAction(
+  entity: "experience" | "certificate" | "project" | "study" | "skillGroup",
+  id: string,
+  direction: "up" | "down",
+) {
+  if (!(await verifyAuth())) throw new Error("Unauthorized");
+
+  const validEntities = ["project", "experience", "certificate", "study", "skillGroup"] as const;
+  if (!validEntities.includes(entity)) {
+    throw new Error("Invalid entity type");
+  }
+
+  await prisma.$transaction(async (tx: any) => {
+    const txModel = tx[entity];
+    const allRecords = await txModel.findMany({
+      orderBy:
+        entity === "project" ? [{ order: "asc" }, { publishedAt: "desc" }] : { order: "asc" },
+      select: { id: true, order: true },
+    });
+
+    const currentIndex = allRecords.findIndex((r: any) => r.id === id);
+    if (currentIndex === -1) return;
+
+    const targetIndex = direction === "up" ? currentIndex - 1 : currentIndex + 1;
+    if (targetIndex < 0 || targetIndex >= allRecords.length) return;
+
+    const updated = [...allRecords];
+    const [moved] = updated.splice(currentIndex, 1);
+    updated.splice(targetIndex, 0, moved);
+
+    for (let i = 0; i < updated.length; i++) {
+      const expectedOrder = i + 1;
+      if (updated[i].order !== expectedOrder) {
+        await txModel.update({
+          where: { id: updated[i].id },
+          data: { order: expectedOrder },
+        });
+      }
+    }
+  });
+
+  if (entity === "project") {
+    invalidateProjectCache();
+    revalidatePath("/");
+    revalidatePath("/project");
+    revalidatePath("/en");
+    revalidatePath("/en/project");
+  } else {
+    invalidateContentCache();
+    revalidatePath("/");
+    revalidatePath("/about");
+    revalidatePath("/licenses");
+    revalidatePath("/en");
+    revalidatePath("/en/about");
+    revalidatePath("/en/licenses");
+  }
+
+  return { success: true };
+}

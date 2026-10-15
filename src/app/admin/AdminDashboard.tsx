@@ -17,6 +17,7 @@ import {
   deleteProjectAction,
   deleteSkillGroupAction,
   deleteStudyAction,
+  moveOrderAction,
   saveCertificateAction,
   saveExperienceAction,
   saveProfileAction,
@@ -50,6 +51,109 @@ const SOCIAL_ICON_OPTIONS = [
 function getSkillIconName(rawName: string): string {
   return resolveIconifyName(rawName);
 }
+
+const OrderButtons = ({
+  order,
+  isFirst,
+  isLast,
+  onUp,
+  onDown,
+  disabled,
+}: {
+  order: number;
+  isFirst: boolean;
+  isLast: boolean;
+  onUp: () => void;
+  onDown: () => void;
+  disabled?: boolean;
+}) => {
+  return (
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        gap: "3px",
+        paddingRight: "10px",
+        marginRight: "6px",
+        borderRight: "1px solid rgba(255, 255, 255, 0.08)",
+        flexShrink: 0,
+      }}
+    >
+      <button
+        type="button"
+        disabled={isFirst || disabled}
+        onClick={(e) => {
+          e.stopPropagation();
+          onUp();
+        }}
+        title="Geser ke Atas"
+        style={{
+          width: "26px",
+          height: "20px",
+          borderRadius: "4px",
+          background:
+            isFirst || disabled ? "rgba(255, 255, 255, 0.02)" : "rgba(16, 185, 129, 0.12)",
+          border:
+            isFirst || disabled
+              ? "1px solid rgba(255, 255, 255, 0.05)"
+              : "1px solid rgba(16, 185, 129, 0.3)",
+          color: isFirst || disabled ? "rgba(255, 255, 255, 0.2)" : "#10b981",
+          cursor: isFirst || disabled ? "not-allowed" : "pointer",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          fontSize: "10px",
+          lineHeight: 1,
+          transition: "all 0.15s ease",
+        }}
+      >
+        ▲
+      </button>
+      <span
+        style={{
+          fontSize: "11px",
+          fontWeight: 700,
+          color: "rgba(255, 255, 255, 0.8)",
+          minWidth: "22px",
+          textAlign: "center",
+          fontVariantNumeric: "tabular-nums",
+        }}
+      >
+        #{order}
+      </span>
+      <button
+        type="button"
+        disabled={isLast || disabled}
+        onClick={(e) => {
+          e.stopPropagation();
+          onDown();
+        }}
+        title="Geser ke Bawah"
+        style={{
+          width: "26px",
+          height: "20px",
+          borderRadius: "4px",
+          background: isLast || disabled ? "rgba(255, 255, 255, 0.02)" : "rgba(16, 185, 129, 0.12)",
+          border:
+            isLast || disabled
+              ? "1px solid rgba(255, 255, 255, 0.05)"
+              : "1px solid rgba(16, 185, 129, 0.3)",
+          color: isLast || disabled ? "rgba(255, 255, 255, 0.2)" : "#10b981",
+          cursor: isLast || disabled ? "not-allowed" : "pointer",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          fontSize: "10px",
+          lineHeight: 1,
+          transition: "all 0.15s ease",
+        }}
+      >
+        ▼
+      </button>
+    </div>
+  );
+};
 
 interface AdminDashboardProps {
   initialProjects: any[];
@@ -130,6 +234,83 @@ export default function AdminDashboard({
     await fetch("/api/authenticate", { method: "DELETE" });
     router.push("/admin/login");
     router.refresh();
+  };
+
+  const [movingId, setMovingId] = useState<string | null>(null);
+
+  const handleMoveOrder = async (
+    entity: "experience" | "certificate" | "project" | "study" | "skillGroup",
+    id: string,
+    direction: "up" | "down",
+  ) => {
+    if (movingId) return;
+    setMovingId(id);
+
+    if (entity === "experience") {
+      setExperiences((prev) => {
+        const idx = prev.findIndex((item) => item.id === id);
+        if (idx === -1) return prev;
+        const targetIdx = direction === "up" ? idx - 1 : idx + 1;
+        if (targetIdx < 0 || targetIdx >= prev.length) return prev;
+        const copy = [...prev];
+        const [item] = copy.splice(idx, 1);
+        copy.splice(targetIdx, 0, item);
+        return copy.map((it, i) => ({ ...it, order: i + 1 }));
+      });
+    } else if (entity === "certificate") {
+      setCertificates((prev) => {
+        const idx = prev.findIndex((item) => item.id === id);
+        if (idx === -1) return prev;
+        const targetIdx = direction === "up" ? idx - 1 : idx + 1;
+        if (targetIdx < 0 || targetIdx >= prev.length) return prev;
+        const copy = [...prev];
+        const [item] = copy.splice(idx, 1);
+        copy.splice(targetIdx, 0, item);
+        return copy.map((it, i) => ({ ...it, order: i + 1 }));
+      });
+    } else if (entity === "project") {
+      setProjects((prev) => {
+        const idx = prev.findIndex((item) => item.id === id);
+        if (idx === -1) return prev;
+        const targetIdx = direction === "up" ? idx - 1 : idx + 1;
+        if (targetIdx < 0 || targetIdx >= prev.length) return prev;
+        const copy = [...prev];
+        const [item] = copy.splice(idx, 1);
+        copy.splice(targetIdx, 0, item);
+        return copy.map((it, i) => ({ ...it, order: i + 1 }));
+      });
+    } else if (entity === "study") {
+      setStudies((prev) => {
+        const idx = prev.findIndex((item) => item.id === id);
+        if (idx === -1) return prev;
+        const targetIdx = direction === "up" ? idx - 1 : idx + 1;
+        if (targetIdx < 0 || targetIdx >= prev.length) return prev;
+        const copy = [...prev];
+        const [item] = copy.splice(idx, 1);
+        copy.splice(targetIdx, 0, item);
+        return copy.map((it, i) => ({ ...it, order: i + 1 }));
+      });
+    } else if (entity === "skillGroup") {
+      setSkills((prev) => {
+        const idx = prev.findIndex((item) => item.id === id);
+        if (idx === -1) return prev;
+        const targetIdx = direction === "up" ? idx - 1 : idx + 1;
+        if (targetIdx < 0 || targetIdx >= prev.length) return prev;
+        const copy = [...prev];
+        const [item] = copy.splice(idx, 1);
+        copy.splice(targetIdx, 0, item);
+        return copy.map((it, i) => ({ ...it, order: i + 1 }));
+      });
+    }
+
+    try {
+      await moveOrderAction(entity, id, direction);
+    } catch {
+      showToast("error", "Gagal memperbarui urutan");
+      router.refresh();
+    } finally {
+      setMovingId(null);
+    }
   };
 
   return (
@@ -318,7 +499,7 @@ export default function AdminDashboard({
               />
             ) : (
               <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
-                {projects.map((proj) => {
+                {projects.map((proj, index: number) => {
                   const idTrans = proj.translations?.find((t: any) => t.locale === "id") || {};
                   const enTrans = proj.translations?.find((t: any) => t.locale === "en") || {};
                   const coverImg = Array.isArray(proj.images) ? proj.images[0] : "";
@@ -326,8 +507,16 @@ export default function AdminDashboard({
                   return (
                     <div key={proj.id} className={styles.itemCard}>
                       <div
-                        style={{ display: "flex", alignItems: "center", gap: "16px", minWidth: 0 }}
+                        style={{ display: "flex", alignItems: "center", gap: "14px", minWidth: 0 }}
                       >
+                        <OrderButtons
+                          order={proj.order ?? index + 1}
+                          isFirst={index === 0}
+                          isLast={index === projects.length - 1}
+                          disabled={movingId !== null}
+                          onUp={() => handleMoveOrder("project", proj.id, "up")}
+                          onDown={() => handleMoveOrder("project", proj.id, "down")}
+                        />
                         {coverImg ? (
                           coverImg.endsWith(".webm") ? (
                             <video
@@ -530,22 +719,32 @@ export default function AdminDashboard({
               />
             ) : (
               <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
-                {experiences.map((exp: any) => {
+                {experiences.map((exp: any, index: number) => {
                   const idTrans = exp.translations?.find((t: any) => t.locale === "id") || {};
                   return (
                     <div key={exp.id} className={styles.itemCard}>
-                      <div>
-                        <div style={{ fontSize: "14.5px", fontWeight: 600, color: "#fff" }}>
-                          {exp.company}
-                        </div>
-                        <div
-                          style={{
-                            fontSize: "12.5px",
-                            color: "rgba(255,255,255,0.45)",
-                            marginTop: 2,
-                          }}
-                        >
-                          {idTrans.role} • {exp.timeframe} (Urutan: {exp.order})
+                      <div style={{ display: "flex", alignItems: "center", gap: "14px" }}>
+                        <OrderButtons
+                          order={exp.order ?? index + 1}
+                          isFirst={index === 0}
+                          isLast={index === experiences.length - 1}
+                          disabled={movingId !== null}
+                          onUp={() => handleMoveOrder("experience", exp.id, "up")}
+                          onDown={() => handleMoveOrder("experience", exp.id, "down")}
+                        />
+                        <div>
+                          <div style={{ fontSize: "14.5px", fontWeight: 600, color: "#fff" }}>
+                            {exp.company}
+                          </div>
+                          <div
+                            style={{
+                              fontSize: "12.5px",
+                              color: "rgba(255,255,255,0.45)",
+                              marginTop: 2,
+                            }}
+                          >
+                            {idTrans.role} • {exp.timeframe}
+                          </div>
                         </div>
                       </div>
                       <div style={{ display: "flex", gap: "8px" }}>
@@ -636,17 +835,29 @@ export default function AdminDashboard({
               />
             ) : (
               <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
-                {studies.map((item: any) => {
+                {studies.map((item: any, index: number) => {
                   const idTrans = item.translations?.find((t: any) => t.locale === "id") || {};
                   return (
                     <div key={item.id} className={styles.itemCard}>
-                      <div>
-                        <div style={{ fontSize: "14.5px", fontWeight: 600, color: "#fff" }}>
-                          {item.institution}
-                        </div>
-                        <div style={{ fontSize: "13px", color: "#34d399", marginTop: 2 }}>
-                          {idTrans.degree || "Studi"} •{" "}
-                          <span style={{ color: "rgba(255,255,255,0.45)" }}>{item.timeframe}</span>
+                      <div style={{ display: "flex", alignItems: "center", gap: "14px" }}>
+                        <OrderButtons
+                          order={item.order ?? index + 1}
+                          isFirst={index === 0}
+                          isLast={index === studies.length - 1}
+                          disabled={movingId !== null}
+                          onUp={() => handleMoveOrder("study", item.id, "up")}
+                          onDown={() => handleMoveOrder("study", item.id, "down")}
+                        />
+                        <div>
+                          <div style={{ fontSize: "14.5px", fontWeight: 600, color: "#fff" }}>
+                            {item.institution}
+                          </div>
+                          <div style={{ fontSize: "13px", color: "#34d399", marginTop: 2 }}>
+                            {idTrans.degree || "Studi"} •{" "}
+                            <span style={{ color: "rgba(255,255,255,0.45)" }}>
+                              {item.timeframe}
+                            </span>
+                          </div>
                         </div>
                       </div>
 
@@ -722,34 +933,44 @@ export default function AdminDashboard({
               />
             ) : (
               <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
-                {skills.map((sg: any) => {
+                {skills.map((sg: any, index: number) => {
                   const idTrans = sg.translations?.find((t: any) => t.locale === "id") || {};
                   const skillList = Array.isArray(sg.skills)
                     ? sg.skills.map((s: any) => (typeof s === "string" ? s : s.name))
                     : [];
                   return (
                     <div key={sg.id} className={styles.itemCard}>
-                      <div>
-                        <div style={{ fontSize: "14.5px", fontWeight: 600, color: "#fff" }}>
-                          {idTrans.title || sg.title}
-                        </div>
-                        <div
-                          style={{ display: "flex", gap: "6px", flexWrap: "wrap", marginTop: 6 }}
-                        >
-                          {skillList.map((tag: string) => (
-                            <span
-                              key={tag}
-                              className={styles.langPill}
-                              style={{ display: "inline-flex", alignItems: "center", gap: "6px" }}
-                            >
-                              <UniversalIcon
-                                name={getSkillIconName(tag)}
-                                size={14}
-                                color="#34d399"
-                              />
-                              {tag}
-                            </span>
-                          ))}
+                      <div style={{ display: "flex", alignItems: "center", gap: "14px" }}>
+                        <OrderButtons
+                          order={sg.order ?? index + 1}
+                          isFirst={index === 0}
+                          isLast={index === skills.length - 1}
+                          disabled={movingId !== null}
+                          onUp={() => handleMoveOrder("skillGroup", sg.id, "up")}
+                          onDown={() => handleMoveOrder("skillGroup", sg.id, "down")}
+                        />
+                        <div>
+                          <div style={{ fontSize: "14.5px", fontWeight: 600, color: "#fff" }}>
+                            {idTrans.title || sg.title}
+                          </div>
+                          <div
+                            style={{ display: "flex", gap: "6px", flexWrap: "wrap", marginTop: 6 }}
+                          >
+                            {skillList.map((tag: string) => (
+                              <span
+                                key={tag}
+                                className={styles.langPill}
+                                style={{ display: "inline-flex", alignItems: "center", gap: "6px" }}
+                              >
+                                <UniversalIcon
+                                  name={getSkillIconName(tag)}
+                                  size={14}
+                                  color="#34d399"
+                                />
+                                {tag}
+                              </span>
+                            ))}
+                          </div>
                         </div>
                       </div>
 
@@ -825,9 +1046,17 @@ export default function AdminDashboard({
               />
             ) : (
               <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
-                {certificates.map((cert: any) => (
+                {certificates.map((cert: any, index: number) => (
                   <div key={cert.id} className={styles.itemCard}>
-                    <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: "14px" }}>
+                      <OrderButtons
+                        order={cert.order ?? index + 1}
+                        isFirst={index === 0}
+                        isLast={index === certificates.length - 1}
+                        disabled={movingId !== null}
+                        onUp={() => handleMoveOrder("certificate", cert.id, "up")}
+                        onDown={() => handleMoveOrder("certificate", cert.id, "down")}
+                      />
                       {cert.image && (
                         <img
                           src={cert.image}
@@ -839,6 +1068,7 @@ export default function AdminDashboard({
                             background: "rgba(255,255,255,0.04)",
                             borderRadius: 6,
                             padding: 2,
+                            flexShrink: 0,
                           }}
                         />
                       )}
