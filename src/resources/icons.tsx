@@ -1,4 +1,5 @@
 import { Icon as IconifyIcon } from "@iconify/react";
+import { iconLibrary as defaultOnceIcons } from "@once-ui-system/core";
 import type React from "react";
 import type { IconType } from "react-icons";
 
@@ -67,6 +68,7 @@ import {
 } from "react-icons/fa6";
 
 export const baseIconLibrary: Record<string, IconType> = {
+  ...defaultOnceIcons,
   chevronRight: HiChevronRight,
   chevronLeft: HiChevronLeft,
   chevronDown: HiChevronDown,
@@ -154,6 +156,10 @@ export function resolveIconifyName(name: string): string {
     rocket: "heroicons:rocket-launch",
     calendar: "heroicons:calendar",
     person: "heroicons:user-circle",
+    light: "heroicons:sun",
+    sun: "heroicons:sun",
+    dark: "heroicons:moon",
+    moon: "heroicons:moon",
 
     // Tech / Languages / Frameworks
     react: "simple-icons:react",

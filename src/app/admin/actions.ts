@@ -99,6 +99,30 @@ async function reorderEntities(
   });
 }
 
+async function deleteAndShiftOrders(
+  modelName: "project" | "experience" | "certificate" | "study" | "skillGroup",
+  id: string,
+  extraWhere: Record<string, unknown> = {},
+) {
+  await prisma.$transaction(async (tx) => {
+    const targetModel = (tx as any)[modelName];
+    const existing = await targetModel.findUnique({
+      where: { id },
+      select: { order: true },
+    });
+    await targetModel.delete({ where: { id } });
+    if (existing && existing.order !== undefined) {
+      await targetModel.updateMany({
+        where: {
+          ...extraWhere,
+          order: { gt: existing.order },
+        },
+        data: { order: { decrement: 1 } },
+      });
+    }
+  });
+}
+
 // 4. Project CRUD
 export interface SaveProjectInput {
   id?: string;
@@ -222,7 +246,7 @@ export async function saveProjectAction(data: SaveProjectInput) {
 
 export async function deleteProjectAction(id: string) {
   if (!(await verifyAuth())) throw new Error("Unauthorized");
-  await prisma.project.delete({ where: { id } });
+  await deleteAndShiftOrders("project", id);
 
   invalidateProjectCache();
 
@@ -417,7 +441,7 @@ export async function saveExperienceAction(data: SaveExperienceInput) {
 
 export async function deleteExperienceAction(id: string) {
   if (!(await verifyAuth())) throw new Error("Unauthorized");
-  await prisma.experience.delete({ where: { id } });
+  await deleteAndShiftOrders("experience", id);
 
   invalidateContentCache();
 
@@ -481,7 +505,7 @@ export async function saveCertificateAction(data: SaveCertificateInput) {
 
 export async function deleteCertificateAction(id: string) {
   if (!(await verifyAuth())) throw new Error("Unauthorized");
-  await prisma.certificate.delete({ where: { id } });
+  await deleteAndShiftOrders("certificate", id);
 
   invalidateContentCache();
 
@@ -615,7 +639,7 @@ export async function saveStudyAction(data: SaveStudyInput) {
 
 export async function deleteStudyAction(id: string) {
   if (!(await verifyAuth())) throw new Error("Unauthorized");
-  await prisma.study.delete({ where: { id } });
+  await deleteAndShiftOrders("study", id);
 
   invalidateContentCache();
   revalidatePath("/about");
@@ -705,7 +729,7 @@ export async function saveSkillGroupAction(data: SaveSkillGroupInput) {
 
 export async function deleteSkillGroupAction(id: string) {
   if (!(await verifyAuth())) throw new Error("Unauthorized");
-  await prisma.skillGroup.delete({ where: { id } });
+  await deleteAndShiftOrders("skillGroup", id);
 
   invalidateContentCache();
   revalidatePath("/about");
