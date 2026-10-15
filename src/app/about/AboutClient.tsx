@@ -1,7 +1,12 @@
 "use client";
 
-import React, { useMemo, useState } from "react";
+import { GitHubContribution } from "@/components";
+import { useDictionary } from "@/components/LanguageProvider";
+import TableOfContents from "@/components/about/TableOfContents";
+import styles from "@/components/about/about.module.scss";
+import { baseURL } from "@/resources";
 import {
+  Accordion,
   Avatar,
   Button,
   Column,
@@ -9,17 +14,12 @@ import {
   Icon,
   IconButton,
   Media,
+  Row,
+  Schema,
   Tag,
   Text,
-  Schema,
-  Row,
-  Accordion,
 } from "@once-ui-system/core";
-import { baseURL } from "@/resources";
-import { useDictionary } from "@/components/LanguageProvider";
-import TableOfContents from "@/components/about/TableOfContents";
-import styles from "@/components/about/about.module.scss";
-import { GitHubContribution } from "@/components";
+import React, { useMemo, useState } from "react";
 
 export default function AboutClient() {
   const [zoomImage, setZoomImage] = useState<string | null>(null);
@@ -37,16 +37,12 @@ export default function AboutClient() {
       {
         title: about.Organization.title,
         display: about.Organization.display,
-        items: about.Organization.experiences.map(
-          (experience) => experience.company,
-        ),
+        items: about.Organization.experiences.map((experience) => experience.company),
       },
       {
         title: about.studies.title,
         display: about.studies.display,
-        items: about.studies.institutions.map(
-          (institution) => institution.name,
-        ),
+        items: about.studies.institutions.map((institution) => institution.name),
       },
       {
         title: about.technical.title,
@@ -57,9 +53,7 @@ export default function AboutClient() {
     [about],
   );
 
-  const createAccordionItemsFromExperiences = (
-    experiences: typeof about.work.experiences,
-  ) =>
+  const createAccordionItemsFromExperiences = (experiences: typeof about.work.experiences) =>
     experiences.map((experience) => {
       const titleNode = (
         <Row fillWidth vertical="center" gap="12">
@@ -135,7 +129,7 @@ export default function AboutClient() {
         author={{
           name: person.name,
           url: `${baseURL}${about.path}`,
-          image: `${baseURL}${person.avatar}`,
+          image: person.avatar?.startsWith("http") ? person.avatar : `${baseURL}${person.avatar}`,
         }}
       />
 
@@ -206,11 +200,7 @@ export default function AboutClient() {
                 className={styles.blockAlign}
                 style={{ backdropFilter: "blur(var(--static-space-1))" }}
               >
-                <Icon
-                  paddingLeft="12"
-                  name="project"
-                  onBackground="brand-weak"
-                />
+                <Icon paddingLeft="12" name="project" onBackground="brand-weak" />
                 <Row paddingX="8">View My Project</Row>
                 <IconButton
                   href={"project"}
@@ -275,12 +265,7 @@ export default function AboutClient() {
           </Column>
 
           {about.intro.display && (
-            <Column
-              textVariant="body-default-l"
-              fillWidth
-              gap="m"
-              marginBottom="l"
-            >
+            <Column textVariant="body-default-l" fillWidth gap="m" marginBottom="l">
               {about.intro.description}
               <GitHubContribution />
             </Column>
@@ -288,18 +273,11 @@ export default function AboutClient() {
 
           {about.work.display && (
             <>
-              <Heading
-                as="h2"
-                id={about.work.title}
-                variant="display-strong-s"
-                marginBottom="m"
-              >
+              <Heading as="h2" id={about.work.title} variant="display-strong-s" marginBottom="m">
                 {about.work.title}
               </Heading>
               <Column fillWidth gap="0">
-                {createAccordionItemsFromExperiences(
-                  about.work.experiences,
-                ).map((item, idx) => (
+                {createAccordionItemsFromExperiences(about.work.experiences).map((item, idx) => (
                   <Accordion
                     key={`${item.title}-${idx}`}
                     title={item.title}
@@ -332,25 +310,25 @@ export default function AboutClient() {
                 {about.Organization.title}
               </Heading>
               <Column fillWidth gap="0">
-                {createAccordionItemsFromExperiences(
-                  about.Organization.experiences,
-                ).map((item, idx) => (
-                  <Accordion
-                    key={`${item.title}-${idx}`}
-                    title={item.title}
-                    size="m"
-                    radius="m"
-                    className={styles.noArrowAccordion}
-                    style={{
-                      border: "none",
-                      boxShadow: "none",
-                      overflow: "visible",
-                      marginBottom: 0,
-                    }}
-                  >
-                    {item.content}
-                  </Accordion>
-                ))}
+                {createAccordionItemsFromExperiences(about.Organization.experiences).map(
+                  (item, idx) => (
+                    <Accordion
+                      key={`${item.title}-${idx}`}
+                      title={item.title}
+                      size="m"
+                      radius="m"
+                      className={styles.noArrowAccordion}
+                      style={{
+                        border: "none",
+                        boxShadow: "none",
+                        overflow: "visible",
+                        marginBottom: 0,
+                      }}
+                    >
+                      {item.content}
+                    </Accordion>
+                  ),
+                )}
               </Column>
             </>
           )}
@@ -368,18 +346,11 @@ export default function AboutClient() {
               </Heading>
               <Column fillWidth gap="l" marginBottom="40">
                 {about.studies.institutions.map((institution, index) => (
-                  <Column
-                    key={`${institution.name}-${index}`}
-                    fillWidth
-                    gap="4"
-                  >
+                  <Column key={`${institution.name}-${index}`} fillWidth gap="4">
                     <Text id={institution.name} variant="heading-strong-l">
                       {institution.name}
                     </Text>
-                    <Text
-                      variant="heading-default-xs"
-                      onBackground="neutral-weak"
-                    >
+                    <Text variant="heading-default-xs" onBackground="neutral-weak">
                       {institution.description}
                     </Text>
                   </Column>
@@ -410,11 +381,7 @@ export default function AboutClient() {
                     {skill.tags && skill.tags.length > 0 && (
                       <Row wrap gap="8" paddingTop="8">
                         {skill.tags.map((tag, tagIndex) => (
-                          <Tag
-                            key={`${skill.title}-${tagIndex}`}
-                            size="l"
-                            prefixIcon={tag.icon}
-                          >
+                          <Tag key={`${skill.title}-${tagIndex}`} size="l" prefixIcon={tag.icon}>
                             {tag.name}
                           </Tag>
                         ))}

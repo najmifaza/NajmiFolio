@@ -1,28 +1,26 @@
-import { notFound } from "next/navigation";
-import { getPostsForCurrentLocale, getPosts } from "@/utils/utils";
+import { CustomMDX, ScrollToHash } from "@/components";
+import { Projects } from "@/components/project/Projects";
+import { baseURL } from "@/resources";
+import { getDictionary } from "@/resources/i18n";
+import { formatDate } from "@/utils/formatDate";
+import { getPosts, getPostsForCurrentLocale } from "@/utils/utils";
 import {
-  Meta,
-  Schema,
+  Avatar,
   AvatarGroup,
   Button,
   Column,
   Flex,
   Heading,
-  Media,
-  Text,
-  SmartLink,
-  Row,
-  Avatar,
   Line,
+  Media,
+  Meta,
+  Row,
+  Schema,
+  SmartLink,
+  Text,
 } from "@once-ui-system/core";
-import { baseURL } from "@/resources";
-import { getDictionary } from "@/resources/i18n";
-import { formatDate } from "@/utils/formatDate";
-import { ScrollToHash, CustomMDX } from "@/components";
-import { Metadata } from "next";
-import { Projects } from "@/components/project/Projects";
-
-
+import type { Metadata } from "next";
+import { notFound } from "next/navigation";
 
 export async function generateMetadata({
   params,
@@ -36,7 +34,7 @@ export async function generateMetadata({
 
   const { project } = await getDictionary();
   const posts = await getPostsForCurrentLocale(["src", "app", "project", "projects"]);
-  let post = posts.find((post) => post.slug === slugPath);
+  const post = posts.find((post) => post.slug === slugPath);
 
   if (!post) return {};
 
@@ -75,7 +73,7 @@ export default async function Project({
   const { about, person, project } = dict;
 
   const posts = await getPostsForCurrentLocale(["src", "app", "project", "projects"]);
-  let post = posts.find((post) => post.slug === slugPath);
+  const post = posts.find((post) => post.slug === slugPath);
 
   if (!post) {
     notFound();
@@ -97,33 +95,26 @@ export default async function Project({
         datePublished={post.metadata.publishedAt}
         dateModified={post.metadata.publishedAt}
         image={
-          post.metadata.image ||
-          `/api/og/generate?title=${encodeURIComponent(post.metadata.title)}`
+          post.metadata.image || `/api/og/generate?title=${encodeURIComponent(post.metadata.title)}`
         }
         author={{
           name: person.name,
           url: `${baseURL}${about.path}`,
-          image: `${baseURL}${person.avatar}`,
+          image: person.avatar?.startsWith("http") ? person.avatar : `${baseURL}${person.avatar}`,
         }}
       />
       <Column maxWidth="s" gap="16" horizontal="center" align="center">
         <SmartLink href="/project">
           <Text variant="label-strong-m">Projects</Text>
         </SmartLink>
-        <Text
-          variant="body-default-xs"
-          onBackground="neutral-weak"
-          marginBottom="12"
-        >
+        <Text variant="body-default-xs" onBackground="neutral-weak" marginBottom="12">
           {post.metadata.publishedAt && formatDate(post.metadata.publishedAt)}
         </Text>
         <Heading variant="display-strong-m">{post.metadata.title}</Heading>
       </Column>
       <Row marginBottom="32" horizontal="center">
         <Row gap="16" vertical="center">
-          {post.metadata.team && (
-            <AvatarGroup reverse avatars={avatars} size="s" />
-          )}
+          {post.metadata.team && <AvatarGroup reverse avatars={avatars} size="s" />}
           <Text variant="label-default-m" onBackground="brand-weak">
             {post.metadata.team?.map((member, idx) => (
               <span key={idx}>
@@ -139,13 +130,7 @@ export default async function Project({
         </Row>
       </Row>
       {post.metadata.images.length > 0 && (
-        <Media
-          priority
-          aspectRatio="16 / 9"
-          radius="m"
-          alt="image"
-          src={post.metadata.images[0]}
-        />
+        <Media priority aspectRatio="16 / 9" radius="m" alt="image" src={post.metadata.images[0]} />
       )}
       <Column style={{ margin: "auto" }} as="article" maxWidth="xs">
         <CustomMDX source={post.content} />

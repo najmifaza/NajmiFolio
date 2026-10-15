@@ -1,25 +1,25 @@
-import { notFound } from "next/navigation";
-import { getPostsForCurrentLocale } from "@/utils/utils";
-import { getProjectBySlugFromDB } from "@/services/projectService";
-import {
-  Meta,
-  Schema,
-  AvatarGroup,
-  Column,
-  Heading,
-  Media,
-  Text,
-  SmartLink,
-  Row,
-  Line,
-} from "@once-ui-system/core";
+import { CustomMDX, ScrollToHash } from "@/components";
+import { Projects } from "@/components/project/Projects";
 import { baseURL } from "@/resources";
 import { getDictionary } from "@/resources/i18n";
 import type { Locale } from "@/resources/i18n";
+import { getProjectBySlugFromDB } from "@/services/projectService";
 import { formatDate } from "@/utils/formatDate";
-import { ScrollToHash, CustomMDX } from "@/components";
-import { Metadata } from "next";
-import { Projects } from "@/components/project/Projects";
+import { getPostsForCurrentLocale } from "@/utils/utils";
+import {
+  AvatarGroup,
+  Column,
+  Heading,
+  Line,
+  Media,
+  Meta,
+  Row,
+  Schema,
+  SmartLink,
+  Text,
+} from "@once-ui-system/core";
+import type { Metadata } from "next";
+import { notFound } from "next/navigation";
 
 export async function generateMetadata({
   params,
@@ -105,33 +105,26 @@ export default async function Project({
         datePublished={post.metadata.publishedAt}
         dateModified={post.metadata.publishedAt}
         image={
-          post.metadata.image ||
-          `/api/og/generate?title=${encodeURIComponent(post.metadata.title)}`
+          post.metadata.image || `/api/og/generate?title=${encodeURIComponent(post.metadata.title)}`
         }
         author={{
           name: person.name,
           url: `${baseURL}${about.path}`,
-          image: `${baseURL}${person.avatar}`,
+          image: person.avatar?.startsWith("http") ? person.avatar : `${baseURL}${person.avatar}`,
         }}
       />
       <Column maxWidth="s" gap="16" horizontal="center" align="center">
         <SmartLink href={projectListHref}>
           <Text variant="label-strong-m">Projects</Text>
         </SmartLink>
-        <Text
-          variant="body-default-xs"
-          onBackground="neutral-weak"
-          marginBottom="12"
-        >
+        <Text variant="body-default-xs" onBackground="neutral-weak" marginBottom="12">
           {post.metadata.publishedAt && formatDate(post.metadata.publishedAt)}
         </Text>
         <Heading variant="display-strong-m">{post.metadata.title}</Heading>
       </Column>
       <Row marginBottom="32" horizontal="center">
         <Row gap="16" vertical="center">
-          {post.metadata.team && (
-            <AvatarGroup reverse avatars={avatars} size="s" />
-          )}
+          {post.metadata.team && <AvatarGroup reverse avatars={avatars} size="s" />}
           <Text variant="label-default-m" onBackground="brand-weak">
             {post.metadata.team?.map((member, idx) => (
               <span key={idx}>
@@ -147,13 +140,7 @@ export default async function Project({
         </Row>
       </Row>
       {post.metadata.images.length > 0 && (
-        <Media
-          priority
-          aspectRatio="16 / 9"
-          radius="m"
-          alt="image"
-          src={post.metadata.images[0]}
-        />
+        <Media priority aspectRatio="16 / 9" radius="m" alt="image" src={post.metadata.images[0]} />
       )}
       <Column style={{ margin: "auto" }} as="article" maxWidth="xs">
         <CustomMDX source={post.content} />

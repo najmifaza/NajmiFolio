@@ -66,7 +66,11 @@ export async function GET(request: Request) {
           }}
         >
           <img
-            src={baseURL + person.avatar}
+            src={
+              person.avatar?.startsWith("http")
+                ? person.avatar
+                : baseURL + person.avatar
+            }
             style={{
               width: "12rem",
               height: "12rem",

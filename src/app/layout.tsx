@@ -5,27 +5,19 @@ import "@/resources/custom.css";
 import classNames from "classnames";
 import Script from "next/script";
 
-import { Background, Column, Flex, Meta, RevealFx } from "@once-ui-system/core";
-import type { opacity, SpacingToken } from "@once-ui-system/core";
-import { Footer, Header, RouteGuard, Providers, LanguageProvider } from "@/components";
-import {
-  baseURL,
-  effects,
-  fonts,
-  style,
-  dataStyle,
-} from "@/resources";
+import { Footer, Header, LanguageProvider, Providers, RouteGuard } from "@/components";
+import { baseURL, dataStyle, effects, fonts, style } from "@/resources";
 import { getDictionary } from "@/resources/i18n";
-import { getDynamicDictionary } from "@/services/contentService";
-import { cookies } from "next/headers";
 import type { Locale } from "@/resources/i18n";
+import { getDynamicDictionary } from "@/services/contentService";
+import { Background, Column, Flex, Meta, RevealFx } from "@once-ui-system/core";
+import type { SpacingToken, opacity } from "@once-ui-system/core";
+import { cookies } from "next/headers";
 
 export async function generateMetadata() {
   const dict = await getDictionary();
   const { home } = dict;
-  const normalizedBaseURL = baseURL.endsWith("/")
-    ? baseURL.slice(0, -1)
-    : baseURL;
+  const normalizedBaseURL = baseURL.endsWith("/") ? baseURL.slice(0, -1) : baseURL;
 
   const cookieStore = await cookies();
   const locale = (cookieStore.get("NEXT_LOCALE")?.value as Locale) ?? "id";
@@ -105,9 +97,7 @@ export default async function RootLayout({
   const dict = locale === "en" ? dictEn : dictId;
   const { person, social } = dict;
 
-  const normalizedBaseURL = baseURL.endsWith("/")
-    ? baseURL.slice(0, -1)
-    : baseURL;
+  const normalizedBaseURL = baseURL.endsWith("/") ? baseURL.slice(0, -1) : baseURL;
 
   const personJsonLd = {
     "@context": "https://schema.org",
@@ -115,11 +105,11 @@ export default async function RootLayout({
     name: person.name,
     alternateName: [person.lastName],
     url: normalizedBaseURL,
-    image: `${normalizedBaseURL}${person.avatar}`,
+    image: person.avatar?.startsWith("http")
+      ? person.avatar
+      : `${normalizedBaseURL}${person.avatar}`,
     jobTitle: person.role,
-    sameAs: social
-      .map((socialItem) => socialItem.link)
-      .filter((link) => link.startsWith("http")),
+    sameAs: social.map((socialItem) => socialItem.link).filter((link) => link.startsWith("http")),
   };
 
   const websiteJsonLd = {
@@ -157,12 +147,8 @@ export default async function RootLayout({
             gtag('config', 'G-KHXXN300H0');
           `}
         </Script>
-        <script type="application/ld+json">
-          {JSON.stringify(personJsonLd)}
-        </script>
-        <script type="application/ld+json">
-          {JSON.stringify(websiteJsonLd)}
-        </script>
+        <script type="application/ld+json">{JSON.stringify(personJsonLd)}</script>
+        <script type="application/ld+json">{JSON.stringify(websiteJsonLd)}</script>
         <script id="theme-init">{`
               (function() {
                 try {

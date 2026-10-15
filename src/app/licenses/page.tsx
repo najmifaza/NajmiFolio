@@ -1,8 +1,8 @@
-import { Flex, Meta, Schema, Heading } from "@once-ui-system/core";
+import styles from "@/components/about/about.module.scss";
 import LicensesView from "@/components/licenses/LicensesView";
 import { baseURL } from "@/resources";
 import { getDictionary } from "@/resources/i18n";
-import styles from "@/components/about/about.module.scss";
+import { Flex, Heading, Meta, Schema } from "@once-ui-system/core";
 
 export async function generateMetadata() {
   const { licenses } = await getDictionary();
@@ -41,7 +41,7 @@ export default async function Licenses() {
         author={{
           name: person.name,
           url: `${baseURL}${licenses.path}`,
-          image: `${baseURL}${person.avatar}`,
+          image: person.avatar?.startsWith("http") ? person.avatar : `${baseURL}${person.avatar}`,
         }}
       />
       <Heading

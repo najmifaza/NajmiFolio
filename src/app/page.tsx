@@ -1,19 +1,19 @@
-import {
-  Heading,
-  Text,
-  Button,
-  Avatar,
-  RevealFx,
-  Column,
-  Badge,
-  Row,
-  Schema,
-  Meta,
-} from "@once-ui-system/core";
+import { GitHubContribution, Mailchimp } from "@/components";
+import { Projects } from "@/components/project/Projects";
 import { baseURL } from "@/resources";
 import { getDictionary } from "@/resources/i18n";
-import { Mailchimp, GitHubContribution } from "@/components";
-import { Projects } from "@/components/project/Projects";
+import {
+  Avatar,
+  Badge,
+  Button,
+  Column,
+  Heading,
+  Meta,
+  RevealFx,
+  Row,
+  Schema,
+  Text,
+} from "@once-ui-system/core";
 
 export async function generateMetadata() {
   const { home } = await getDictionary();
@@ -52,7 +52,7 @@ export default async function Home() {
         author={{
           name: person.name,
           url: `${baseURL}${about.path}`,
-          image: `${baseURL}${person.avatar}`,
+          image: person.avatar?.startsWith("http") ? person.avatar : `${baseURL}${person.avatar}`,
         }}
       />
       <Column fillWidth horizontal="center" gap="m">
@@ -78,37 +78,17 @@ export default async function Home() {
               </Badge>
             </RevealFx>
           )}
-          <RevealFx
-            translateY="4"
-            fillWidth
-            horizontal="center"
-            paddingBottom="16"
-          >
+          <RevealFx translateY="4" fillWidth horizontal="center" paddingBottom="16">
             <Heading wrap="balance" variant="display-strong-l">
               {home.headline}
             </Heading>
           </RevealFx>
-          <RevealFx
-            translateY="8"
-            delay={0.2}
-            fillWidth
-            horizontal="center"
-            paddingBottom="32"
-          >
-            <Text
-              wrap="balance"
-              onBackground="neutral-weak"
-              variant="heading-default-l"
-            >
+          <RevealFx translateY="8" delay={0.2} fillWidth horizontal="center" paddingBottom="32">
+            <Text wrap="balance" onBackground="neutral-weak" variant="heading-default-l">
               {home.subline}
             </Text>
           </RevealFx>
-          <RevealFx
-            paddingTop="12"
-            delay={0.4}
-            horizontal="center"
-            paddingLeft="12"
-          >
+          <RevealFx paddingTop="12" delay={0.4} horizontal="center" paddingLeft="12">
             <Button
               id="about"
               data-border="rounded"

@@ -1,8 +1,8 @@
-import { Column, Heading, Meta, Schema } from "@once-ui-system/core";
+import { Projects } from "@/components/project/Projects";
 import { baseURL } from "@/resources";
 import { getDictionary } from "@/resources/i18n";
 import type { Locale } from "@/resources/i18n";
-import { Projects } from "@/components/project/Projects";
+import { Column, Heading, Meta, Schema } from "@once-ui-system/core";
 
 export async function generateMetadata({
   params,
@@ -55,7 +55,7 @@ export default async function ProjectPage({
         author={{
           name: person.name,
           url: `${baseURL}${about.path}`,
-          image: `${baseURL}${person.avatar}`,
+          image: person.avatar?.startsWith("http") ? person.avatar : `${baseURL}${person.avatar}`,
         }}
       />
       <Heading marginBottom="l" variant="heading-strong-l" align="center">

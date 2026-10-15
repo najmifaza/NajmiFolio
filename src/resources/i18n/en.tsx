@@ -1,12 +1,4 @@
-import type {
-  About,
-  Licenses,
-  Home,
-  Newsletter,
-  Person,
-  Social,
-  Work,
-} from "@/types";
+import type { About, Home, Licenses, Newsletter, Person, Social, Work } from "@/types";
 import { Line, Row, Text } from "@once-ui-system/core";
 import React from "react";
 
@@ -15,7 +7,7 @@ const person: Person = {
   lastName: "Najmi Faza",
   name: "Adridinan Najmi Faza",
   role: "Web Developer",
-  avatar: "/images/avatar.png",
+  avatar: "https://assets.najmifaza.my.id/uploads/f5232e7535e49d0a.png",
   email: "adridinan99@gmail.com",
   location: "Asia/Jakarta", // Expecting the IANA time zone identifier, e.g., 'Europe/Vienna'
   languages: ["English", "Indonesian", "Arabic"], // optional: Leave the array empty if you don't want to display languages
@@ -24,9 +16,7 @@ const person: Person = {
 const newsletter: Newsletter = {
   display: true,
   title: <>Follow to {person.lastName}'s Social Media</>,
-  description: (
-    <>My social media about my life as a student and software engineer</>
-  ),
+  description: <>My social media about my life as a student and software engineer</>,
 };
 
 const social: Social = [
@@ -62,7 +52,7 @@ const social: Social = [
 
 const home: Home = {
   path: "/",
-  image: "/images/og/home.png",
+  image: "https://assets.najmifaza.my.id/uploads/8746d949e19506e7.png",
   label: "Home",
   title: `${person.firstName} | Portfolio`,
   description:
@@ -87,8 +77,7 @@ const home: Home = {
       <Text as="span" size="l" weight="strong">
         Universitas Jenderal Soedirman.{" "}
       </Text>
-      I believe in technology with purpose - building systems that enable
-      people.
+      I believe in technology with purpose - building systems that enable people.
     </>
   ),
 };
@@ -114,11 +103,10 @@ const about: About = {
     title: "Introduction",
     description: (
       <>
-        Informatics student with experience in content production and media
-        operation. Accustomed to working with deadlines, managing digital content,
-        and translating non-technical requirements into visual and
-        structured information output. Experienced in teaching, team
-        coordination, and documentation of state institution scale activities.
+        Informatics student with experience in content production and media operation. Accustomed to
+        working with deadlines, managing digital content, and translating non-technical requirements
+        into visual and structured information output. Experienced in teaching, team coordination,
+        and documentation of state institution scale activities.
       </>
     ),
   },
@@ -147,7 +135,7 @@ const about: About = {
         images: [
           // optional: leave the array empty if you don't want to display images
           {
-            src: "/images/projects/project-01/panggihsedulur.webp",
+            src: "https://assets.najmifaza.my.id/uploads/034b3af3eeb56ffa.webp",
             alt: "Panggih Sedulur's Website",
             width: 16,
             height: 9,
@@ -165,7 +153,7 @@ const about: About = {
         images: [
           // optional: leave the array empty if you don't want to display images
           {
-            src: "/images/projects/project-01/pelantikan-bem-u.webp",
+            src: "https://assets.najmifaza.my.id/uploads/e5f574c44222e0ea.webp",
             alt: "Pelantikan BEM-U 2026/2027 di Graha Widyatama, Universitas Jenderal Soedirman",
             width: 16,
             height: 9,
@@ -176,13 +164,11 @@ const about: About = {
         company: "Rabiha Tour & Travel",
         timeframe: "2025 - 2026",
         role: "Social Media  Specialist",
-        achievements: [
-          "Managed company social media content and appearance.",
-        ],
+        achievements: ["Managed company social media content and appearance."],
         images: [
           // optional: leave the array empty if you don't want to display images
           {
-            src: "/images/projects/project-01/cover-01.webp",
+            src: "https://assets.najmifaza.my.id/uploads/bfa1d58a29732ed7.webp",
             alt: "Rabiha's Instagram Project",
             width: 16,
             height: 9,
@@ -200,7 +186,7 @@ const about: About = {
         images: [
           // optional: leave the array empty if you don't want to display images
           {
-            src: "/images/projects/project-01/cover-06.webp",
+            src: "https://assets.najmifaza.my.id/uploads/82236dae1cd973ed.webp",
             alt: "Photo with the media center team",
             width: 16,
             height: 9,
@@ -218,7 +204,7 @@ const about: About = {
         images: [
           // optional: leave the array empty if you don't want to display images
           {
-            src: "/images/projects/project-01/cover-07.webp",
+            src: "https://assets.najmifaza.my.id/uploads/f96d33ad20c98027.webp",
             alt: "photo with KMI Teachers 2024/2025",
             width: 16,
             height: 9,
@@ -229,13 +215,11 @@ const about: About = {
         company: "PT Promedia Teknologi Indonesia (Melintas.id)",
         timeframe: "2025",
         role: "Web Content Writer",
-        achievements: [
-          "Contributed as a freelance writer staff on the Melintas.id media platform",
-        ],
+        achievements: ["Contributed as a freelance writer staff on the Melintas.id media platform"],
         images: [
           // optional: leave the array empty if you don't want to display images
           {
-            src: "/images/projects/project-01/cover-09.webp",
+            src: "https://assets.najmifaza.my.id/uploads/3478ddb91298610f.webp",
             alt: "My landing page at Melintas.Id ",
             width: 16,
             height: 9,
@@ -271,7 +255,7 @@ const about: About = {
         images: [
           // optional: leave the array empty if you don't want to display images
           {
-            src: "/images/projects/project-01/cover-05.webp",
+            src: "https://assets.najmifaza.my.id/uploads/e65131dba7a25484.webp",
             alt: "at Nusantara V Building, MPR-RI",
             width: 16,
             height: 9,
@@ -355,8 +339,8 @@ const about: About = {
         title: "Modern Web Development",
         description: (
           <>
-            Experienced in building responsive, fast, and scalable modern web applications
-            using the latest React ecosystem.
+            Experienced in building responsive, fast, and scalable modern web applications using the
+            latest React ecosystem.
           </>
         ),
         tags: [
@@ -371,8 +355,8 @@ const about: About = {
         title: "Backend & Infrastructure",
         description: (
           <>
-            Managing database and authentication using modern cloud solutions
-            and ensuring data integrity with robust schemas.
+            Managing database and authentication using modern cloud solutions and ensuring data
+            integrity with robust schemas.
           </>
         ),
         tags: [
@@ -386,8 +370,8 @@ const about: About = {
         title: "Editing & Design",
         description: (
           <>
-            Expert in visual content creation, from design to video editing
-            and documentation of institutional activities.
+            Expert in visual content creation, from design to video editing and documentation of
+            institutional activities.
           </>
         ),
         tags: [
@@ -400,8 +384,6 @@ const about: About = {
     ],
   },
 };
-
-
 
 const project: Work = {
   path: "/project",
@@ -423,27 +405,27 @@ const licenses: Licenses = {
       title: "Data Classification and Summarization with IBM Granite",
       issuer: "IBM SkillsBuild & Hacktiv4",
       date: "Oct 2025",
-      image: "/images/licenses/IBMData.png",
+      image: "https://assets.najmifaza.my.id/uploads/b96ed89ef879ebe1.png",
       url: "https://www.credly.com/badges/8a96daae-43d7-4b68-b44f-bfa5c740ae8e/public_url",
     },
     {
       title: "Soedirman Digital School 2025 – Web Development Program",
       issuer: "BEM-U",
       date: "Nov 2025",
-      image: "/images/licenses/SDSWeb.png",
+      image: "https://assets.najmifaza.my.id/uploads/a2d2e289ce17f406.png",
     },
     {
       title: "Basic Artificial Intelligence Certificate",
       issuer: "Dicoding Indonesia",
       date: "Nov 2025",
-      image: "/images/licenses/BasicAI.png",
+      image: "https://assets.najmifaza.my.id/uploads/1225d6de01e99b61.png",
       url: "https://www.dicoding.com/certificates/ERZR2DVO2PYV",
     },
     {
       title: "Basic Web Programming Certificate",
       issuer: "Dicoding Indonesia",
       date: "Dec 2025",
-      image: "/images/licenses/DasarPemWeb.png",
+      image: "https://assets.najmifaza.my.id/uploads/dd0195f927d3ce8b.png",
       url: "https://www.dicoding.com/certificates/JMZVV7L53ZN9",
     },
 
@@ -451,14 +433,14 @@ const licenses: Licenses = {
       title: "Basic JavaScript Programming Certificate",
       issuer: "Dicoding Indonesia",
       date: "Jan 2026",
-      image: "/images/licenses/JSprogramming.png",
+      image: "https://assets.najmifaza.my.id/uploads/0f90b7610928f313.png",
       url: "https://www.dicoding.com/certificates/RVZKGN0YOXD5",
     },
     {
       title: "Front-End Web Development Certificate",
       issuer: "Dicoding Indonesia",
       date: "Jan 2026",
-      image: "/images/licenses/FE_DEV_DICODING.png",
+      image: "https://assets.najmifaza.my.id/uploads/fbac359e1f543640.png",
       url: "https://www.dicoding.com/certificates/L4PQ2DY72ZO1",
     },
   ],

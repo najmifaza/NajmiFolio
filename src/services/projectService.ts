@@ -92,7 +92,7 @@ export const getProjectsFromDB = cache(async (locale: Locale = "id"): Promise<Pr
             {
               name: "Najmi Faza",
               role: "Full-Stack Web Developer",
-              avatar: "/images/avatar.png",
+              avatar: "https://assets.najmifaza.my.id/uploads/f5232e7535e49d0a.png",
               linkedIn: "https://www.linkedin.com/in/adridinan-najmi-faza-80b88a301/",
             },
           ],
@@ -154,7 +154,7 @@ export const getProjectBySlugFromDB = cache(
             {
               name: "Najmi Faza",
               role: "Full-Stack Web Developer",
-              avatar: "/images/avatar.png",
+              avatar: "https://assets.najmifaza.my.id/uploads/f5232e7535e49d0a.png",
               linkedIn: "https://www.linkedin.com/in/adridinan-najmi-faza-80b88a301/",
             },
           ],
