@@ -1,6 +1,7 @@
 datasource db {
-  provider = "mysql"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 
 generator client {
@@ -32,7 +33,7 @@ model ProfileTranslation {
   role        String   // "Web Developer"
   headline    String   @db.Text // "Passionate about EdTech & Social Impact"
   subline     String   @db.Text
-  intro       String   @db.LongText
+  intro       String   @db.Text
   aboutTitle  String?
   aboutDesc   String?  @db.Text
   profile     Profile  @relation(fields: [profileId], references: [id], onDelete: Cascade)
@@ -155,7 +156,7 @@ model ProjectTranslation {
   locale    String   // "id" | "en"
   title     String
   summary   String   @db.Text
-  content   String   @db.LongText // MDX / Markdown
+  content   String   @db.Text // MDX / Markdown
   project   Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
 
   @@unique([projectId, locale])
