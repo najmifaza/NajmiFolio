@@ -13,34 +13,39 @@ export default async function AdminPage() {
     redirect("/admin/login");
   }
 
-  const [projects, profile, experiences, certificates, studies, skills] = await Promise.all([
-    prisma.project.findMany({
-      orderBy: [{ order: "asc" }, { publishedAt: "desc" }],
-      include: { translations: true },
-    }),
-    prisma.profile.findUnique({
-      where: { id: "default" },
-      include: {
-        translations: true,
-        socialLinks: { orderBy: { order: "asc" } },
+  // Query sequentially in just 2 queries to prevent pool timeout (P2024)
+  const projects = await prisma.project.findMany({
+    orderBy: [{ order: "asc" }, { publishedAt: "desc" }],
+    include: { translations: true },
+  });
+
+  const profile = await prisma.profile.findUnique({
+    where: { id: "default" },
+    include: {
+      translations: true,
+      socialLinks: { orderBy: { order: "asc" } },
+      experiences: {
+        include: { translations: true },
+        orderBy: { order: "asc" },
       },
-    }),
-    prisma.experience.findMany({
-      orderBy: { order: "asc" },
-      include: { translations: true },
-    }),
-    prisma.certificate.findMany({
-      orderBy: { order: "asc" },
-    }),
-    prisma.study.findMany({
-      orderBy: { order: "asc" },
-      include: { translations: true },
-    }),
-    prisma.skillGroup.findMany({
-      orderBy: { order: "asc" },
-      include: { translations: true },
-    }),
-  ]);
+      certificates: {
+        orderBy: { order: "asc" },
+      },
+      studies: {
+        include: { translations: true },
+        orderBy: { order: "asc" },
+      },
+      skills: {
+        include: { translations: true },
+        orderBy: { order: "asc" },
+      },
+    },
+  });
+
+  const experiences = profile?.experiences || [];
+  const certificates = profile?.certificates || [];
+  const studies = profile?.studies || [];
+  const skills = profile?.skills || [];
 
   return (
     <AdminDashboard
