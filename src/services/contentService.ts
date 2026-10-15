@@ -13,7 +13,7 @@ const enPlain = { ...enDict };
 const memCache: {
   [key in Locale]?: { data: Dictionary; timestamp: number };
 } = {};
-const CACHE_TTL_MS = 30_000; // 30 seconds
+const CACHE_TTL_MS = 300_000; // 5 minutes (invalidated on CMS actions)
 
 export function invalidateContentCache() {
   memCache.id = undefined;

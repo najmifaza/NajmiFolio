@@ -26,7 +26,7 @@ export interface ProjectData {
 
 const projectsMemCache: { [key in Locale]?: { data: ProjectData[]; timestamp: number } } = {};
 const projectSlugMemCache: { [key: string]: { data: ProjectData | null; timestamp: number } } = {};
-const CACHE_TTL_MS = 30_000;
+const CACHE_TTL_MS = 300_000; // 5 minutes (invalidated on CMS actions)
 const MAX_SLUG_CACHE_ENTRIES = 200;
 
 function setSlugCache(key: string, value: { data: ProjectData | null; timestamp: number }) {
