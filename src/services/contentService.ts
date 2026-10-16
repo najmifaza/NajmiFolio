@@ -9,15 +9,22 @@ import { cache } from "react";
 const idPlain = { ...idDict };
 const enPlain = { ...enDict };
 
-// In-memory cache for fast dev/prod responses without spamming DB
-const memCache: {
-  [key in Locale]?: { data: Dictionary; timestamp: number };
-} = {};
-const CACHE_TTL_MS = 300_000; // 5 minutes (invalidated on CMS actions)
+// In-memory cache on globalThis for fast dev/prod responses without spamming DB
+declare global {
+  var __contentMemCache: { [key in Locale]?: { data: Dictionary; timestamp: number } } | undefined;
+}
+
+if (!globalThis.__contentMemCache) {
+  globalThis.__contentMemCache = {};
+}
+const memCache = globalThis.__contentMemCache;
+const CACHE_TTL_MS = 60_000; // 1 minute (invalidated on CMS actions)
 
 export function invalidateContentCache() {
-  memCache.id = undefined;
-  memCache.en = undefined;
+  if (globalThis.__contentMemCache) {
+    globalThis.__contentMemCache.id = undefined;
+    globalThis.__contentMemCache.en = undefined;
+  }
 }
 
 export const getDynamicDictionary = cache(async (locale: Locale = "id"): Promise<Dictionary> => {
@@ -57,10 +64,17 @@ export const getDynamicDictionary = cache(async (locale: Locale = "id"): Promise
       profile.translations.find((t) => t.locale === "id") ||
       profile.translations[0];
 
+    const fullName = pTrans?.name ?? baseDict.person.name;
+    const nameParts = fullName.trim().split(/\s+/);
+    const firstName = nameParts[0] || baseDict.person.firstName;
+    const lastName = nameParts.length > 1 ? nameParts.slice(1).join(" ") : fullName;
+
     const person = {
       ...baseDict.person,
-      name: pTrans?.name || baseDict.person.name,
-      role: pTrans?.role || baseDict.person.role,
+      name: fullName,
+      firstName,
+      lastName,
+      role: pTrans?.role ?? baseDict.person.role,
       avatar: profile.avatar || baseDict.person.avatar,
       email: profile.email || baseDict.person.email,
       location: (profile.location as IANATimeZone) || baseDict.person.location,
@@ -79,9 +93,9 @@ export const getDynamicDictionary = cache(async (locale: Locale = "id"): Promise
 
     const home = {
       ...baseDict.home,
-      title: pTrans ? `${pTrans.name} | Portfolio` : baseDict.home.title,
-      headline: pTrans?.headline || baseDict.home.headline,
-      subline: pTrans?.subline || baseDict.home.subline,
+      title: pTrans?.name ? `${pTrans.name} | Portfolio` : baseDict.home.title,
+      headline: pTrans?.headline ?? baseDict.home.headline,
+      subline: pTrans?.subline ?? baseDict.home.subline,
     };
 
     // Split experiences: 1-8 are work, 9+ are committee / organization
@@ -96,7 +110,7 @@ export const getDynamicDictionary = cache(async (locale: Locale = "id"): Promise
       return {
         company: e.company,
         timeframe: e.timeframe,
-        role: eTrans?.role || "",
+        role: eTrans?.role ?? "",
         achievements: (eTrans?.achievements as string[]) || [],
         images: e.images
           ? (
@@ -118,11 +132,11 @@ export const getDynamicDictionary = cache(async (locale: Locale = "id"): Promise
 
     const about = {
       ...baseDict.about,
-      title: pTrans?.aboutTitle || baseDict.about.title,
-      description: pTrans?.aboutDesc || baseDict.about.description,
+      title: pTrans?.aboutTitle ?? baseDict.about.title,
+      description: pTrans?.aboutDesc ?? baseDict.about.description,
       intro: {
         ...baseDict.about.intro,
-        description: pTrans?.intro || baseDict.about.intro.description,
+        description: pTrans?.intro ?? baseDict.about.intro.description,
       },
       work: {
         ...baseDict.about.work,

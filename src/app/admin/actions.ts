@@ -285,11 +285,11 @@ export async function saveProfileAction(data: SaveProfileInput) {
   let enSubline = data.enSubline || "";
   let enIntro = data.enIntro || "";
 
-  if (data.autoTranslateEn || !enHeadline) {
-    enRole = await autoTranslate(data.idRole, "id", "en");
-    enHeadline = await autoTranslate(data.idHeadline, "id", "en");
-    enSubline = await autoTranslate(data.idSubline, "id", "en");
-    enIntro = await autoTranslate(data.idIntro, "id", "en");
+  if (data.autoTranslateEn) {
+    if (data.idRole) enRole = await autoTranslate(data.idRole, "id", "en");
+    if (data.idHeadline) enHeadline = await autoTranslate(data.idHeadline, "id", "en");
+    if (data.idSubline) enSubline = await autoTranslate(data.idSubline, "id", "en");
+    if (data.idIntro) enIntro = await autoTranslate(data.idIntro, "id", "en");
   }
 
   await prisma.$transaction(async (tx) => {
@@ -353,10 +353,7 @@ export async function saveProfileAction(data: SaveProfileInput) {
 
   invalidateContentCache();
 
-  revalidatePath("/");
-  revalidatePath("/about");
-  revalidatePath("/en");
-  revalidatePath("/en/about");
+  revalidatePath("/", "layout");
   return { success: true };
 }
 
@@ -545,10 +542,7 @@ export async function saveSocialLinksAction(links: SocialLinkItem[]) {
   });
 
   invalidateContentCache();
-  revalidatePath("/");
-  revalidatePath("/about");
-  revalidatePath("/en");
-  revalidatePath("/en/about");
+  revalidatePath("/", "layout");
   return { success: true };
 }
 

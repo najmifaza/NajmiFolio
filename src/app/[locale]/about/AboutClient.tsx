@@ -211,7 +211,7 @@ export default function AboutClient() {
               </Row>
             )}
             <Heading className={styles.textAlign} variant="display-strong-l">
-              {person.lastName}
+              {person.name || person.lastName}
             </Heading>
             <Text
               className={styles.textAlign}
