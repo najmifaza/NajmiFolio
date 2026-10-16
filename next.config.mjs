@@ -21,6 +21,11 @@ const nextConfig = {
     compiler: "modern",
     silenceDeprecations: ["legacy-js-api"],
   },
+  experimental: {
+    serverActions: {
+      bodySizeLimit: "50mb",
+    },
+  },
   async redirects() {
     return [
       {

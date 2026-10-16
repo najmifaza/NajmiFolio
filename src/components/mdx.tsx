@@ -1,31 +1,32 @@
-import { MDXRemote, MDXRemoteProps } from "next-mdx-remote/rsc";
-import React, { ReactNode } from "react";
-import { slugify as transliterate } from "transliteration";
-import remarkGfm from "remark-gfm";
 import {
-  Heading,
-  HeadingLink,
-  Text,
-  InlineCode,
-  CodeBlock,
-  TextProps,
-  MediaProps,
   Accordion,
   AccordionGroup,
-  Table,
-  Feedback,
   Button,
   Card,
-  Grid,
-  Row,
+  CodeBlock,
   Column,
+  Feedback,
+  Grid,
+  Heading,
+  HeadingLink,
   Icon,
-  Media,
-  SmartLink,
+  InlineCode,
+  Line,
   List,
   ListItem,
-  Line,
+  Media,
+  type MediaProps,
+  Row,
+  SmartLink,
+  Table,
+  Text,
+  type TextProps,
 } from "@once-ui-system/core";
+import { MDXRemote, type MDXRemoteProps } from "next-mdx-remote/rsc";
+import type React from "react";
+import type { ReactNode } from "react";
+import remarkGfm from "remark-gfm";
+import { slugify as transliterate } from "transliteration";
 
 type CustomLinkProps = React.AnchorHTMLAttributes<HTMLAnchorElement> & {
   href: string;
@@ -92,13 +93,7 @@ function createHeading(as: "h1" | "h2" | "h3" | "h4" | "h5" | "h6") {
   }: Omit<React.ComponentProps<typeof HeadingLink>, "as" | "id">) => {
     const slug = slugify(children as string);
     return (
-      <HeadingLink
-        marginTop="24"
-        marginBottom="12"
-        as={as}
-        id={slug}
-        {...props}
-      >
+      <HeadingLink marginTop="24" marginBottom="12" as={as} id={slug} {...props}>
         {children}
       </HeadingLink>
     );
@@ -129,11 +124,7 @@ function createInlineCode({ children }: { children: ReactNode }) {
 
 function createCodeBlock(props: any) {
   // For pre tags that contain code blocks
-  if (
-    props.children &&
-    props.children.props &&
-    props.children.props.className
-  ) {
+  if (props.children?.props?.className) {
     const { className, children } = props.children.props;
 
     // Extract language from className (format: language-xxx)
@@ -191,9 +182,7 @@ function createTable({ children }: { children: ReactNode }) {
         borderRadius: "var(--radius-m)",
       }}
     >
-      <table
-        style={{ width: "100%", borderCollapse: "collapse", fontSize: "0.9em" }}
-      >
+      <table style={{ width: "100%", borderCollapse: "collapse", fontSize: "0.9em" }}>
         {children}
       </table>
     </div>
@@ -271,16 +260,59 @@ type CustomMDXProps = MDXRemoteProps & {
   components?: typeof components;
 };
 
-export function CustomMDX(props: CustomMDXProps) {
-  return (
-    <MDXRemote
-      {...props}
-      options={{
-        mdxOptions: {
-          remarkPlugins: [remarkGfm],
-        },
-      }}
-      components={{ ...components, ...(props.components || {}) }}
-    />
-  );
+function sanitizeMDX(content: string): string {
+  if (!content) return "";
+
+  // Split by fenced code blocks (```...```) to protect code contents
+  const parts = content.split(/(```[\s\S]*?```)/g);
+
+  return parts
+    .map((part, index) => {
+      // Odd indices are fenced code blocks; preserve verbatim
+      if (index % 2 === 1) return part;
+
+      // Also split by inline code spans (`...`)
+      const inlineParts = part.split(/(`[^`\n]+`)/g);
+      return inlineParts
+        .map((subPart, subIndex) => {
+          // Odd indices are inline code spans; preserve verbatim
+          if (subIndex % 2 === 1) return subPart;
+
+          // In prose text:
+          // 1. Escape `<` that would break JSX parser (< followed by numbers, symbols, spaces, or lowercase non-tags)
+          let sanitized = subPart.replace(/<(?=[0-9=\s:_-])/g, "&lt;");
+
+          // 2. Escape curly braces in plain text so MDX does not treat them as JS variables (e.g. {task_id})
+          sanitized = sanitized.replace(/\{([^{}\n]*)\}/g, "&#123;$1&#125;");
+
+          return sanitized;
+        })
+        .join("");
+    })
+    .join("");
+}
+
+export async function CustomMDX(props: CustomMDXProps) {
+  const sanitizedSource =
+    typeof props.source === "string" ? sanitizeMDX(props.source) : props.source;
+
+  try {
+    return (
+      <MDXRemote
+        {...props}
+        source={sanitizedSource}
+        options={{
+          mdxOptions: {
+            remarkPlugins: [remarkGfm],
+          },
+        }}
+        components={{ ...components, ...(props.components || {}) }}
+      />
+    );
+  } catch (err) {
+    console.error("CustomMDX render error, falling back to safe pre-wrap:", err);
+    return (
+      <div style={{ whiteSpace: "pre-wrap", lineHeight: 1.6 }}>{String(props.source || "")}</div>
+    );
+  }
 }

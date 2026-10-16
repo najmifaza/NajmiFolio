@@ -14,7 +14,6 @@
     "postinstall": "prisma generate && patch-package"
   },
   "dependencies": {
-    "@iamtraction/google-translate": "^3.0.0",
     "@iconify/react": "^6.0.2",
     "@once-ui-system/core": "^1.5.6",
     "@prisma/client": "^6.19.3",

@@ -9,7 +9,15 @@ export async function uploadAsset(
   fileBlob: Blob,
   fileName: string,
 ): Promise<{ success: boolean; url?: string; error?: string }> {
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL?.replace(/\/$/, "");
+  // Prefer project ref directly from DATABASE_URL if available to prevent host mismatch
+  let supabaseUrl =
+    process.env.SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL?.replace(/\/$/, "");
+  const dbUrl = process.env.DATABASE_URL || "";
+  const match = dbUrl.match(/postgres(?:ql)?:\/\/postgres\.([a-z0-9]+):/i);
+  if (match?.[1]) {
+    supabaseUrl = `https://${match[1]}.supabase.co`;
+  }
+
   const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
   const bucket = process.env.SUPABASE_STORAGE_BUCKET || "bucket_portofolio";
 
