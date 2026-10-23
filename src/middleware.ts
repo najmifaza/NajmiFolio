@@ -90,7 +90,11 @@ export async function middleware(request: NextRequest) {
   }
 
   // 6. Any other path is the default locale
-  return rewriteToDefaultLocale(request, pathname);
+  const response = rewriteToDefaultLocale(request, pathname);
+  if (cookieLocale !== "id") {
+    response.cookies.set("NEXT_LOCALE", "id", { path: "/", maxAge: LOCALE_COOKIE_MAX_AGE });
+  }
+  return response;
 }
 
 export const config = {

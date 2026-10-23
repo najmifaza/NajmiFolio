@@ -14,6 +14,7 @@ function supabaseHostname() {
 const supabaseHost = supabaseHostname();
 
 const nextConfig = {
+  distDir: process.env.NEXT_DIST_DIR || ".next",
   pageExtensions: ["ts", "tsx"],
   transpilePackages: ["next-mdx-remote"],
   images: {

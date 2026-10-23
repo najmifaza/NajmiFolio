@@ -23,7 +23,6 @@
     "cookie": "^1.0.2",
     "lint-staged": "^16.1.5",
     "next": "^16.0.10",
-    "next-intl": "^4.14.9",
     "next-mdx-remote": "^6.0.0",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",

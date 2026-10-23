@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 
 import { Fade, Flex, Line, Row, ToggleButton } from "@once-ui-system/core";
 
+import { normalizeLocalePath } from "@/lib/locale-path";
 import { display, routes } from "@/resources";
 import styles from "./Header.module.scss";
 import { useDictionary, useLanguage } from "./LanguageProvider";
@@ -50,24 +51,25 @@ export const Header = () => {
   const { language } = useLanguage();
   const { person, about, project, licenses } = dict;
 
-  const isEn = language === "en" || pathname.startsWith("/en");
+  const currentPath = normalizeLocalePath(pathname);
+  const isEn = language === "en";
   const homeHref = isEn ? "/en" : "/";
   const aboutHref = isEn ? "/en/about" : "/about";
   const projectHref = isEn ? "/en/project" : "/project";
   const licensesHref = isEn ? "/en/licenses" : "/licenses";
 
-  const isHomeSelected = pathname === "/" || pathname === "/en";
-  const isAboutSelected = pathname === "/about" || pathname === "/en/about";
+  const isHomeSelected = currentPath === "/" || currentPath === "/en";
+  const isAboutSelected = currentPath === "/about" || currentPath === "/en/about";
   const isProjectSelected =
-    pathname === "/project" ||
-    pathname.startsWith("/project/") ||
-    pathname === "/en/project" ||
-    pathname.startsWith("/en/project/");
+    currentPath === "/project" ||
+    currentPath.startsWith("/project/") ||
+    currentPath === "/en/project" ||
+    currentPath.startsWith("/en/project/");
   const isLicensesSelected =
-    pathname === "/licenses" ||
-    pathname.startsWith("/licenses/") ||
-    pathname === "/en/licenses" ||
-    pathname.startsWith("/en/licenses/");
+    currentPath === "/licenses" ||
+    currentPath.startsWith("/licenses/") ||
+    currentPath === "/en/licenses" ||
+    currentPath.startsWith("/en/licenses/");
 
   if (pathname.startsWith("/admin")) {
     return null;

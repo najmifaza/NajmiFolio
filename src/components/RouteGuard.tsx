@@ -1,6 +1,7 @@
 "use client";
 
-import NotFound from "@/app/not-found";
+import NotFound from "@/app/[locale]/not-found";
+import { normalizeLocalePath } from "@/lib/locale-path";
 import { protectedRoutes, routes } from "@/resources";
 import { Button, Column, Flex, Heading, PasswordInput, Spinner } from "@once-ui-system/core";
 import { usePathname } from "next/navigation";
@@ -14,7 +15,7 @@ function checkRouteEnabled(pathname: string): boolean {
   if (!pathname) return false;
   if (pathname.startsWith("/admin")) return true;
 
-  let normalizedPath = pathname;
+  let normalizedPath = normalizeLocalePath(pathname);
   if (normalizedPath === "/en") {
     normalizedPath = "/";
   } else if (normalizedPath.startsWith("/en/")) {
@@ -37,7 +38,7 @@ function checkRouteEnabled(pathname: string): boolean {
 
 function checkRouteProtected(pathname: string): boolean {
   if (!pathname) return false;
-  let normalizedPath = pathname;
+  let normalizedPath = normalizeLocalePath(pathname);
   if (normalizedPath === "/en") {
     normalizedPath = "/";
   } else if (normalizedPath.startsWith("/en/")) {
