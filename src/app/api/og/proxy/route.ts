@@ -1,25 +1,19 @@
-import { isSafePublicUrl } from "@/lib/ssrf";
+import { safeFetchBytes } from "@/lib/ssrf";
 import { type NextRequest, NextResponse } from "next/server";
+
+const MAX_IMAGE_BYTES = 5 * 1024 * 1024;
 
 export async function GET(request: NextRequest) {
   try {
-    // Get the URL parameter
-    const url = new URL(request.url);
-    const imageUrl = url.searchParams.get("url");
+    const imageUrl = new URL(request.url).searchParams.get("url");
 
     if (!imageUrl) {
       return NextResponse.json({ error: "Missing URL parameter" }, { status: 400 });
     }
 
-    if (!isSafePublicUrl(imageUrl)) {
-      return NextResponse.json({ error: "Forbidden or invalid target URL" }, { status: 403 });
-    }
-
-    // Fetch the image
-    const response = await fetch(imageUrl, {
-      headers: {
-        "User-Agent": "Mozilla/5.0 (compatible; ImageProxy/1.0)",
-      },
+    const { response, body } = await safeFetchBytes(imageUrl, {
+      maxBytes: MAX_IMAGE_BYTES,
+      headers: { "User-Agent": "Mozilla/5.0 (compatible; ImageProxy/1.0)" },
     });
 
     if (!response.ok) {
@@ -29,19 +23,24 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    // Get the image data
-    const contentType = response.headers.get("content-type") || "image/jpeg";
-    const imageData = await response.arrayBuffer();
+    // Only proxy real images — keeps this from being a general-purpose open proxy.
+    const contentType = response.headers.get("content-type")?.split(";")[0].trim() ?? "";
+    if (!contentType.startsWith("image/")) {
+      return NextResponse.json({ error: "Target is not an image" }, { status: 415 });
+    }
 
-    // Return the image with appropriate headers
-    return new NextResponse(imageData, {
+    return new NextResponse(body, {
       headers: {
         "Content-Type": contentType,
+        "Content-Length": String(body.byteLength),
+        "X-Content-Type-Options": "nosniff",
         "Cache-Control": "public, max-age=86400",
       },
     });
   } catch (error) {
-    console.error("Error proxying image:", error);
-    return NextResponse.json({ error: "Failed to proxy image" }, { status: 500 });
+    const message = error instanceof Error ? error.message : "Failed to proxy image";
+    const status = message === "Response too large" ? 413 : 502;
+    console.error("Error proxying image:", message);
+    return NextResponse.json({ error: message }, { status });
   }
 }

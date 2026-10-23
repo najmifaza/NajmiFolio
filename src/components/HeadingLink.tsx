@@ -1,7 +1,8 @@
 "use client";
 
-import React, { JSX } from "react";
-import { Heading, Flex, IconButton, useToast } from "@once-ui-system/core";
+import { Flex, Heading, IconButton, useToast } from "@once-ui-system/core";
+import type React from "react";
+import type { JSX } from "react";
 
 import styles from "@/components/HeadingLink.module.scss";
 
@@ -12,12 +13,7 @@ interface HeadingLinkProps {
   style?: React.CSSProperties;
 }
 
-export const HeadingLink: React.FC<HeadingLinkProps> = ({
-  id,
-  level,
-  children,
-  style,
-}) => {
+export const HeadingLink: React.FC<HeadingLinkProps> = ({ id, level, children, style }) => {
   const { addToast } = useToast();
 
   const copyURL = (id: string): void => {

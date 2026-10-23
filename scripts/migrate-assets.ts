@@ -1,5 +1,5 @@
-import fs from "fs";
-import path from "path";
+import fs from "node:fs";
+import path from "node:path";
 import dotenv from "dotenv";
 
 // Load .env.local then .env
@@ -122,7 +122,7 @@ async function run() {
   let cachedCount = 0;
 
   for (const filePath of files) {
-    const relFromPublic = "/" + path.relative(path.join(process.cwd(), "public"), filePath).replace(/\\/g, "/");
+    const relFromPublic = `/${path.relative(path.join(process.cwd(), "public"), filePath).replace(/\\/g, "/")}`;
     const filename = path.basename(filePath);
     const category = getCategory(relFromPublic);
 

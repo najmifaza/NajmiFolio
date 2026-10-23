@@ -19,7 +19,7 @@ export async function generateMetadata({
       title: project.title,
       description: project.description,
       baseURL: baseURL,
-      image: `/api/og/generate?title=${encodeURIComponent(project.title)}`,
+      image: `/api/og/generate?title=${encodeURIComponent(project.title)}&locale=${locale}`,
       path: basePath,
     }),
     alternates: {
@@ -51,7 +51,7 @@ export default async function ProjectPage({
         path={locale === "en" ? "/en/project" : project.path}
         title={project.title}
         description={project.description}
-        image={`/api/og/generate?title=${encodeURIComponent(project.title)}`}
+        image={`/api/og/generate?title=${encodeURIComponent(project.title)}&locale=${locale}`}
         author={{
           name: person.name,
           url: `${baseURL}${about.path}`,

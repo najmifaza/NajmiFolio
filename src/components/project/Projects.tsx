@@ -1,8 +1,8 @@
+import { ProjectCard } from "@/components";
+import type { Locale } from "@/resources/i18n";
 import { getPostsForCurrentLocale } from "@/utils/utils";
 import { Column } from "@once-ui-system/core";
-import { ProjectCard } from "@/components";
 import { cookies } from "next/headers";
-import type { Locale } from "@/resources/i18n";
 
 interface ProjectsProps {
   range?: [number, number?];
@@ -21,10 +21,7 @@ export async function Projects({ range, exclude, locale: propLocale }: ProjectsP
     }
   }
 
-  let allProjects = await getPostsForCurrentLocale(
-    ["src", "app", "project", "projects"],
-    locale
-  );
+  let allProjects = await getPostsForCurrentLocale(["src", "app", "project", "projects"], locale);
 
   // Exclude by slug (exact match)
   if (exclude && exclude.length > 0) {
@@ -32,10 +29,7 @@ export async function Projects({ range, exclude, locale: propLocale }: ProjectsP
   }
 
   const sortedProjects = allProjects.sort((a, b) => {
-    return (
-      new Date(b.metadata.publishedAt).getTime() -
-      new Date(a.metadata.publishedAt).getTime()
-    );
+    return new Date(b.metadata.publishedAt).getTime() - new Date(a.metadata.publishedAt).getTime();
   });
 
   const displayedProjects = range
@@ -55,9 +49,7 @@ export async function Projects({ range, exclude, locale: propLocale }: ProjectsP
           title={post.metadata.title}
           description={post.metadata.summary}
           content={post.content}
-          avatars={
-            post.metadata.team?.map((member) => ({ src: member.avatar })) || []
-          }
+          avatars={post.metadata.team?.map((member) => ({ src: member.avatar })) || []}
           link={post.metadata.link || ""}
         />
       ))}

@@ -9,12 +9,20 @@ async function fetchMyMemory(chunk: string, from: string, to: string): Promise<s
   try {
     const url = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(chunk)}&langpair=${from}|${to}`;
     const res = await fetch(url, { headers: { "User-Agent": "Mozilla/5.0" } });
-    if (!res.ok) return null;
+    if (!res.ok) {
+      console.warn(`[translate] MyMemory HTTP ${res.status} (${from}->${to})`);
+      return null;
+    }
     const data = await res.json();
     if (data.responseData?.translatedText && data.responseStatus === 200) {
       return data.responseData.translatedText;
     }
-  } catch {}
+    console.warn(
+      `[translate] MyMemory returned no text (status ${data.responseStatus}): ${data.responseDetails ?? "unknown"}`,
+    );
+  } catch (err) {
+    console.error("[translate] MyMemory request failed:", err instanceof Error ? err.message : err);
+  }
   return null;
 }
 

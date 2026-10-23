@@ -7,7 +7,8 @@ const person: Person = {
   lastName: "Najmi Faza",
   name: "Adridinan Najmi Faza",
   role: "Web Developer",
-  avatar: "https://vfaivkobxxwuujvqdoei.supabase.co/storage/v1/object/public/bucket_portofolio/uploads/f5232e7535e49d0a.png",
+  avatar:
+    "https://vfaivkobxxwuujvqdoei.supabase.co/storage/v1/object/public/bucket_portofolio/uploads/f5232e7535e49d0a.png",
   email: "adridinan99@gmail.com",
   location: "Asia/Jakarta", // Expecting the IANA time zone identifier, e.g., 'Europe/Vienna'
   languages: ["English", "Indonesian", "Arabic"], // optional: Leave the array empty if you don't want to display languages
@@ -52,7 +53,8 @@ const social: Social = [
 
 const home: Home = {
   path: "/",
-  image: "https://vfaivkobxxwuujvqdoei.supabase.co/storage/v1/object/public/bucket_portofolio/uploads/8746d949e19506e7.png",
+  image:
+    "https://vfaivkobxxwuujvqdoei.supabase.co/storage/v1/object/public/bucket_portofolio/uploads/8746d949e19506e7.png",
   label: "Home",
   title: `${person.firstName} | Portfolio`,
   description:
@@ -405,27 +407,31 @@ const licenses: Licenses = {
       title: "Data Classification and Summarization with IBM Granite",
       issuer: "IBM SkillsBuild & Hacktiv4",
       date: "Oct 2025",
-      image: "https://vfaivkobxxwuujvqdoei.supabase.co/storage/v1/object/public/bucket_portofolio/uploads/b96ed89ef879ebe1.png",
+      image:
+        "https://vfaivkobxxwuujvqdoei.supabase.co/storage/v1/object/public/bucket_portofolio/uploads/b96ed89ef879ebe1.png",
       url: "https://www.credly.com/badges/8a96daae-43d7-4b68-b44f-bfa5c740ae8e/public_url",
     },
     {
       title: "Soedirman Digital School 2025 – Web Development Program",
       issuer: "BEM-U",
       date: "Nov 2025",
-      image: "https://vfaivkobxxwuujvqdoei.supabase.co/storage/v1/object/public/bucket_portofolio/uploads/a2d2e289ce17f406.png",
+      image:
+        "https://vfaivkobxxwuujvqdoei.supabase.co/storage/v1/object/public/bucket_portofolio/uploads/a2d2e289ce17f406.png",
     },
     {
       title: "Basic Artificial Intelligence Certificate",
       issuer: "Dicoding Indonesia",
       date: "Nov 2025",
-      image: "https://vfaivkobxxwuujvqdoei.supabase.co/storage/v1/object/public/bucket_portofolio/uploads/1225d6de01e99b61.png",
+      image:
+        "https://vfaivkobxxwuujvqdoei.supabase.co/storage/v1/object/public/bucket_portofolio/uploads/1225d6de01e99b61.png",
       url: "https://www.dicoding.com/certificates/ERZR2DVO2PYV",
     },
     {
       title: "Basic Web Programming Certificate",
       issuer: "Dicoding Indonesia",
       date: "Dec 2025",
-      image: "https://vfaivkobxxwuujvqdoei.supabase.co/storage/v1/object/public/bucket_portofolio/uploads/dd0195f927d3ce8b.png",
+      image:
+        "https://vfaivkobxxwuujvqdoei.supabase.co/storage/v1/object/public/bucket_portofolio/uploads/dd0195f927d3ce8b.png",
       url: "https://www.dicoding.com/certificates/JMZVV7L53ZN9",
     },
 
@@ -433,14 +439,16 @@ const licenses: Licenses = {
       title: "Basic JavaScript Programming Certificate",
       issuer: "Dicoding Indonesia",
       date: "Jan 2026",
-      image: "https://vfaivkobxxwuujvqdoei.supabase.co/storage/v1/object/public/bucket_portofolio/uploads/0f90b7610928f313.png",
+      image:
+        "https://vfaivkobxxwuujvqdoei.supabase.co/storage/v1/object/public/bucket_portofolio/uploads/0f90b7610928f313.png",
       url: "https://www.dicoding.com/certificates/RVZKGN0YOXD5",
     },
     {
       title: "Front-End Web Development Certificate",
       issuer: "Dicoding Indonesia",
       date: "Jan 2026",
-      image: "https://vfaivkobxxwuujvqdoei.supabase.co/storage/v1/object/public/bucket_portofolio/uploads/fbac359e1f543640.png",
+      image:
+        "https://vfaivkobxxwuujvqdoei.supabase.co/storage/v1/object/public/bucket_portofolio/uploads/fbac359e1f543640.png",
       url: "https://www.dicoding.com/certificates/L4PQ2DY72ZO1",
     },
   ],

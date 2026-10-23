@@ -6,11 +6,13 @@
   "description": "Portofolio pribadi Najmi Faza - Web Developer",
   "scripts": {
     "dev": "next dev",
-    "export": "next export",
     "build": "next build",
-    "biome-write": "npx @biomejs/biome format --write .",
     "start": "next start",
-    "lint": "next lint",
+    "lint": "biome check .",
+    "format": "biome format --write .",
+    "biome-write": "npx @biomejs/biome format --write .",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "tsx scripts/auth.check.mts && tsx scripts/ssrf.check.mts && tsx scripts/upload.check.mts",
     "postinstall": "prisma generate && patch-package"
   },
   "dependencies": {

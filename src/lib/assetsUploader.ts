@@ -5,18 +5,59 @@ interface UploadResponse {
   message?: string;
 }
 
+const MAX_UPLOAD_BYTES = 10 * 1024 * 1024;
+
+// Extension and client-supplied Content-Type are both attacker-controlled, so the
+// stored object's type is decided by magic bytes only.
+export function detectFileType(head: Uint8Array): string | null {
+  const ascii = (from: number, to: number) => String.fromCharCode(...head.slice(from, to));
+
+  if (head[0] === 0x89 && ascii(1, 4) === "PNG") return "png";
+  if (head[0] === 0xff && head[1] === 0xd8 && head[2] === 0xff) return "jpeg";
+  if (ascii(0, 4) === "GIF8") return "gif";
+  if (ascii(0, 4) === "RIFF" && ascii(8, 12) === "WEBP") return "webp";
+  if (ascii(0, 4) === "%PDF") return "pdf";
+  if (head[0] === 0x1a && head[1] === 0x45 && head[2] === 0xdf && head[3] === 0xa3) return "webm";
+  if (ascii(4, 8) === "ftyp") return "mp4";
+  return null;
+}
+
+const CONTENT_TYPES: Record<string, string> = {
+  png: "image/png",
+  jpeg: "image/jpeg",
+  gif: "image/gif",
+  webp: "image/webp",
+  pdf: "application/pdf",
+  webm: "video/webm",
+  mp4: "video/mp4",
+};
+
 export async function uploadAsset(
   fileBlob: Blob,
   fileName: string,
 ): Promise<{ success: boolean; url?: string; error?: string }> {
-  // Prefer project ref directly from DATABASE_URL if available to prevent host mismatch
-  let supabaseUrl =
-    process.env.SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL?.replace(/\/$/, "");
-  const dbUrl = process.env.DATABASE_URL || "";
-  const match = dbUrl.match(/postgres(?:ql)?:\/\/postgres\.([a-z0-9]+):/i);
-  if (match?.[1]) {
-    supabaseUrl = `https://${match[1]}.supabase.co`;
+  if (fileBlob.size === 0) {
+    return { success: false, error: "File is empty." };
   }
+  if (fileBlob.size > MAX_UPLOAD_BYTES) {
+    return { success: false, error: "File exceeds the 10 MB upload limit." };
+  }
+
+  const head = new Uint8Array(await fileBlob.slice(0, 12).arrayBuffer());
+  const detected = detectFileType(head);
+  if (!detected) {
+    return { success: false, error: "Unsupported file type." };
+  }
+
+  const ext = detected;
+  const contentType = CONTENT_TYPES[detected];
+
+  // Explicit config only. Deriving the project ref from DATABASE_URL used to
+  // silently override NEXT_PUBLIC_SUPABASE_URL and broke on non-Supabase hosts.
+  const supabaseUrl = (process.env.SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL)?.replace(
+    /\/$/,
+    "",
+  );
 
   const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
   const bucket = process.env.SUPABASE_STORAGE_BUCKET || "bucket_portofolio";
@@ -24,25 +65,16 @@ export async function uploadAsset(
   // 1. Supabase Storage (Preferred)
   if (supabaseUrl && serviceKey) {
     try {
-      const ext = fileName.includes(".") ? fileName.split(".").pop()?.toLowerCase() || "" : "";
       const baseName = fileName
         .replace(/\.[^/.]+$/, "")
         .replace(/[^a-zA-Z0-9_-]/g, "_")
         .slice(0, 40);
 
       const uniqueSuffix = Math.random().toString(36).substring(2, 10);
-      const storageFileName = ext
-        ? `${Date.now()}-${uniqueSuffix}-${baseName}.${ext}`
-        : `${Date.now()}-${uniqueSuffix}-${baseName}`;
+      const storageFileName = `${Date.now()}-${uniqueSuffix}-${baseName}.${ext}`;
 
       const storagePath = `uploads/${storageFileName}`;
       const uploadEndpoint = `${supabaseUrl}/storage/v1/object/${bucket}/${storagePath}`;
-
-      let contentType = fileBlob.type || "application/octet-stream";
-      if (ext === "webm") contentType = "video/webm";
-      else if (ext === "webp") contentType = "image/webp";
-      else if (ext === "png") contentType = "image/png";
-      else if (ext === "jpg" || ext === "jpeg") contentType = "image/jpeg";
 
       const fileBuffer = Buffer.from(await fileBlob.arrayBuffer());
 

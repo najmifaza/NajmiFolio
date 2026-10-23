@@ -1,9 +1,7 @@
 import { baseURL } from "@/resources";
 
 export default function robots() {
-  const normalizedBaseURL = baseURL.endsWith("/")
-    ? baseURL.slice(0, -1)
-    : baseURL;
+  const normalizedBaseURL = baseURL.endsWith("/") ? baseURL.slice(0, -1) : baseURL;
 
   return {
     rules: [

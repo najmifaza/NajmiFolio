@@ -49,7 +49,8 @@ export async function generateMetadata({
       description: post.metadata.summary,
       baseURL: baseURL,
       image:
-        post.metadata.image || `/api/og/generate?title=${encodeURIComponent(post.metadata.title)}`,
+        post.metadata.image ||
+        `/api/og/generate?title=${encodeURIComponent(post.metadata.title)}&locale=${locale}`,
       path: canonicalPath,
     }),
     alternates: {
@@ -105,7 +106,8 @@ export default async function Project({
         datePublished={post.metadata.publishedAt}
         dateModified={post.metadata.publishedAt}
         image={
-          post.metadata.image || `/api/og/generate?title=${encodeURIComponent(post.metadata.title)}`
+          post.metadata.image ||
+          `/api/og/generate?title=${encodeURIComponent(post.metadata.title)}&locale=${locale}`
         }
         author={{
           name: person.name,
@@ -127,7 +129,7 @@ export default async function Project({
           {post.metadata.team && <AvatarGroup reverse avatars={avatars} size="s" />}
           <Text variant="label-default-m" onBackground="brand-weak">
             {post.metadata.team?.map((member, idx) => (
-              <span key={idx}>
+              <span key={member.name}>
                 {idx > 0 && (
                   <Text as="span" onBackground="neutral-weak">
                     ,{" "}

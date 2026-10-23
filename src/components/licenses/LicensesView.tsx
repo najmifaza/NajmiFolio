@@ -1,6 +1,6 @@
 "use client";
 
-import { Media, Text, Flex, Grid, SmartLink } from "@once-ui-system/core";
+import { Flex, Grid, Media, SmartLink, Text } from "@once-ui-system/core";
 import { useDictionary } from "../LanguageProvider";
 
 export default function LicensesView() {
@@ -12,8 +12,8 @@ export default function LicensesView() {
       gap="40" // Jarak antar kartu
       fillWidth
     >
-      {licenses.certificates.map((cert, index) => (
-        <Flex key={index} direction="column" fillWidth gap="16">
+      {licenses.certificates.map((cert) => (
+        <Flex key={cert.title} direction="column" fillWidth gap="16">
           {/* Bagian Gambar Sertifikat */}
           <Media
             enlarge

@@ -1,22 +1,13 @@
 "use client";
-import { Row, IconButton, Text } from "@once-ui-system/core";
-import styles from "./Footer.module.scss";
 import { mailchimp } from "@/resources";
-import { useDictionary } from "./LanguageProvider";
-import {
-  Button,
-  Heading,
-  Input,
-  Background,
-  Column,
-} from "@once-ui-system/core";
-import { opacity, SpacingToken } from "@once-ui-system/core";
+import { IconButton, Row, Text } from "@once-ui-system/core";
+import { Background, Button, Column, Heading, Input } from "@once-ui-system/core";
+import type { SpacingToken, opacity } from "@once-ui-system/core";
 import { useState } from "react";
+import styles from "./Footer.module.scss";
+import { useDictionary } from "./LanguageProvider";
 
-function debounce<T extends (...args: any[]) => void>(
-  func: T,
-  delay: number,
-): T {
+function debounce<T extends (...args: any[]) => void>(func: T, delay: number): T {
   let timeout: ReturnType<typeof setTimeout>;
   return ((...args: Parameters<T>) => {
     clearTimeout(timeout);
@@ -24,9 +15,7 @@ function debounce<T extends (...args: any[]) => void>(
   }) as T;
 }
 
-export const Mailchimp: React.FC<React.ComponentProps<typeof Column>> = ({
-  ...flex
-}) => {
+export const Mailchimp: React.FC<React.ComponentProps<typeof Column>> = ({ ...flex }) => {
   const { newsletter, social } = useDictionary();
   const [email, setEmail] = useState<string>("");
   const [error, setError] = useState<string>("");
@@ -122,12 +111,7 @@ export const Mailchimp: React.FC<React.ComponentProps<typeof Column>> = ({
         <Heading marginBottom="s" variant="display-strong-xs">
           {newsletter.title}
         </Heading>
-        <Text
-          wrap="balance"
-          marginBottom="l"
-          variant="body-default-l"
-          onBackground="neutral-weak"
-        >
+        <Text wrap="balance" marginBottom="l" variant="body-default-l" onBackground="neutral-weak">
           {newsletter.description}
         </Text>
       </Column>

@@ -1,7 +1,7 @@
-import * as idDict from "./id";
-import * as enDict from "./en";
-import { cookies } from "next/headers";
 import { getDynamicDictionary } from "@/services/contentService";
+import { cookies } from "next/headers";
+import * as enDict from "./en";
+import * as idDict from "./id";
 
 // Convert module namespace objects to plain objects so they can be passed to Client Components
 const idPlain = { ...idDict };

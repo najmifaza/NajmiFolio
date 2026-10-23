@@ -1,8 +1,8 @@
 "use client";
+import { IconButton, Row, Text } from "@once-ui-system/core";
 import { usePathname } from "next/navigation";
-import { Row, IconButton, Text } from "@once-ui-system/core";
-import { useDictionary } from "./LanguageProvider";
 import styles from "./Footer.module.scss";
+import { useDictionary } from "./LanguageProvider";
 
 export const Footer = () => {
   const pathname = usePathname() ?? "";
@@ -14,13 +14,7 @@ export const Footer = () => {
   }
 
   return (
-    <Row
-      as="footer"
-      fillWidth
-      padding="8"
-      horizontal="center"
-      s={{ direction: "column" }}
-    >
+    <Row as="footer" fillWidth padding="8" horizontal="center" s={{ direction: "column" }}>
       <Row
         className={styles.mobile}
         maxWidth="m"
@@ -51,7 +45,7 @@ export const Footer = () => {
                   size="s"
                   variant="ghost"
                 />
-              )
+              ),
           )}
         </Row>
       </Row>

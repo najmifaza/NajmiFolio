@@ -1,7 +1,10 @@
-import { isSafePublicUrl } from "@/lib/ssrf";
+import { safeFetchBytes } from "@/lib/ssrf";
 import { NextResponse } from "next/server";
 
-export const runtime = "edge";
+// Node runtime: SSRF validation needs node:dns to resolve hostnames.
+export const runtime = "nodejs";
+
+const MAX_HTML_BYTES = 2 * 1024 * 1024;
 
 function decodeHTMLEntities(text: string): string {
   return text.replace(/&(#?[a-zA-Z0-9]+);/g, (match, entity) => {
@@ -26,25 +29,6 @@ function decodeHTMLEntities(text: string): string {
 
     return entities[entity] || match;
   });
-}
-
-async function fetchWithTimeout(url: string, timeout = 5000) {
-  const controller = new AbortController();
-  const timeoutId = setTimeout(() => controller.abort(), timeout);
-
-  try {
-    const response = await fetch(url, {
-      signal: controller.signal,
-      headers: {
-        "User-Agent": "bot",
-      },
-    });
-    clearTimeout(timeoutId);
-    return response;
-  } catch (error) {
-    clearTimeout(timeoutId);
-    throw error;
-  }
 }
 
 async function extractMetadata(html: string) {
@@ -76,18 +60,17 @@ export async function GET(request: Request) {
     return NextResponse.json({ error: "URL is required" }, { status: 400 });
   }
 
-  if (!isSafePublicUrl(url)) {
-    return NextResponse.json({ error: "Forbidden or invalid target URL" }, { status: 403 });
-  }
-
   try {
-    const response = await fetchWithTimeout(url);
+    const { response, body } = await safeFetchBytes(url, {
+      maxBytes: MAX_HTML_BYTES,
+      headers: { "User-Agent": "bot" },
+    });
 
     if (!response.ok) {
       throw new Error(`Failed to fetch URL: ${response.status}`);
     }
 
-    const html = await response.text();
+    const html = new TextDecoder().decode(body);
     const metadata = await extractMetadata(html);
 
     return NextResponse.json({

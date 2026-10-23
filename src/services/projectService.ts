@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import type { Locale } from "@/resources/i18n";
+import { getDynamicDictionary } from "@/services/contentService";
 import { cache } from "react";
 
 export interface ProjectData {
@@ -24,48 +25,82 @@ export interface ProjectData {
   };
 }
 
-const projectsMemCache: { [key in Locale]?: { data: ProjectData[]; timestamp: number } } = {};
-const projectSlugMemCache: { [key: string]: { data: ProjectData | null; timestamp: number } } = {};
+// Team comes from the profile row, not a hardcoded literal — one source of truth
+// for name/role/avatar/LinkedIn. ponytail: single-owner portfolio, so the team is
+// always the profile owner. Add a Team model when projects need real co-authors.
+async function getTeam(locale: Locale): Promise<ProjectData["metadata"]["team"]> {
+  const { person, social } = await getDynamicDictionary(locale);
+  const linkedIn = social.find((s) => s.name.toLowerCase().includes("linkedin"))?.link ?? "";
+
+  return [
+    {
+      name: person.name,
+      role: person.role,
+      avatar: person.avatar,
+      linkedIn,
+    },
+  ];
+}
+
+// Cache lives on globalThis so dev HMR and multiple module instances share one entry.
+declare global {
+  var __projectMemCache:
+    | {
+        list: { [key in Locale]?: { data: ProjectData[]; timestamp: number } };
+        slug: { [key: string]: { data: ProjectData | null; timestamp: number } };
+      }
+    | undefined;
+}
+
+if (!globalThis.__projectMemCache) {
+  globalThis.__projectMemCache = { list: {}, slug: {} };
+}
+const memCache = globalThis.__projectMemCache;
+
 const CACHE_TTL_MS = 300_000; // 5 minutes (invalidated on CMS actions)
 const MAX_SLUG_CACHE_ENTRIES = 200;
 
 function setSlugCache(key: string, value: { data: ProjectData | null; timestamp: number }) {
-  const keys = Object.keys(projectSlugMemCache);
+  const keys = Object.keys(memCache.slug);
   if (keys.length >= MAX_SLUG_CACHE_ENTRIES) {
     let oldestKey = keys[0];
-    let oldestTime = projectSlugMemCache[oldestKey].timestamp;
+    let oldestTime = memCache.slug[oldestKey].timestamp;
     for (const k of keys) {
-      if (projectSlugMemCache[k].timestamp < oldestTime) {
-        oldestTime = projectSlugMemCache[k].timestamp;
+      if (memCache.slug[k].timestamp < oldestTime) {
+        oldestTime = memCache.slug[k].timestamp;
         oldestKey = k;
       }
     }
-    delete projectSlugMemCache[oldestKey];
+    delete memCache.slug[oldestKey];
   }
-  projectSlugMemCache[key] = value;
+  memCache.slug[key] = value;
 }
 
 export function invalidateProjectCache() {
-  projectsMemCache.id = undefined;
-  projectsMemCache.en = undefined;
-  for (const k of Object.keys(projectSlugMemCache)) {
-    delete projectSlugMemCache[k];
+  memCache.list.id = undefined;
+  memCache.list.en = undefined;
+  for (const k of Object.keys(memCache.slug)) {
+    delete memCache.slug[k];
   }
 }
 
 export const getProjectsFromDB = cache(async (locale: Locale = "id"): Promise<ProjectData[]> => {
   const now = Date.now();
-  if (projectsMemCache[locale] && now - projectsMemCache[locale]?.timestamp < CACHE_TTL_MS) {
-    return projectsMemCache[locale]?.data;
+  const cached = memCache.list[locale];
+  if (cached && now - cached.timestamp < CACHE_TTL_MS) {
+    return cached.data;
   }
 
   try {
-    const projects = await prisma.project.findMany({
-      orderBy: [{ order: "asc" }, { publishedAt: "desc" }],
-      include: {
-        translations: true,
-      },
-    });
+    const [projects, team] = await Promise.all([
+      prisma.project.findMany({
+        orderBy: [{ order: "asc" }, { publishedAt: "desc" }],
+        include: {
+          translations: true,
+        },
+      }),
+      getTeam(locale),
+    ]);
 
     if (!projects || projects.length === 0) return [];
 
@@ -88,23 +123,17 @@ export const getProjectsFromDB = cache(async (locale: Locale = "id"): Promise<Pr
           images: images,
           link: p.link || "",
           github: p.github || "",
-          team: [
-            {
-              name: "Najmi Faza",
-              role: "Full-Stack Web Developer",
-              avatar: "https://vfaivkobxxwuujvqdoei.supabase.co/storage/v1/object/public/bucket_portofolio/uploads/f5232e7535e49d0a.png",
-              linkedIn: "https://www.linkedin.com/in/adridinan-najmi-faza-80b88a301/",
-            },
-          ],
+          team,
         },
       };
     });
 
-    projectsMemCache[locale] = { data: mapped, timestamp: now };
+    memCache.list[locale] = { data: mapped, timestamp: now };
     return mapped;
   } catch (error) {
-    if (projectsMemCache[locale]) {
-      return projectsMemCache[locale]?.data;
+    console.error("[projects] DB read failed:", error instanceof Error ? error.message : error);
+    if (memCache.list[locale]) {
+      return memCache.list[locale].data;
     }
     return [];
   }
@@ -114,21 +143,22 @@ export const getProjectBySlugFromDB = cache(
   async (slug: string, locale: Locale = "id"): Promise<ProjectData | null> => {
     const cacheKey = `${slug}_${locale}`;
     const now = Date.now();
+    const cached = memCache.slug[cacheKey];
 
-    if (
-      projectSlugMemCache[cacheKey] &&
-      now - projectSlugMemCache[cacheKey].timestamp < CACHE_TTL_MS
-    ) {
-      return projectSlugMemCache[cacheKey].data;
+    if (cached && now - cached.timestamp < CACHE_TTL_MS) {
+      return cached.data;
     }
 
     try {
-      const p = await prisma.project.findUnique({
-        where: { slug },
-        include: {
-          translations: true,
-        },
-      });
+      const [p, team] = await Promise.all([
+        prisma.project.findUnique({
+          where: { slug },
+          include: {
+            translations: true,
+          },
+        }),
+        getTeam(locale),
+      ]);
 
       if (!p) return null;
 
@@ -150,22 +180,16 @@ export const getProjectBySlugFromDB = cache(
           images: images,
           link: p.link || "",
           github: p.github || "",
-          team: [
-            {
-              name: "Najmi Faza",
-              role: "Full-Stack Web Developer",
-              avatar: "https://vfaivkobxxwuujvqdoei.supabase.co/storage/v1/object/public/bucket_portofolio/uploads/f5232e7535e49d0a.png",
-              linkedIn: "https://www.linkedin.com/in/adridinan-najmi-faza-80b88a301/",
-            },
-          ],
+          team,
         },
       };
 
       setSlugCache(cacheKey, { data: result, timestamp: now });
       return result;
     } catch (error) {
-      if (projectSlugMemCache[cacheKey]) {
-        return projectSlugMemCache[cacheKey].data;
+      console.error("[projects] slug read failed:", error instanceof Error ? error.message : error);
+      if (memCache.slug[cacheKey]) {
+        return memCache.slug[cacheKey].data;
       }
       return null;
     }

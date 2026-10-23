@@ -1,14 +1,16 @@
-import { ImageResponse } from "next/og";
 import { baseURL } from "@/resources";
-import { getDictionary } from "@/resources/i18n";
+import { type Locale, getDictionary } from "@/resources/i18n";
+import { ImageResponse } from "next/og";
 
 export const runtime = "nodejs";
 
 export async function GET(request: Request) {
-  const dict = await getDictionary();
+  const url = new URL(request.url);
+  // Crawlers send no NEXT_LOCALE cookie, so the locale has to be explicit here.
+  const locale: Locale = url.searchParams.get("locale") === "en" ? "en" : "id";
+  const dict = await getDictionary(locale);
   const { person } = dict;
-  let url = new URL(request.url);
-  let title = url.searchParams.get("title") || "Portfolio";
+  const title = url.searchParams.get("title") || "Portfolio";
 
   async function loadGoogleFont(font: string) {
     const url = `https://fonts.googleapis.com/css2?family=${font}`;
@@ -17,7 +19,7 @@ export async function GET(request: Request) {
 
     if (resource) {
       const response = await fetch(resource[1]);
-      if (response.status == 200) {
+      if (response.status === 200) {
         return await response.arrayBuffer();
       }
     }
@@ -66,11 +68,8 @@ export async function GET(request: Request) {
           }}
         >
           <img
-            src={
-              person.avatar?.startsWith("http")
-                ? person.avatar
-                : baseURL + person.avatar
-            }
+            alt={person.name}
+            src={person.avatar?.startsWith("http") ? person.avatar : baseURL + person.avatar}
             style={{
               width: "12rem",
               height: "12rem",

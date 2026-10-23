@@ -1,6 +1,6 @@
+import fs from "node:fs";
+import path from "node:path";
 import { PrismaClient } from "@prisma/client";
-import fs from "fs";
-import path from "path";
 
 const prisma = new PrismaClient();
 
@@ -61,7 +61,13 @@ async function main() {
 
   // 2. Social Links
   const socialLinks = [
-    { name: "GitHub", icon: "github", link: "https://github.com/najmifaza", essential: true, order: 1 },
+    {
+      name: "GitHub",
+      icon: "github",
+      link: "https://github.com/najmifaza",
+      essential: true,
+      order: 1,
+    },
     {
       name: "LinkedIn",
       icon: "linkedin",
@@ -69,8 +75,20 @@ async function main() {
       essential: true,
       order: 2,
     },
-    { name: "Instagram", icon: "instagram", link: "https://www.instagram.com/najmi.zaa/", essential: true, order: 3 },
-    { name: "Email", icon: "email", link: "mailto:adridinan99@gmail.com", essential: true, order: 4 },
+    {
+      name: "Instagram",
+      icon: "instagram",
+      link: "https://www.instagram.com/najmi.zaa/",
+      essential: true,
+      order: 3,
+    },
+    {
+      name: "Email",
+      icon: "email",
+      link: "mailto:adridinan99@gmail.com",
+      essential: true,
+      order: 4,
+    },
   ];
 
   await prisma.socialLink.deleteMany({ where: { profileId: "default" } });
@@ -107,7 +125,12 @@ async function main() {
       company: "Panggih Sedulur",
       timeframe: "April 2026 - Present",
       order: 2,
-      images: [{ src: "/images/projects/project-01/panggihsedulur.webp", alt: "Panggih Sedulur's Website" }],
+      images: [
+        {
+          src: "/images/projects/project-01/panggihsedulur.webp",
+          alt: "Panggih Sedulur's Website",
+        },
+      ],
       id_role: "IT Coordinator",
       id_achievements: [
         "Bertanggung jawab atas pengembangan dan pengelolaan platform web Panggih Sedulur yang terintegrasi langsung dengan sistem CRM dan database",
@@ -123,7 +146,12 @@ async function main() {
       company: "Badan Eksekutif Mahasiswa Universitas Jenderal Soedirman",
       timeframe: "Februari 2026 - Present",
       order: 3,
-      images: [{ src: "/images/projects/project-01/pelantikan-bem-u.webp", alt: "Pelantikan BEM-U 2026/2027" }],
+      images: [
+        {
+          src: "/images/projects/project-01/pelantikan-bem-u.webp",
+          alt: "Pelantikan BEM-U 2026/2027",
+        },
+      ],
       id_role: "Web Development Staff",
       id_achievements: [
         "Mengelola dan mengembangkan website resmi BEM-U menggunakan WordPress, merancang tata letak halaman dengan Elementor, serta melakukan kustomisasi tingkat lanjut melalui inject HTML/CSS.",
@@ -139,7 +167,9 @@ async function main() {
       company: "Rabiha Tour & Travel",
       timeframe: "2025 - 2026",
       order: 4,
-      images: [{ src: "/images/projects/project-01/cover-01.webp", alt: "Rabiha's Instagram Project" }],
+      images: [
+        { src: "/images/projects/project-01/cover-01.webp", alt: "Rabiha's Instagram Project" },
+      ],
       id_role: "Social Media Specialist",
       id_achievements: ["Mengelola konten dan tampilan media sosial perusahaan."],
       en_role: "Social Media Specialist",
@@ -181,7 +211,9 @@ async function main() {
       company: "PT Promedia Teknologi Indonesia (Melintas.id)",
       timeframe: "2025",
       order: 7,
-      images: [{ src: "/images/projects/project-01/cover-09.webp", alt: "Landing page at Melintas.Id" }],
+      images: [
+        { src: "/images/projects/project-01/cover-09.webp", alt: "Landing page at Melintas.Id" },
+      ],
       id_role: "Web Content Writer",
       id_achievements: ["Berkontribusi sebagai staf penulis lepas pada platform media Melintas.id"],
       en_role: "Web Content Writer",
@@ -209,7 +241,9 @@ async function main() {
       company: "Seminar Nasional di MPR-RI - LAZIS Assalam Fil Alamin",
       timeframe: "Juli 2025",
       order: 9,
-      images: [{ src: "/images/projects/project-01/cover-05.webp", alt: "Gedung Nusantara V, MPR-RI" }],
+      images: [
+        { src: "/images/projects/project-01/cover-05.webp", alt: "Gedung Nusantara V, MPR-RI" },
+      ],
       id_role: "Jurnalis & Dokumenter",
       id_achievements: [
         "Bertanggung jawab dalam peliputan jurnalistik dan dokumentasi pada acara Seminar Nasional Pelepasan Duta Asfa yang diselenggarakan di MPR RI.",
@@ -432,7 +466,10 @@ async function main() {
         const colon = line.indexOf(":");
         if (colon > 0) {
           const key = line.slice(0, colon).trim();
-          const val = line.slice(colon + 1).trim().replace(/^["']|["']$/g, "");
+          const val = line
+            .slice(colon + 1)
+            .trim()
+            .replace(/^["']|["']$/g, "");
           data[key] = val;
         }
       }
@@ -464,81 +501,81 @@ async function main() {
       const idParsed = idContent ? parseFrontmatter(idContent) : null;
       const enParsed = enContent ? parseFrontmatter(enContent) : null;
 
-    const metadata = idParsed?.data || enParsed?.data || {};
+      const metadata = idParsed?.data || enParsed?.data || {};
 
-    const images: string[] = [];
-    if (Array.isArray(metadata.images)) {
-      images.push(...metadata.images);
-    } else if (typeof metadata.image === "string") {
-      images.push(metadata.image);
-    }
+      const images: string[] = [];
+      if (Array.isArray(metadata.images)) {
+        images.push(...metadata.images);
+      } else if (typeof metadata.image === "string") {
+        images.push(metadata.image);
+      }
 
-    const publishedAt = metadata.publishedAt ? new Date(metadata.publishedAt) : new Date();
+      const publishedAt = metadata.publishedAt ? new Date(metadata.publishedAt) : new Date();
 
-    const project = await prisma.project.upsert({
-      where: { slug },
-      update: {
-        link: metadata.link || null,
-        github: metadata.github || null,
-        images: images,
-        publishedAt: isNaN(publishedAt.getTime()) ? new Date() : publishedAt,
-        order: projectOrder++,
-      },
-      create: {
-        slug,
-        link: metadata.link || null,
-        github: metadata.github || null,
-        images: images,
-        publishedAt: isNaN(publishedAt.getTime()) ? new Date() : publishedAt,
-        order: projectOrder++,
-      },
-    });
+      const project = await prisma.project.upsert({
+        where: { slug },
+        update: {
+          link: metadata.link || null,
+          github: metadata.github || null,
+          images: images,
+          publishedAt: Number.isNaN(publishedAt.getTime()) ? new Date() : publishedAt,
+          order: projectOrder++,
+        },
+        create: {
+          slug,
+          link: metadata.link || null,
+          github: metadata.github || null,
+          images: images,
+          publishedAt: Number.isNaN(publishedAt.getTime()) ? new Date() : publishedAt,
+          order: projectOrder++,
+        },
+      });
 
-    if (idParsed) {
-      await prisma.projectTranslation.upsert({
-        where: {
-          projectId_locale: {
+      if (idParsed) {
+        await prisma.projectTranslation.upsert({
+          where: {
+            projectId_locale: {
+              projectId: project.id,
+              locale: "id",
+            },
+          },
+          update: {
+            title: idParsed.data.title || slug,
+            summary: idParsed.data.summary || "",
+            content: idParsed.content,
+          },
+          create: {
             projectId: project.id,
             locale: "id",
+            title: idParsed.data.title || slug,
+            summary: idParsed.data.summary || "",
+            content: idParsed.content,
           },
-        },
-        update: {
-          title: idParsed.data.title || slug,
-          summary: idParsed.data.summary || "",
-          content: idParsed.content,
-        },
-        create: {
-          projectId: project.id,
-          locale: "id",
-          title: idParsed.data.title || slug,
-          summary: idParsed.data.summary || "",
-          content: idParsed.content,
-        },
-      });
-    }
+        });
+      }
 
-    if (enParsed) {
-      await prisma.projectTranslation.upsert({
-        where: {
-          projectId_locale: {
+      if (enParsed) {
+        await prisma.projectTranslation.upsert({
+          where: {
+            projectId_locale: {
+              projectId: project.id,
+              locale: "en",
+            },
+          },
+          update: {
+            title: enParsed.data.title || slug,
+            summary: enParsed.data.summary || "",
+            content: enParsed.content,
+          },
+          create: {
             projectId: project.id,
             locale: "en",
+            title: enParsed.data.title || slug,
+            summary: enParsed.data.summary || "",
+            content: enParsed.content,
           },
-        },
-        update: {
-          title: enParsed.data.title || slug,
-          summary: enParsed.data.summary || "",
-          content: enParsed.content,
-        },
-        create: {
-          projectId: project.id,
-          locale: "en",
-          title: enParsed.data.title || slug,
-          summary: enParsed.data.summary || "",
-          content: enParsed.content,
-        },
-      });
-    }
+        });
+      }
       console.log(`Seeded project: ${slug}`);
     }
   }

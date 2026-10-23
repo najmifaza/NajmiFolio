@@ -1,7 +1,7 @@
 import { baseURL } from "@/resources";
 import { getDictionary } from "@/resources/i18n";
-import { Meta } from "@once-ui-system/core";
 import type { Locale } from "@/resources/i18n";
+import { Meta } from "@once-ui-system/core";
 
 export async function generateMetadata({
   params,
@@ -12,9 +12,7 @@ export async function generateMetadata({
   const validLocale: Locale = routeLocale === "en" ? "en" : "id";
   const dict = await getDictionary(validLocale);
   const { home } = dict;
-  const normalizedBaseURL = baseURL.endsWith("/")
-    ? baseURL.slice(0, -1)
-    : baseURL;
+  const normalizedBaseURL = baseURL.endsWith("/") ? baseURL.slice(0, -1) : baseURL;
 
   const basePath = validLocale === "en" ? "/en" : "/";
   const ogLocale = validLocale === "en" ? "en_US" : "id_ID";

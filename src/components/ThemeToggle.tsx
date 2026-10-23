@@ -1,7 +1,8 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
 import { Row, ToggleButton, useTheme } from "@once-ui-system/core";
+import type React from "react";
+import { useEffect, useState } from "react";
 
 export const ThemeToggle: React.FC = () => {
   const { theme, setTheme } = useTheme();
@@ -13,6 +14,7 @@ export const ThemeToggle: React.FC = () => {
     setCurrentTheme(document.documentElement.getAttribute("data-theme") || "light");
   }, []);
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: theme is only a trigger here; the resolved value lives in the DOM attribute.
   useEffect(() => {
     setCurrentTheme(document.documentElement.getAttribute("data-theme") || "light");
   }, [theme]);

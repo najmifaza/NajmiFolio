@@ -1,23 +1,20 @@
 "use client";
 
 import { useEffect } from "react";
-import { useRouter } from "next/navigation";
 
 export function ScrollToHash() {
-  const router = useRouter();
-
   useEffect(() => {
-    // Get the hash from the URL
-    const hash = window.location.hash;
-    if (hash) {
-      // Remove the '#' symbol
-      const id = hash.replace("#", "");
-      const element = document.getElementById(id);
-      if (element) {
-        element.scrollIntoView({ behavior: "smooth" });
-      }
-    }
-  }, [router]);
+    const scrollToHash = () => {
+      const hash = window.location.hash;
+      if (!hash) return;
+      document.getElementById(hash.slice(1))?.scrollIntoView({ behavior: "smooth" });
+    };
+
+    scrollToHash();
+    // Hash-only navigation doesn't remount the page, so listen for it directly.
+    window.addEventListener("hashchange", scrollToHash);
+    return () => window.removeEventListener("hashchange", scrollToHash);
+  }, []);
 
   return null;
 }

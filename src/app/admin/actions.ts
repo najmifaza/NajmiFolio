@@ -23,6 +23,10 @@ export async function translateAction(
   from = "id",
   to = "en",
 ): Promise<{ success: boolean; result: string }> {
+  if (!(await verifyAuth())) {
+    return { success: false, result: text };
+  }
+
   try {
     const res = await autoTranslate(text, from, to);
     return { success: true, result: res };
@@ -50,9 +54,24 @@ export async function uploadMediaAction(formData: FormData): Promise<{
   return res;
 }
 
+// Minimal shape shared by every ordered delegate (project, experience, certificate,
+// study, skillGroup). Typed instead of `any` so the write layer is checked.
+interface OrderedModel {
+  findUnique(args: {
+    where: { id: string };
+    select: { order: true };
+  }): Promise<{ order: number } | null>;
+  updateMany(args: {
+    where: Record<string, unknown>;
+    data: { order: { increment: number } | { decrement: number } };
+  }): Promise<{ count: number }>;
+}
+
+type OrderedModelName = "project" | "experience" | "certificate" | "study" | "skillGroup";
+
 // Helper: Auto-shift orders to prevent collision when an order index is inserted/updated
 async function reorderEntities(
-  model: any,
+  model: OrderedModel,
   currentId: string | undefined,
   newOrder: number,
   extraWhere: Record<string, unknown> = {},
@@ -100,12 +119,14 @@ async function reorderEntities(
 }
 
 async function deleteAndShiftOrders(
-  modelName: "project" | "experience" | "certificate" | "study" | "skillGroup",
+  modelName: OrderedModelName,
   id: string,
   extraWhere: Record<string, unknown> = {},
 ) {
   await prisma.$transaction(async (tx) => {
-    const targetModel = (tx as any)[modelName];
+    const targetModel = tx[modelName] as unknown as OrderedModel & {
+      delete(args: { where: { id: string } }): Promise<unknown>;
+    };
     const existing = await targetModel.findUnique({
       where: { id },
       select: { order: true },
@@ -743,15 +764,21 @@ export async function moveOrderAction(
     throw new Error("Invalid entity type");
   }
 
-  await prisma.$transaction(async (tx: any) => {
-    const txModel = tx[entity];
+  await prisma.$transaction(async (tx) => {
+    const txModel = tx[entity] as unknown as {
+      findMany(args: {
+        orderBy: Record<string, "asc" | "desc"> | Array<Record<string, "asc" | "desc">>;
+        select: { id: true; order: true };
+      }): Promise<Array<{ id: string; order: number }>>;
+      update(args: { where: { id: string }; data: { order: number } }): Promise<unknown>;
+    };
     const allRecords = await txModel.findMany({
       orderBy:
         entity === "project" ? [{ order: "asc" }, { publishedAt: "desc" }] : { order: "asc" },
       select: { id: true, order: true },
     });
 
-    const currentIndex = allRecords.findIndex((r: any) => r.id === id);
+    const currentIndex = allRecords.findIndex((r) => r.id === id);
     if (currentIndex === -1) return;
 
     const targetIndex = direction === "up" ? currentIndex - 1 : currentIndex + 1;

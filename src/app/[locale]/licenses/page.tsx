@@ -20,7 +20,7 @@ export async function generateMetadata({
       title: licenses.title,
       description: licenses.description,
       baseURL: baseURL,
-      image: `/api/og/generate?title=${encodeURIComponent(licenses.title)}`,
+      image: `/api/og/generate?title=${encodeURIComponent(licenses.title)}&locale=${locale}`,
       path: basePath,
     }),
     alternates: {
@@ -52,7 +52,7 @@ export default async function Licenses({
         title={licenses.title}
         description={licenses.description}
         path={locale === "en" ? "/en/licenses" : licenses.path}
-        image={`/api/og/generate?title=${encodeURIComponent(licenses.title)}`}
+        image={`/api/og/generate?title=${encodeURIComponent(licenses.title)}&locale=${locale}`}
         author={{
           name: person.name,
           url: `${baseURL}${locale === "en" ? "/en/licenses" : licenses.path}`,

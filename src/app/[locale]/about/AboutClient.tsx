@@ -1,7 +1,7 @@
 "use client";
 
 import { GitHubContribution } from "@/components";
-import { useDictionary } from "@/components/LanguageProvider";
+import { useDictionary, useLanguage } from "@/components/LanguageProvider";
 import TableOfContents from "@/components/about/TableOfContents";
 import styles from "@/components/about/about.module.scss";
 import { baseURL } from "@/resources";
@@ -23,6 +23,7 @@ import React, { useMemo, useState } from "react";
 
 export default function AboutClient() {
   const [zoomImage, setZoomImage] = useState<string | null>(null);
+  const { language } = useLanguage();
   const dict = useDictionary();
   const { about, person, social } = dict;
 
@@ -56,7 +57,7 @@ export default function AboutClient() {
   const createAccordionItemsFromExperiences = (experiences: typeof about.work.experiences) =>
     experiences.map((experience) => {
       const titleNode = (
-        <Row fillWidth vertical="center" gap="12">
+        <Row key={experience.company} fillWidth vertical="center" gap="12">
           <Column>
             <Text variant="heading-strong-s">{experience.company}</Text>
             <Text variant="body-default-s" onBackground="neutral-weak">
@@ -67,7 +68,7 @@ export default function AboutClient() {
       );
 
       const contentNode = (
-        <Column fillWidth gap="12" padding="0">
+        <Column key={experience.company} fillWidth gap="12" padding="0">
           <Column as="ul" gap="8">
             {experience.achievements.map((achievement, achievementIdx) => (
               <Text
@@ -82,9 +83,9 @@ export default function AboutClient() {
 
           {experience.images && experience.images.length > 0 && (
             <Row fillWidth paddingTop="0" gap="12" wrap horizontal="start">
-              {experience.images.map((image, idx) => (
+              {experience.images.map((image) => (
                 <Row
-                  key={idx}
+                  key={image.src}
                   border="neutral-medium"
                   radius="m"
                   fitWidth
@@ -125,7 +126,7 @@ export default function AboutClient() {
         title={about.title}
         description={about.description}
         path={about.path}
-        image={`/api/og/generate?title=${encodeURIComponent(about.title)}`}
+        image={`/api/og/generate?title=${encodeURIComponent(about.title)}&locale=${language}`}
         author={{
           name: person.name,
           url: `${baseURL}${about.path}`,
@@ -169,8 +170,8 @@ export default function AboutClient() {
             </Row>
             {person.languages && person.languages.length > 0 && (
               <Row wrap gap="8">
-                {person.languages.map((language, index) => (
-                  <Tag key={index} size="l">
+                {person.languages.map((language) => (
+                  <Tag key={language} size="l">
                     {language}
                   </Tag>
                 ))}
@@ -370,8 +371,8 @@ export default function AboutClient() {
                 {about.technical.title}
               </Heading>
               <Column fillWidth gap="l">
-                {about.technical.skills.map((skill, index) => (
-                  <Column key={`${skill}-${index}`} fillWidth gap="4">
+                {about.technical.skills.map((skill) => (
+                  <Column key={skill.title} fillWidth gap="4">
                     <Text id={skill.title} variant="heading-strong-l">
                       {skill.title}
                     </Text>
@@ -389,9 +390,9 @@ export default function AboutClient() {
                     )}
                     {skill.images && skill.images.length > 0 && (
                       <Row fillWidth paddingTop="m" gap="12" wrap>
-                        {skill.images.map((image, index) => (
+                        {skill.images.map((image) => (
                           <Row
-                            key={index}
+                            key={image.src}
                             border="neutral-medium"
                             radius="m"
                             minWidth={image.width}
@@ -425,9 +426,17 @@ export default function AboutClient() {
       </Row>
 
       {zoomImage && (
-        <div className={styles.zoomOverlay} onClick={() => setZoomImage(null)}>
+        <button
+          type="button"
+          className={styles.zoomOverlay}
+          aria-label="Close image preview"
+          onClick={() => setZoomImage(null)}
+          onKeyDown={(e) => {
+            if (e.key === "Escape") setZoomImage(null);
+          }}
+        >
           <img src={zoomImage} alt="Zoom" className={styles.zoomImage} />
-        </div>
+        </button>
       )}
     </Column>
   );

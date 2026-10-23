@@ -12,7 +12,8 @@ import type {
 } from "@/types";
 
 // IMPORTANT: Replace with your own domain address - it's used for SEO in meta tags and schema
-const baseURL: string = "https://www.najmifaza.my.id/";
+// No trailing slash: every consumer concatenates a path that already starts with "/".
+const baseURL: string = "https://www.najmifaza.my.id";
 
 const routes: RoutesConfig = {
   "/": true,
@@ -30,7 +31,7 @@ const display: DisplayConfig = {
 // Enable password protection on selected routes
 // Set password in the .env file, refer to .env.example
 const protectedRoutes: ProtectedRoutesConfig = {
-  "/project/nnama": true,
+  // Admin is guarded by middleware + verifyAuthToken() in src/app/admin/page.tsx.
 };
 
 // Import and set font for each variant
@@ -184,8 +185,6 @@ const sameAs: SameAsConfig = {
   linkedin: "https://www.linkedin.com/in/adridinan-najmi-faza-80b88a301",
   discord: "https://github.com/najmifaza",
 };
-
-
 
 export {
   display,

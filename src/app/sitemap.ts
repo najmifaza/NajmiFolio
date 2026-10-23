@@ -1,11 +1,9 @@
-import { getPostsForCurrentLocale } from "@/utils/utils";
 import { baseURL, routes as routesConfig } from "@/resources";
+import { getPostsForCurrentLocale } from "@/utils/utils";
 import type { MetadataRoute } from "next";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const normalizedBaseURL = baseURL.endsWith("/")
-    ? baseURL.slice(0, -1)
-    : baseURL;
+  const normalizedBaseURL = baseURL.endsWith("/") ? baseURL.slice(0, -1) : baseURL;
 
   const posts = await getPostsForCurrentLocale(["src", "app", "project", "projects"]);
 
@@ -38,7 +36,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   }
 
   const activeRoutes = Object.keys(routesConfig).filter(
-    (route) => routesConfig[route as keyof typeof routesConfig]
+    (route) => routesConfig[route as keyof typeof routesConfig],
   );
 
   const staticEntries: MetadataRoute.Sitemap = [];

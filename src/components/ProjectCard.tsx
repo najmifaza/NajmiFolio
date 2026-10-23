@@ -59,11 +59,7 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({
         {(avatars?.length > 0 || description?.trim() || content?.trim()) && (
           <Column flex={7} gap="16">
             {description?.trim() && (
-              <Text
-                wrap="balance"
-                variant="body-default-s"
-                onBackground="neutral-weak"
-              >
+              <Text wrap="balance" variant="body-default-s" onBackground="neutral-weak">
                 {description}
               </Text>
             )}
