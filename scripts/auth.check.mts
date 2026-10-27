@@ -24,7 +24,8 @@ assert.equal(await verifyAuthToken(`${ts}.deadbeef`), false, "legacy token rejec
 
 // tamper / expiry / garbage
 const [t, nonce, sig] = token.split(".");
-assert.equal(await verifyAuthToken(`${t}.${nonce}.${sig.slice(0, -1)}0`), false, "tampered sig");
+const tamperedSig = sig.endsWith("0") ? `${sig.slice(0, -1)}1` : `${sig.slice(0, -1)}0`;
+assert.equal(await verifyAuthToken(`${t}.${nonce}.${tamperedSig}`), false, "tampered sig");
 assert.equal(await verifyAuthToken(`${Number(t) - 8 * 864e5}.${nonce}.${sig}`), false, "expired");
 assert.equal(await verifyAuthToken("nonsense"), false);
 assert.equal(await verifyAuthToken(""), false);
