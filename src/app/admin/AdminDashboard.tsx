@@ -1142,29 +1142,11 @@ export default function AdminDashboard({
           <div>
             {selectedRoomForInbox ? (
               <div>
-                <div
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "space-between",
-                    marginBottom: "20px",
-                  }}
-                >
+                <div className={styles.inboxHeader}>
                   <button
                     type="button"
+                    className={styles.secondaryButton}
                     onClick={() => setSelectedRoomForInbox(null)}
-                    style={{
-                      background: "rgba(255,255,255,0.06)",
-                      border: "1px solid rgba(255,255,255,0.12)",
-                      borderRadius: "8px",
-                      color: "#f1f5f9",
-                      padding: "8px 14px",
-                      fontSize: "13px",
-                      cursor: "pointer",
-                      display: "flex",
-                      alignItems: "center",
-                      gap: "6px",
-                    }}
                   >
                     <span>←</span>
                     <span>Kembali ke Daftar Ruang</span>
@@ -1175,18 +1157,8 @@ export default function AdminDashboard({
                       href={`/${selectedRoomForInbox.slug}`}
                       target="_blank"
                       rel="noopener noreferrer"
-                      style={{
-                        padding: "8px 14px",
-                        borderRadius: "8px",
-                        border: "1px solid rgba(56, 189, 248, 0.3)",
-                        background: "rgba(56, 189, 248, 0.1)",
-                        color: "#38bdf8",
-                        fontSize: "13px",
-                        textDecoration: "none",
-                        display: "flex",
-                        alignItems: "center",
-                        gap: "6px",
-                      }}
+                      className={styles.aiButton}
+                      style={{ textDecoration: "none" }}
                     >
                       <span>Buka Form Publik</span>
                       <span>↗</span>
@@ -1195,36 +1167,20 @@ export default function AdminDashboard({
                 </div>
 
                 <div className={styles.glassCard} style={{ marginBottom: "20px" }}>
-                  <div
-                    style={{
-                      display: "flex",
-                      justifyContent: "space-between",
-                      alignItems: "flex-start",
-                      flexWrap: "wrap",
-                      gap: "12px",
-                    }}
-                  >
+                  <div className={styles.inboxRoomMeta}>
                     <div>
-                      <h2 style={{ margin: "0 0 6px 0", fontSize: "20px", color: "#fff" }}>
-                        {selectedRoomForInbox.title}
-                      </h2>
-                      <div
-                        style={{
-                          display: "flex",
-                          alignItems: "center",
-                          gap: "8px",
-                          fontSize: "13px",
-                          color: "rgba(255,255,255,0.6)",
-                        }}
-                      >
-                        <span>Slug: /{selectedRoomForInbox.slug}</span>
+                      <h2 className={styles.inboxRoomTitle}>{selectedRoomForInbox.title}</h2>
+                      <div className={styles.inboxRoomSubtitle}>
+                        <span style={{ fontFamily: "monospace", color: "#38bdf8" }}>
+                          /{selectedRoomForInbox.slug}
+                        </span>
                         <span>•</span>
                         <span
-                          style={{
-                            color: selectedRoomForInbox.isActive ? "#34d399" : "#f87171",
-                          }}
+                          className={`${styles.statusPill} ${
+                            selectedRoomForInbox.isActive ? styles.active : styles.inactive
+                          }`}
                         >
-                          {selectedRoomForInbox.isActive ? "Status: Aktif" : "Status: Nonaktif"}
+                          {selectedRoomForInbox.isActive ? "Aktif" : "Nonaktif"}
                         </span>
                       </div>
                       {selectedRoomForInbox.description && (
@@ -1239,16 +1195,8 @@ export default function AdminDashboard({
                         </p>
                       )}
                     </div>
-                    <div
-                      style={{
-                        background: "rgba(255,255,255,0.05)",
-                        padding: "8px 14px",
-                        borderRadius: "8px",
-                        fontSize: "13px",
-                        color: "#fff",
-                      }}
-                    >
-                      Total Pesan: <strong>{selectedRoomForInbox.messages?.length || 0}</strong>
+                    <div className={styles.inboxCountBadge}>
+                      {selectedRoomForInbox.messages?.length || 0} Pesan Masuk
                     </div>
                   </div>
                 </div>
@@ -1259,49 +1207,26 @@ export default function AdminDashboard({
                       className={styles.glassCard}
                       style={{
                         textAlign: "center",
-                        padding: "40px",
-                        color: "rgba(255,255,255,0.5)",
+                        padding: "48px 24px",
+                        color: "rgba(255,255,255,0.45)",
+                        fontSize: "13.5px",
                       }}
                     >
-                      Belum ada pesan yang masuk untuk ruang ini.
+                      Belum ada pesan anonim yang masuk untuk ruang ini.
                     </div>
                   ) : (
                     selectedRoomForInbox.messages.map((msg: any) => (
-                      <div
-                        key={msg.id}
-                        className={styles.glassCard}
-                        style={{
-                          display: "flex",
-                          flexDirection: "column",
-                          gap: "10px",
-                          padding: "16px 20px",
-                        }}
-                      >
-                        <div
-                          style={{
-                            display: "flex",
-                            justifyContent: "space-between",
-                            alignItems: "center",
-                            borderBottom: "1px solid rgba(255,255,255,0.06)",
-                            paddingBottom: "8px",
-                          }}
-                        >
-                          <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                      <div key={msg.id} className={styles.inboxMessageCard}>
+                        <div className={styles.inboxMessageHeader}>
+                          <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
                             <span
-                              style={{
-                                padding: "2px 8px",
-                                borderRadius: "4px",
-                                background: msg.senderTag
-                                  ? "rgba(56, 189, 248, 0.15)"
-                                  : "rgba(255,255,255,0.08)",
-                                color: msg.senderTag ? "#38bdf8" : "rgba(255,255,255,0.7)",
-                                fontSize: "12px",
-                                fontWeight: 500,
-                              }}
+                              className={`${styles.inboxSenderPill} ${
+                                !msg.senderTag ? styles.anonymous : ""
+                              }`}
                             >
                               {msg.senderTag ? msg.senderTag : "Anonim"}
                             </span>
-                            <span style={{ fontSize: "12px", color: "rgba(255,255,255,0.4)" }}>
+                            <span className={styles.inboxTimestamp}>
                               {new Date(msg.createdAt).toLocaleString("id-ID", {
                                 dateStyle: "medium",
                                 timeStyle: "short",
@@ -1310,17 +1235,9 @@ export default function AdminDashboard({
                           </div>
                           <button
                             type="button"
-                            style={{
-                              background: "rgba(239, 68, 68, 0.1)",
-                              border: "1px solid rgba(239, 68, 68, 0.25)",
-                              color: "#f87171",
-                              borderRadius: "6px",
-                              padding: "4px 8px",
-                              fontSize: "12px",
-                              cursor: "pointer",
-                            }}
+                            className={styles.dangerButton}
                             onClick={async () => {
-                              if (confirm("Hapus pesan ini?")) {
+                              if (confirm("Hapus pesan anonim ini?")) {
                                 await deleteAnonymousMessageAction(msg.id);
                                 const updatedMessages = selectedRoomForInbox.messages.filter(
                                   (m: any) => m.id !== msg.id,
@@ -1343,17 +1260,7 @@ export default function AdminDashboard({
                             Hapus
                           </button>
                         </div>
-                        <p
-                          style={{
-                            margin: 0,
-                            fontSize: "14px",
-                            lineHeight: "1.6",
-                            whiteSpace: "pre-wrap",
-                            color: "#f1f5f9",
-                          }}
-                        >
-                          {msg.content}
-                        </p>
+                        <p className={styles.inboxMessageBody}>{msg.content}</p>
                       </div>
                     ))
                   )}
@@ -1361,24 +1268,24 @@ export default function AdminDashboard({
               </div>
             ) : (
               <div>
-                <div className={styles.sectionHeader}>
-                  <div>
-                    <h2>Ruang Pesan Anonim</h2>
+                <div className={styles.contentHeader}>
+                  <div className={styles.pageTitleGroup}>
+                    <h1>Ruang Pesan Anonim</h1>
                     <p>
-                      Kelola slug ruang untuk mahasiswa/praktikan kirim pesan anonim, jadwal
-                      buka-tutup, dan status aktif.
+                      Kelola slug ruang untuk praktikan kirim pesan anonim, jadwal buka-tutup, dan
+                      status aktif.
                     </p>
                   </div>
                   {!isCreatingRoom && !editingRoom && (
                     <button
                       type="button"
-                      className={styles.btnPrimary}
+                      className={styles.primaryButton}
                       onClick={() => {
                         setIsCreatingRoom(true);
                         setEditingRoom(null);
                       }}
                     >
-                      + Buat Ruang Pesan
+                      + Buat Ruang Pesan Baru
                     </button>
                   )}
                 </div>
@@ -1424,12 +1331,20 @@ export default function AdminDashboard({
                       scheduleText = "Nonaktif";
                       scheduleColor = "#94a3b8";
                     } else if (notYetOpen) {
-                      scheduleText = `Belum Buka (Buka: ${new Date(room.openAt).toLocaleString("id-ID", { dateStyle: "short", timeStyle: "short" })})`;
+                      scheduleText = `Buka: ${new Date(room.openAt).toLocaleString("id-ID", { dateStyle: "short", timeStyle: "short" })}`;
                       scheduleColor = "#fbbf24";
                     } else if (isClosed) {
-                      scheduleText = `Sudah Ditutup (${new Date(room.closeAt).toLocaleString("id-ID", { dateStyle: "short", timeStyle: "short" })})`;
+                      scheduleText = `Tutup: ${new Date(room.closeAt).toLocaleString("id-ID", { dateStyle: "short", timeStyle: "short" })}`;
                       scheduleColor = "#f87171";
                     }
+
+                    const statusClass = !room.isActive
+                      ? styles.inactive
+                      : notYetOpen
+                        ? styles.scheduled
+                        : isClosed
+                          ? styles.closed
+                          : styles.active;
 
                     return (
                       <div key={room.id} className={styles.itemCard}>
@@ -1437,7 +1352,7 @@ export default function AdminDashboard({
                           style={{
                             display: "flex",
                             flexDirection: "column",
-                            gap: "6px",
+                            gap: "8px",
                             flex: 1,
                           }}
                         >
@@ -1452,16 +1367,7 @@ export default function AdminDashboard({
                             <span style={{ fontWeight: 600, fontSize: "15px", color: "#fff" }}>
                               {room.title}
                             </span>
-                            <span
-                              style={{
-                                padding: "2px 8px",
-                                borderRadius: "4px",
-                                background: `${scheduleColor}20`,
-                                color: scheduleColor,
-                                fontSize: "11px",
-                                fontWeight: 500,
-                              }}
-                            >
+                            <span className={`${styles.statusPill} ${statusClass}`}>
                               {scheduleText}
                             </span>
                           </div>
@@ -1470,7 +1376,7 @@ export default function AdminDashboard({
                             style={{
                               display: "flex",
                               alignItems: "center",
-                              gap: "10px",
+                              gap: "12px",
                               fontSize: "13px",
                             }}
                           >
@@ -1485,26 +1391,19 @@ export default function AdminDashboard({
                                 setCopiedSlug(room.slug);
                                 setTimeout(() => setCopiedSlug(null), 2000);
                               }}
-                              style={{
-                                background: "none",
-                                border: "none",
-                                color:
-                                  copiedSlug === room.slug ? "#34d399" : "rgba(255,255,255,0.45)",
-                                fontSize: "12px",
-                                cursor: "pointer",
-                                padding: 0,
-                                textDecoration: "underline",
-                              }}
+                              className={styles.aiButton}
+                              style={{ padding: "2px 8px", fontSize: "11px" }}
                             >
-                              {copiedSlug === room.slug ? "Tersalin!" : "Salin Link"}
+                              {copiedSlug === room.slug ? "✓ Tersalin!" : "Salin Link"}
                             </button>
                             <a
                               href={`/${room.slug}`}
                               target="_blank"
                               rel="noopener noreferrer"
+                              className={styles.secondaryButton}
                               style={{
-                                color: "rgba(255,255,255,0.45)",
-                                fontSize: "12px",
+                                padding: "2px 8px",
+                                fontSize: "11px",
                                 textDecoration: "none",
                               }}
                             >
@@ -1513,7 +1412,13 @@ export default function AdminDashboard({
                           </div>
 
                           {room.description && (
-                            <span style={{ fontSize: "12px", color: "rgba(255, 255, 255, 0.45)" }}>
+                            <span
+                              style={{
+                                fontSize: "12.5px",
+                                color: "rgba(255, 255, 255, 0.45)",
+                                lineHeight: "1.4",
+                              }}
+                            >
                               {room.description}
                             </span>
                           )}
@@ -1529,31 +1434,16 @@ export default function AdminDashboard({
                         >
                           <button
                             type="button"
-                            style={{
-                              padding: "6px 14px",
-                              borderRadius: "6px",
-                              border: "1px solid rgba(56, 189, 248, 0.3)",
-                              background: "rgba(56, 189, 248, 0.12)",
-                              color: "#38bdf8",
-                              fontSize: "12.5px",
-                              fontWeight: 500,
-                              cursor: "pointer",
-                            }}
+                            className={styles.primaryButton}
+                            style={{ padding: "6px 14px", fontSize: "12.5px" }}
                             onClick={() => setSelectedRoomForInbox(room)}
                           >
                             Inbox ({room.messages?.length || 0})
                           </button>
                           <button
                             type="button"
-                            style={{
-                              padding: "6px 12px",
-                              borderRadius: "6px",
-                              border: "1px solid rgba(255,255,255,0.12)",
-                              background: "rgba(255,255,255,0.05)",
-                              color: "#fff",
-                              fontSize: "12.5px",
-                              cursor: "pointer",
-                            }}
+                            className={styles.secondaryButton}
+                            style={{ padding: "6px 14px", fontSize: "12.5px" }}
                             onClick={() => {
                               setIsCreatingRoom(false);
                               setEditingRoom(room);
@@ -1563,15 +1453,8 @@ export default function AdminDashboard({
                           </button>
                           <button
                             type="button"
-                            style={{
-                              padding: "6px 12px",
-                              borderRadius: "6px",
-                              border: "1px solid rgba(239, 68, 68, 0.2)",
-                              background: "rgba(239, 68, 68, 0.08)",
-                              color: "#f87171",
-                              fontSize: "12.5px",
-                              cursor: "pointer",
-                            }}
+                            className={styles.dangerButton}
+                            style={{ padding: "6px 14px", fontSize: "12.5px" }}
                             onClick={async () => {
                               if (
                                 confirm(`Hapus ruang "${room.title}" beserta seluruh pesannya?`)

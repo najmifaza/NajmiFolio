@@ -79,9 +79,9 @@ export default function RoomForm({
         style={{ display: "flex", flexDirection: "column", gap: "20px" }}
       >
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-          <h3 style={{ margin: 0, fontSize: "16px", fontWeight: 600, color: "#fff" }}>
+          <h2 style={{ fontSize: "17px", fontWeight: 700, margin: 0, color: "#fff" }}>
             {room?.id ? "Edit Ruang Pesan Anonim" : "Buat Ruang Pesan Anonim Baru"}
-          </h3>
+          </h2>
           <span style={{ fontSize: "12px", color: "rgba(255, 255, 255, 0.45)" }}>
             Praktikan / Mahasiswa
           </span>
@@ -120,26 +120,26 @@ export default function RoomForm({
           </div>
 
           <div className={styles.formGroup}>
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                marginBottom: "2px",
+              }}
+            >
               <label>Slug URL (contoh: /BasdatShiftC) *</label>
               <button
                 type="button"
+                className={styles.aiButton}
                 onClick={handleGenerateSlug}
-                style={{
-                  background: "none",
-                  border: "none",
-                  color: "#38bdf8",
-                  fontSize: "11px",
-                  cursor: "pointer",
-                  padding: 0,
-                  textDecoration: "underline",
-                }}
+                style={{ padding: "3px 10px", fontSize: "11px" }}
               >
-                Generate Otomatis
+                ⚡ Generate Slug
               </button>
             </div>
-            <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
-              <span style={{ fontSize: "13px", color: "rgba(255, 255, 255, 0.4)" }}>/</span>
+            <div className={styles.slugInputWrapper}>
+              <span>/</span>
               <input
                 className={styles.formInput}
                 required
@@ -149,7 +149,7 @@ export default function RoomForm({
               />
             </div>
             {slug && (
-              <span style={{ fontSize: "11px", color: "#10b981" }}>
+              <span style={{ fontSize: "11px", color: "#10b981", marginTop: "2px" }}>
                 Preview link:{" "}
                 {typeof window !== "undefined" ? window.location.host : "localhost:3000"}/
                 {slug.replace(/^\/+/, "")}
@@ -197,34 +197,46 @@ export default function RoomForm({
           </div>
         </div>
 
-        <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 10, marginTop: 4 }}>
           <input
             type="checkbox"
             id="roomActiveToggle"
             checked={isActive}
             onChange={(e) => setIsActive(e.target.checked)}
-            style={{ width: "16px", height: "16px", cursor: "pointer" }}
+            style={{
+              width: 16,
+              height: 16,
+              cursor: "pointer",
+              accentColor: "#10b981",
+            }}
           />
           <label
             htmlFor="roomActiveToggle"
-            style={{ fontSize: "13px", cursor: "pointer", color: "#f1f5f9" }}
+            style={{ cursor: "pointer", fontSize: "13.5px", color: "rgba(255,255,255,0.85)" }}
           >
-            Status Aktif (Bisa menerima pesan jika jadwal sesuai)
+            Status Aktif (Form dibuka untuk pengiriman pesan anonim jika jadwal sesuai)
           </label>
         </div>
 
         <div
-          style={{ display: "flex", justifyContent: "flex-end", gap: "12px", marginTop: "10px" }}
+          style={{
+            display: "flex",
+            justifyContent: "flex-end",
+            gap: "12px",
+            borderTop: "1px solid rgba(255,255,255,0.08)",
+            paddingTop: 18,
+            marginTop: 6,
+          }}
         >
           <button
             type="button"
-            className={styles.btnSecondary}
+            className={styles.secondaryButton}
             onClick={onCancel}
             disabled={saving}
           >
             Batal
           </button>
-          <button type="submit" className={styles.btnPrimary} disabled={saving}>
+          <button type="submit" className={styles.primaryButton} disabled={saving}>
             {saving ? "Menyimpan..." : room?.id ? "Perbarui Ruang" : "Buat Ruang"}
           </button>
         </div>
