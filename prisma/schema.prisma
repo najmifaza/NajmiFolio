@@ -162,3 +162,30 @@ model ProjectTranslation {
   @@unique([projectId, locale])
   @@index([locale])
 }
+
+// 8. Anonymous Message Rooms
+model MessageRoom {
+  id          String             @id @default(cuid())
+  slug        String             @unique
+  title       String
+  description String?            @db.Text
+  openAt      DateTime?
+  closeAt     DateTime?
+  isActive    Boolean            @default(true)
+  createdAt   DateTime           @default(now())
+  updatedAt   DateTime           @updatedAt
+  messages    AnonymousMessage[]
+}
+
+model AnonymousMessage {
+  id        String      @id @default(cuid())
+  roomId    String
+  content   String      @db.Text
+  senderTag String?
+  createdAt DateTime    @default(now())
+  room      MessageRoom @relation(fields: [roomId], references: [id], onDelete: Cascade)
+
+  @@index([roomId])
+  @@index([createdAt])
+}
+

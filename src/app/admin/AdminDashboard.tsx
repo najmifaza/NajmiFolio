@@ -5,8 +5,10 @@ import { useRouter } from "next/navigation";
 import type React from "react";
 import { useEffect, useState } from "react";
 import {
+  deleteAnonymousMessageAction,
   deleteCertificateAction,
   deleteExperienceAction,
+  deleteMessageRoomAction,
   deleteProjectAction,
   deleteSkillGroupAction,
   deleteStudyAction,
@@ -17,6 +19,7 @@ import CertificateForm from "./forms/CertificateForm";
 import ExperienceForm from "./forms/ExperienceForm";
 import ProfileForm from "./forms/ProfileForm";
 import ProjectForm from "./forms/ProjectForm";
+import RoomForm from "./forms/RoomForm";
 import SkillGroupForm from "./forms/SkillGroupForm";
 import StudyForm from "./forms/StudyForm";
 
@@ -130,6 +133,7 @@ interface AdminDashboardProps {
   initialCertificates: any[];
   initialStudies?: any[];
   initialSkills?: any[];
+  initialRooms?: any[];
 }
 
 export default function AdminDashboard({
@@ -139,10 +143,11 @@ export default function AdminDashboard({
   initialCertificates,
   initialStudies = [],
   initialSkills = [],
+  initialRooms = [],
 }: AdminDashboardProps) {
   const router = useRouter();
   const [activeTab, setActiveTab] = useState<
-    "projects" | "profile" | "experiences" | "studies" | "skills" | "certificates"
+    "projects" | "profile" | "experiences" | "studies" | "skills" | "certificates" | "rooms"
   >("projects");
 
   const [projects, setProjects] = useState<any[]>(initialProjects);
@@ -166,6 +171,16 @@ export default function AdminDashboard({
   const [certificates, setCertificates] = useState<any[]>(initialCertificates);
   const [editingCertificate, setEditingCertificate] = useState<any | null>(null);
   const [isCreatingCertificate, setIsCreatingCertificate] = useState(false);
+
+  const [rooms, setRooms] = useState<any[]>(initialRooms);
+  const [editingRoom, setEditingRoom] = useState<any | null>(null);
+  const [isCreatingRoom, setIsCreatingRoom] = useState(false);
+  const [selectedRoomForInbox, setSelectedRoomForInbox] = useState<any | null>(null);
+  const [copiedSlug, setCopiedSlug] = useState<string | null>(null);
+
+  useEffect(() => {
+    setRooms(initialRooms);
+  }, [initialRooms]);
 
   useEffect(() => {
     setProjects(initialProjects);
@@ -388,6 +403,7 @@ export default function AdminDashboard({
                 setActiveTab("certificates");
                 setIsCreatingCertificate(false);
                 setEditingCertificate(null);
+                setSelectedRoomForInbox(null);
               }}
             >
               <div className={styles.navItemLeft}>
@@ -395,6 +411,23 @@ export default function AdminDashboard({
                 <span>Certificates</span>
               </div>
               <span className={styles.navBadge}>{certificates.length}</span>
+            </button>
+
+            <button
+              type="button"
+              className={`${styles.navItem} ${activeTab === "rooms" ? styles.active : ""}`}
+              onClick={() => {
+                setActiveTab("rooms");
+                setIsCreatingRoom(false);
+                setEditingRoom(null);
+                setSelectedRoomForInbox(null);
+              }}
+            >
+              <div className={styles.navItemLeft}>
+                <span className={styles.navDash}>—</span>
+                <span>Pesan Anonim</span>
+              </div>
+              <span className={styles.navBadge}>{rooms.length}</span>
             </button>
           </nav>
         </div>
@@ -1100,6 +1133,463 @@ export default function AdminDashboard({
                     </div>
                   </div>
                 ))}
+              </div>
+            )}
+          </div>
+        )}
+
+        {activeTab === "rooms" && (
+          <div>
+            {selectedRoomForInbox ? (
+              <div>
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                    marginBottom: "20px",
+                  }}
+                >
+                  <button
+                    type="button"
+                    onClick={() => setSelectedRoomForInbox(null)}
+                    style={{
+                      background: "rgba(255,255,255,0.06)",
+                      border: "1px solid rgba(255,255,255,0.12)",
+                      borderRadius: "8px",
+                      color: "#f1f5f9",
+                      padding: "8px 14px",
+                      fontSize: "13px",
+                      cursor: "pointer",
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "6px",
+                    }}
+                  >
+                    <span>←</span>
+                    <span>Kembali ke Daftar Ruang</span>
+                  </button>
+
+                  <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+                    <a
+                      href={`/${selectedRoomForInbox.slug}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      style={{
+                        padding: "8px 14px",
+                        borderRadius: "8px",
+                        border: "1px solid rgba(56, 189, 248, 0.3)",
+                        background: "rgba(56, 189, 248, 0.1)",
+                        color: "#38bdf8",
+                        fontSize: "13px",
+                        textDecoration: "none",
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "6px",
+                      }}
+                    >
+                      <span>Buka Form Publik</span>
+                      <span>↗</span>
+                    </a>
+                  </div>
+                </div>
+
+                <div className={styles.glassCard} style={{ marginBottom: "20px" }}>
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "flex-start",
+                      flexWrap: "wrap",
+                      gap: "12px",
+                    }}
+                  >
+                    <div>
+                      <h2 style={{ margin: "0 0 6px 0", fontSize: "20px", color: "#fff" }}>
+                        {selectedRoomForInbox.title}
+                      </h2>
+                      <div
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          gap: "8px",
+                          fontSize: "13px",
+                          color: "rgba(255,255,255,0.6)",
+                        }}
+                      >
+                        <span>Slug: /{selectedRoomForInbox.slug}</span>
+                        <span>•</span>
+                        <span
+                          style={{
+                            color: selectedRoomForInbox.isActive ? "#34d399" : "#f87171",
+                          }}
+                        >
+                          {selectedRoomForInbox.isActive ? "Status: Aktif" : "Status: Nonaktif"}
+                        </span>
+                      </div>
+                      {selectedRoomForInbox.description && (
+                        <p
+                          style={{
+                            margin: "8px 0 0 0",
+                            fontSize: "13px",
+                            color: "rgba(255,255,255,0.5)",
+                          }}
+                        >
+                          {selectedRoomForInbox.description}
+                        </p>
+                      )}
+                    </div>
+                    <div
+                      style={{
+                        background: "rgba(255,255,255,0.05)",
+                        padding: "8px 14px",
+                        borderRadius: "8px",
+                        fontSize: "13px",
+                        color: "#fff",
+                      }}
+                    >
+                      Total Pesan: <strong>{selectedRoomForInbox.messages?.length || 0}</strong>
+                    </div>
+                  </div>
+                </div>
+
+                <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+                  {!selectedRoomForInbox.messages || selectedRoomForInbox.messages.length === 0 ? (
+                    <div
+                      className={styles.glassCard}
+                      style={{
+                        textAlign: "center",
+                        padding: "40px",
+                        color: "rgba(255,255,255,0.5)",
+                      }}
+                    >
+                      Belum ada pesan yang masuk untuk ruang ini.
+                    </div>
+                  ) : (
+                    selectedRoomForInbox.messages.map((msg: any) => (
+                      <div
+                        key={msg.id}
+                        className={styles.glassCard}
+                        style={{
+                          display: "flex",
+                          flexDirection: "column",
+                          gap: "10px",
+                          padding: "16px 20px",
+                        }}
+                      >
+                        <div
+                          style={{
+                            display: "flex",
+                            justifyContent: "space-between",
+                            alignItems: "center",
+                            borderBottom: "1px solid rgba(255,255,255,0.06)",
+                            paddingBottom: "8px",
+                          }}
+                        >
+                          <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                            <span
+                              style={{
+                                padding: "2px 8px",
+                                borderRadius: "4px",
+                                background: msg.senderTag
+                                  ? "rgba(56, 189, 248, 0.15)"
+                                  : "rgba(255,255,255,0.08)",
+                                color: msg.senderTag ? "#38bdf8" : "rgba(255,255,255,0.7)",
+                                fontSize: "12px",
+                                fontWeight: 500,
+                              }}
+                            >
+                              {msg.senderTag ? msg.senderTag : "Anonim"}
+                            </span>
+                            <span style={{ fontSize: "12px", color: "rgba(255,255,255,0.4)" }}>
+                              {new Date(msg.createdAt).toLocaleString("id-ID", {
+                                dateStyle: "medium",
+                                timeStyle: "short",
+                              })}
+                            </span>
+                          </div>
+                          <button
+                            type="button"
+                            style={{
+                              background: "rgba(239, 68, 68, 0.1)",
+                              border: "1px solid rgba(239, 68, 68, 0.25)",
+                              color: "#f87171",
+                              borderRadius: "6px",
+                              padding: "4px 8px",
+                              fontSize: "12px",
+                              cursor: "pointer",
+                            }}
+                            onClick={async () => {
+                              if (confirm("Hapus pesan ini?")) {
+                                await deleteAnonymousMessageAction(msg.id);
+                                const updatedMessages = selectedRoomForInbox.messages.filter(
+                                  (m: any) => m.id !== msg.id,
+                                );
+                                const updatedSelected = {
+                                  ...selectedRoomForInbox,
+                                  messages: updatedMessages,
+                                };
+                                setSelectedRoomForInbox(updatedSelected);
+                                setRooms((prev) =>
+                                  prev.map((r) =>
+                                    r.id === selectedRoomForInbox.id ? updatedSelected : r,
+                                  ),
+                                );
+                                showToast("success", "Pesan berhasil dihapus");
+                                router.refresh();
+                              }
+                            }}
+                          >
+                            Hapus
+                          </button>
+                        </div>
+                        <p
+                          style={{
+                            margin: 0,
+                            fontSize: "14px",
+                            lineHeight: "1.6",
+                            whiteSpace: "pre-wrap",
+                            color: "#f1f5f9",
+                          }}
+                        >
+                          {msg.content}
+                        </p>
+                      </div>
+                    ))
+                  )}
+                </div>
+              </div>
+            ) : (
+              <div>
+                <div className={styles.sectionHeader}>
+                  <div>
+                    <h2>Ruang Pesan Anonim</h2>
+                    <p>
+                      Kelola slug ruang untuk mahasiswa/praktikan kirim pesan anonim, jadwal
+                      buka-tutup, dan status aktif.
+                    </p>
+                  </div>
+                  {!isCreatingRoom && !editingRoom && (
+                    <button
+                      type="button"
+                      className={styles.btnPrimary}
+                      onClick={() => {
+                        setIsCreatingRoom(true);
+                        setEditingRoom(null);
+                      }}
+                    >
+                      + Buat Ruang Pesan
+                    </button>
+                  )}
+                </div>
+
+                {(isCreatingRoom || editingRoom) && (
+                  <RoomForm
+                    room={editingRoom}
+                    onCancel={() => {
+                      setIsCreatingRoom(false);
+                      setEditingRoom(null);
+                    }}
+                    onSave={() => {
+                      setIsCreatingRoom(false);
+                      setEditingRoom(null);
+                      showToast("success", "Ruang pesan berhasil disimpan!");
+                      router.refresh();
+                    }}
+                  />
+                )}
+
+                {rooms.length === 0 && !isCreatingRoom && (
+                  <div
+                    className={styles.glassCard}
+                    style={{
+                      textAlign: "center",
+                      padding: "40px",
+                      color: "rgba(255, 255, 255, 0.45)",
+                    }}
+                  >
+                    Belum ada ruang pesan anonim. Klik &quot;+ Buat Ruang Pesan&quot; untuk membuat.
+                  </div>
+                )}
+
+                <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+                  {rooms.map((room) => {
+                    const now = new Date();
+                    const notYetOpen = room.openAt && now < new Date(room.openAt);
+                    const isClosed = room.closeAt && now > new Date(room.closeAt);
+                    let scheduleText = "Menerima Pesan";
+                    let scheduleColor = "#34d399";
+
+                    if (!room.isActive) {
+                      scheduleText = "Nonaktif";
+                      scheduleColor = "#94a3b8";
+                    } else if (notYetOpen) {
+                      scheduleText = `Belum Buka (Buka: ${new Date(room.openAt).toLocaleString("id-ID", { dateStyle: "short", timeStyle: "short" })})`;
+                      scheduleColor = "#fbbf24";
+                    } else if (isClosed) {
+                      scheduleText = `Sudah Ditutup (${new Date(room.closeAt).toLocaleString("id-ID", { dateStyle: "short", timeStyle: "short" })})`;
+                      scheduleColor = "#f87171";
+                    }
+
+                    return (
+                      <div key={room.id} className={styles.itemCard}>
+                        <div
+                          style={{
+                            display: "flex",
+                            flexDirection: "column",
+                            gap: "6px",
+                            flex: 1,
+                          }}
+                        >
+                          <div
+                            style={{
+                              display: "flex",
+                              alignItems: "center",
+                              gap: "10px",
+                              flexWrap: "wrap",
+                            }}
+                          >
+                            <span style={{ fontWeight: 600, fontSize: "15px", color: "#fff" }}>
+                              {room.title}
+                            </span>
+                            <span
+                              style={{
+                                padding: "2px 8px",
+                                borderRadius: "4px",
+                                background: `${scheduleColor}20`,
+                                color: scheduleColor,
+                                fontSize: "11px",
+                                fontWeight: 500,
+                              }}
+                            >
+                              {scheduleText}
+                            </span>
+                          </div>
+
+                          <div
+                            style={{
+                              display: "flex",
+                              alignItems: "center",
+                              gap: "10px",
+                              fontSize: "13px",
+                            }}
+                          >
+                            <span style={{ color: "#38bdf8", fontFamily: "monospace" }}>
+                              /{room.slug}
+                            </span>
+                            <button
+                              type="button"
+                              onClick={() => {
+                                const fullUrl = `${window.location.origin}/${room.slug}`;
+                                navigator.clipboard.writeText(fullUrl);
+                                setCopiedSlug(room.slug);
+                                setTimeout(() => setCopiedSlug(null), 2000);
+                              }}
+                              style={{
+                                background: "none",
+                                border: "none",
+                                color:
+                                  copiedSlug === room.slug ? "#34d399" : "rgba(255,255,255,0.45)",
+                                fontSize: "12px",
+                                cursor: "pointer",
+                                padding: 0,
+                                textDecoration: "underline",
+                              }}
+                            >
+                              {copiedSlug === room.slug ? "Tersalin!" : "Salin Link"}
+                            </button>
+                            <a
+                              href={`/${room.slug}`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              style={{
+                                color: "rgba(255,255,255,0.45)",
+                                fontSize: "12px",
+                                textDecoration: "none",
+                              }}
+                            >
+                              Buka ↗
+                            </a>
+                          </div>
+
+                          {room.description && (
+                            <span style={{ fontSize: "12px", color: "rgba(255, 255, 255, 0.45)" }}>
+                              {room.description}
+                            </span>
+                          )}
+                        </div>
+
+                        <div
+                          style={{
+                            display: "flex",
+                            alignItems: "center",
+                            gap: "8px",
+                            flexShrink: 0,
+                          }}
+                        >
+                          <button
+                            type="button"
+                            style={{
+                              padding: "6px 14px",
+                              borderRadius: "6px",
+                              border: "1px solid rgba(56, 189, 248, 0.3)",
+                              background: "rgba(56, 189, 248, 0.12)",
+                              color: "#38bdf8",
+                              fontSize: "12.5px",
+                              fontWeight: 500,
+                              cursor: "pointer",
+                            }}
+                            onClick={() => setSelectedRoomForInbox(room)}
+                          >
+                            Inbox ({room.messages?.length || 0})
+                          </button>
+                          <button
+                            type="button"
+                            style={{
+                              padding: "6px 12px",
+                              borderRadius: "6px",
+                              border: "1px solid rgba(255,255,255,0.12)",
+                              background: "rgba(255,255,255,0.05)",
+                              color: "#fff",
+                              fontSize: "12.5px",
+                              cursor: "pointer",
+                            }}
+                            onClick={() => {
+                              setIsCreatingRoom(false);
+                              setEditingRoom(room);
+                            }}
+                          >
+                            Edit
+                          </button>
+                          <button
+                            type="button"
+                            style={{
+                              padding: "6px 12px",
+                              borderRadius: "6px",
+                              border: "1px solid rgba(239, 68, 68, 0.2)",
+                              background: "rgba(239, 68, 68, 0.08)",
+                              color: "#f87171",
+                              fontSize: "12.5px",
+                              cursor: "pointer",
+                            }}
+                            onClick={async () => {
+                              if (
+                                confirm(`Hapus ruang "${room.title}" beserta seluruh pesannya?`)
+                              ) {
+                                await deleteMessageRoomAction(room.id);
+                                setRooms(rooms.filter((r) => r.id !== room.id));
+                                showToast("success", "Ruang pesan dihapus");
+                                router.refresh();
+                              }
+                            }}
+                          >
+                            Hapus
+                          </button>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
               </div>
             )}
           </div>

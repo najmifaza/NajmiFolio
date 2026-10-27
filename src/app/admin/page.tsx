@@ -47,6 +47,15 @@ export default async function AdminPage() {
   const studies = profile?.studies || [];
   const skills = profile?.skills || [];
 
+  const messageRooms = await prisma.messageRoom.findMany({
+    orderBy: { createdAt: "desc" },
+    include: {
+      messages: {
+        orderBy: { createdAt: "desc" },
+      },
+    },
+  });
+
   return (
     <AdminDashboard
       initialProjects={JSON.parse(JSON.stringify(projects))}
@@ -55,6 +64,7 @@ export default async function AdminPage() {
       initialCertificates={JSON.parse(JSON.stringify(certificates))}
       initialStudies={JSON.parse(JSON.stringify(studies))}
       initialSkills={JSON.parse(JSON.stringify(skills))}
+      initialRooms={JSON.parse(JSON.stringify(messageRooms))}
     />
   );
 }

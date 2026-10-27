@@ -33,6 +33,11 @@ function checkRouteEnabled(pathname: string): boolean {
     }
   }
 
+  // Allow 1-segment dynamic routes (e.g. /BasdatShiftC anonymous message room)
+  if (/^\/[^/]+$/.test(normalizedPath)) {
+    return true;
+  }
+
   return false;
 }
 

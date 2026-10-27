@@ -817,3 +817,128 @@ export async function moveOrderAction(
 
   return { success: true };
 }
+
+// ---------------------------------------------------------
+// 10. Message Rooms & Anonymous Messages Actions
+// ---------------------------------------------------------
+
+export interface SaveMessageRoomInput {
+  id?: string;
+  slug: string;
+  title: string;
+  description?: string;
+  openAt?: string | null;
+  closeAt?: string | null;
+  isActive: boolean;
+}
+
+export async function saveMessageRoomAction(input: SaveMessageRoomInput) {
+  if (!(await verifyAuth())) throw new Error("Unauthorized");
+
+  const cleanSlug = input.slug.trim().replace(/^\/+/, "");
+  if (!cleanSlug) throw new Error("Slug tidak boleh kosong");
+
+  if (!/^[a-zA-Z0-9_-]+$/.test(cleanSlug)) {
+    throw new Error(
+      "Slug hanya boleh mengandung huruf, angka, tanda hubung (-), dan garis bawah (_)",
+    );
+  }
+
+  const reservedSlugs = [
+    "admin",
+    "api",
+    "about",
+    "project",
+    "licenses",
+    "blog",
+    "images",
+    "id",
+    "en",
+    "favicon.ico",
+  ];
+  if (reservedSlugs.includes(cleanSlug.toLowerCase())) {
+    throw new Error(`Slug "/${cleanSlug}" adalah kata yang dipesan sistem. Gunakan slug lain.`);
+  }
+
+  if (!input.title?.trim()) {
+    throw new Error("Judul ruang pesan tidak boleh kosong");
+  }
+
+  const existing = await prisma.messageRoom.findUnique({
+    where: { slug: cleanSlug },
+  });
+
+  if (existing && existing.id !== input.id) {
+    throw new Error(`Slug "/${cleanSlug}" sudah digunakan oleh ruang lain`);
+  }
+
+  const openDate = input.openAt ? new Date(input.openAt) : null;
+  const closeDate = input.closeAt ? new Date(input.closeAt) : null;
+
+  if (openDate && closeDate && closeDate <= openDate) {
+    throw new Error("Waktu penutupan harus setelah waktu pembukaan");
+  }
+
+  const data = {
+    slug: cleanSlug,
+    title: input.title.trim(),
+    description: input.description?.trim() || null,
+    openAt: openDate,
+    closeAt: closeDate,
+    isActive: input.isActive,
+  };
+
+  const room = input.id
+    ? await prisma.messageRoom.update({
+        where: { id: input.id },
+        data,
+      })
+    : await prisma.messageRoom.create({
+        data,
+      });
+
+  revalidatePath(`/${cleanSlug}`);
+  revalidatePath(`/en/${cleanSlug}`);
+  revalidatePath("/admin");
+
+  return { success: true, room };
+}
+
+export async function deleteMessageRoomAction(id: string) {
+  if (!(await verifyAuth())) throw new Error("Unauthorized");
+  await prisma.messageRoom.delete({ where: { id } });
+  revalidatePath("/admin");
+  return { success: true };
+}
+
+export async function deleteAnonymousMessageAction(id: string) {
+  if (!(await verifyAuth())) throw new Error("Unauthorized");
+  await prisma.anonymousMessage.delete({ where: { id } });
+  revalidatePath("/admin");
+  return { success: true };
+}
+
+export async function toggleMessageRoomStatusAction(id: string, isActive: boolean) {
+  if (!(await verifyAuth())) throw new Error("Unauthorized");
+  const room = await prisma.messageRoom.update({
+    where: { id },
+    data: { isActive },
+  });
+  revalidatePath(`/${room.slug}`);
+  revalidatePath(`/en/${room.slug}`);
+  revalidatePath("/admin");
+  return { success: true, room };
+}
+
+export async function getMessageRoomWithMessagesAction(roomId: string) {
+  if (!(await verifyAuth())) throw new Error("Unauthorized");
+  const room = await prisma.messageRoom.findUnique({
+    where: { id: roomId },
+    include: {
+      messages: {
+        orderBy: { createdAt: "desc" },
+      },
+    },
+  });
+  return { success: true, room };
+}

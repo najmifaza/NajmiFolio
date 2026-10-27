@@ -25,6 +25,11 @@ const nextConfig = {
         hostname: "www.google.com",
         pathname: "**",
       },
+      {
+        protocol: "https",
+        hostname: "*.supabase.co",
+        pathname: "**",
+      },
       ...(supabaseHost
         ? [
             {
