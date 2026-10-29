@@ -1,10 +1,17 @@
 "use client";
 
 import { deleteMessageRoomAction } from "@/app/admin/actions";
-import styles from "@/app/admin/admin.module.scss";
 import { useAdminToast } from "@/app/admin/components/AdminToast";
 import RoomForm from "@/app/admin/forms/RoomForm";
-import Link from "next/link";
+import {
+  Button,
+  Column,
+  Heading,
+  Row,
+  SmartLink,
+  StatusIndicator,
+  Text,
+} from "@once-ui-system/core";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
@@ -21,28 +28,37 @@ export default function RoomsManager({ initialRooms }: { initialRooms: any[] }) 
   }, [initialRooms]);
 
   return (
-    <div>
-      <div className={styles.contentHeader}>
-        <div className={styles.pageTitleGroup}>
-          <h1>Ruang Pesan Anonim</h1>
-          <p>
+    <Column gap="24" fillWidth>
+      <Row
+        vertical="center"
+        horizontal="between"
+        paddingBottom="20"
+        borderBottom="neutral-alpha-weak"
+        wrap
+        gap="16"
+      >
+        <Column gap="4">
+          <Heading as="h1" variant="heading-strong-m" onBackground="neutral-strong">
+            Ruang Pesan Anonim
+          </Heading>
+          <Text variant="body-default-s" onBackground="neutral-weak">
             Kelola slug ruang untuk praktikan kirim pesan anonim, jadwal buka-tutup, dan status
             aktif.
-          </p>
-        </div>
+          </Text>
+        </Column>
         {!isCreatingRoom && !editingRoom && (
-          <button
+          <Button
             type="button"
-            className={styles.primaryButton}
+            variant="primary"
+            size="m"
+            label="+ Buat Ruang Pesan Baru"
             onClick={() => {
               setIsCreatingRoom(true);
               setEditingRoom(null);
             }}
-          >
-            + Buat Ruang Pesan Baru
-          </button>
+          />
         )}
-      </div>
+      </Row>
 
       {(isCreatingRoom || editingRoom) && (
         <RoomForm
@@ -61,152 +77,128 @@ export default function RoomsManager({ initialRooms }: { initialRooms: any[] }) 
       )}
 
       {rooms.length === 0 && !isCreatingRoom && (
-        <div
-          className={styles.glassCard}
-          style={{
-            textAlign: "center",
-            padding: "48px 24px",
-            color: "rgba(255, 255, 255, 0.45)",
-            fontSize: "13.5px",
-          }}
-        >
-          Belum ada ruang pesan anonim. Klik &quot;+ Buat Ruang Pesan Baru&quot; untuk membuat.
-        </div>
+        <Row center padding="48" radius="l" background="surface" border="neutral-alpha-weak">
+          <Text variant="body-default-s" onBackground="neutral-weak">
+            Belum ada ruang pesan anonim. Klik &quot;+ Buat Ruang Pesan Baru&quot; untuk membuat.
+          </Text>
+        </Row>
       )}
 
-      <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+      <Column gap="12" fillWidth>
         {rooms.map((room) => {
           const now = new Date();
           const notYetOpen = room.openAt && now < new Date(room.openAt);
           const isClosed = room.closeAt && now > new Date(room.closeAt);
           let scheduleText = "Menerima Pesan";
+          let indicatorColor: "green" | "yellow" | "red" | "gray" = "green";
 
           if (!room.isActive) {
             scheduleText = "Nonaktif";
+            indicatorColor = "gray";
           } else if (notYetOpen) {
             scheduleText = `Buka: ${new Date(room.openAt).toLocaleString("id-ID", {
               dateStyle: "short",
               timeStyle: "short",
             })}`;
+            indicatorColor = "yellow";
           } else if (isClosed) {
             scheduleText = `Tutup: ${new Date(room.closeAt).toLocaleString("id-ID", {
               dateStyle: "short",
               timeStyle: "short",
             })}`;
+            indicatorColor = "red";
           }
 
-          const statusClass = !room.isActive
-            ? styles.inactive
-            : notYetOpen
-              ? styles.scheduled
-              : isClosed
-                ? styles.closed
-                : styles.active;
-
           return (
-            <div key={room.id} className={styles.itemCard}>
-              <div
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  gap: "8px",
-                  flex: 1,
-                }}
-              >
-                <div
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "10px",
-                    flexWrap: "wrap",
-                  }}
-                >
-                  <span style={{ fontWeight: 600, fontSize: "15px", color: "#fff" }}>
+            <Row
+              key={room.id}
+              vertical="center"
+              horizontal="between"
+              padding="16"
+              radius="m"
+              background="surface"
+              border="neutral-alpha-weak"
+              wrap
+              gap="16"
+            >
+              <Column gap="8" style={{ flex: 1, minWidth: 260 }}>
+                <Row vertical="center" gap="12" wrap>
+                  <Text variant="heading-strong-xs" onBackground="neutral-strong">
                     {room.title}
-                  </span>
-                  <span className={`${styles.statusPill} ${statusClass}`}>{scheduleText}</span>
-                </div>
+                  </Text>
+                  <Row
+                    vertical="center"
+                    gap="8"
+                    paddingX="8"
+                    paddingY="2"
+                    radius="full"
+                    background="neutral-alpha-weak"
+                    border="neutral-alpha-weak"
+                  >
+                    <StatusIndicator color={indicatorColor} size="s" />
+                    <Text variant="label-default-xs" onBackground="neutral-strong">
+                      {scheduleText}
+                    </Text>
+                  </Row>
+                </Row>
 
-                <div
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "12px",
-                    fontSize: "13px",
-                  }}
-                >
-                  <span style={{ color: "#38bdf8", fontFamily: "monospace" }}>/{room.slug}</span>
-                  <button
+                <Row vertical="center" gap="12" wrap>
+                  <Text
+                    variant="label-default-s"
+                    style={{ color: "var(--brand-solid-strong)", fontFamily: "monospace" }}
+                  >
+                    /{room.slug}
+                  </Text>
+                  <Button
                     type="button"
+                    variant="secondary"
+                    size="s"
+                    label={copiedSlug === room.slug ? "✓ Tersalin!" : "Salin Link"}
                     onClick={() => {
                       const fullUrl = `${window.location.origin}/${room.slug}`;
                       navigator.clipboard.writeText(fullUrl);
                       setCopiedSlug(room.slug);
                       setTimeout(() => setCopiedSlug(null), 2000);
                     }}
-                    className={styles.aiButton}
-                    style={{ padding: "2px 8px", fontSize: "11px" }}
-                  >
-                    {copiedSlug === room.slug ? "✓ Tersalin!" : "Salin Link"}
-                  </button>
-                  <a
-                    href={`/${room.slug}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className={styles.secondaryButton}
-                    style={{
-                      padding: "2px 8px",
-                      fontSize: "11px",
-                      textDecoration: "none",
-                    }}
-                  >
-                    Buka ↗
-                  </a>
-                </div>
+                  />
+                  <SmartLink href={`/${room.slug}`} target="_blank" rel="noopener noreferrer">
+                    <Text variant="label-default-xs" onBackground="neutral-weak">
+                      Buka ↗
+                    </Text>
+                  </SmartLink>
+                </Row>
 
                 {room.description && (
-                  <span
-                    style={{
-                      fontSize: "12.5px",
-                      color: "rgba(255, 255, 255, 0.45)",
-                      lineHeight: "1.4",
-                    }}
-                  >
+                  <Text variant="body-default-xs" onBackground="neutral-weak">
                     {room.description}
-                  </span>
+                  </Text>
                 )}
-              </div>
+              </Column>
 
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "8px",
-                  flexShrink: 0,
-                }}
-              >
-                <Link
-                  href={`/admin/rooms/${room.id}`}
-                  className={styles.primaryButton}
-                  style={{ padding: "6px 14px", fontSize: "12.5px", textDecoration: "none" }}
-                >
-                  Inbox ({room.messages?.length ?? room._count?.messages ?? 0})
-                </Link>
-                <button
+              <Row vertical="center" gap="8" style={{ flexShrink: 0 }}>
+                <SmartLink href={`/admin/rooms/${room.id}`} style={{ textDecoration: "none" }}>
+                  <Button
+                    type="button"
+                    variant="primary"
+                    size="s"
+                    label={`Inbox (${room.messages?.length ?? room._count?.messages ?? 0})`}
+                  />
+                </SmartLink>
+                <Button
                   type="button"
-                  className={styles.secondaryButton}
-                  style={{ padding: "6px 14px", fontSize: "12.5px" }}
+                  variant="secondary"
+                  size="s"
+                  label="Edit"
                   onClick={() => {
                     setIsCreatingRoom(false);
                     setEditingRoom(room);
                   }}
-                >
-                  Edit
-                </button>
-                <button
+                />
+                <Button
                   type="button"
-                  className={styles.dangerButton}
-                  style={{ padding: "6px 14px", fontSize: "12.5px" }}
+                  variant="danger"
+                  size="s"
+                  label="Hapus"
                   onClick={async () => {
                     if (confirm(`Hapus ruang "${room.title}" beserta seluruh pesannya?`)) {
                       await deleteMessageRoomAction(room.id);
@@ -215,14 +207,12 @@ export default function RoomsManager({ initialRooms }: { initialRooms: any[] }) 
                       router.refresh();
                     }
                   }}
-                >
-                  Hapus
-                </button>
-              </div>
-            </div>
+                />
+              </Row>
+            </Row>
           );
         })}
-      </div>
-    </div>
+      </Column>
+    </Column>
   );
 }

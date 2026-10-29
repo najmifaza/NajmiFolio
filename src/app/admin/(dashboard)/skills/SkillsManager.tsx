@@ -1,11 +1,11 @@
 "use client";
 
 import { deleteSkillGroupAction, moveOrderAction } from "@/app/admin/actions";
-import styles from "@/app/admin/admin.module.scss";
 import { useAdminToast } from "@/app/admin/components/AdminToast";
 import OrderButtons from "@/app/admin/components/OrderButtons";
 import SkillGroupForm from "@/app/admin/forms/SkillGroupForm";
 import { UniversalIcon, resolveIconifyName } from "@/resources/icons";
+import { Button, Column, Heading, Row, Text } from "@once-ui-system/core";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
@@ -47,25 +47,36 @@ export default function SkillsManager({ initialSkills }: { initialSkills: any[] 
   };
 
   return (
-    <div>
-      <div className={styles.contentHeader}>
-        <div className={styles.pageTitleGroup}>
-          <h1>Technical Skills</h1>
-          <p>Kelola kelompok keahlian teknologi dan tag skill.</p>
-        </div>
+    <Column gap="24" fillWidth>
+      <Row
+        vertical="center"
+        horizontal="between"
+        paddingBottom="20"
+        borderBottom="neutral-alpha-weak"
+        wrap
+        gap="16"
+      >
+        <Column gap="4">
+          <Heading as="h1" variant="heading-strong-m" onBackground="neutral-strong">
+            Technical Skills
+          </Heading>
+          <Text variant="body-default-s" onBackground="neutral-weak">
+            Kelola kelompok keahlian teknologi dan tag skill.
+          </Text>
+        </Column>
         {!isCreatingSkill && !editingSkill && (
-          <button
+          <Button
             type="button"
-            className={styles.primaryButton}
+            variant="primary"
+            size="m"
+            label="+ Tambah Kelompok Skill"
             onClick={() => {
               setEditingSkill(null);
               setIsCreatingSkill(true);
             }}
-          >
-            + Tambah Kelompok Skill
-          </button>
+          />
         )}
-      </div>
+      </Row>
 
       {isCreatingSkill || editingSkill ? (
         <SkillGroupForm
@@ -82,15 +93,27 @@ export default function SkillsManager({ initialSkills }: { initialSkills: any[] 
           }}
         />
       ) : (
-        <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+        <Column gap="12" fillWidth>
           {skills.map((sg: any, index: number) => {
             const idTrans = sg.translations?.find((t: any) => t.locale === "id") || {};
             const skillList = Array.isArray(sg.skills)
               ? sg.skills.map((s: any) => (typeof s === "string" ? s : s.name))
               : [];
             return (
-              <div key={sg.id} className={styles.itemCard}>
-                <div style={{ display: "flex", alignItems: "center", gap: "14px" }}>
+              <Row
+                key={sg.id}
+                vertical="center"
+                horizontal="between"
+                paddingX="16"
+                paddingY="12"
+                radius="m"
+                background="surface"
+                border="neutral-alpha-weak"
+                wrap
+                gap="16"
+                style={{ transition: "all 0.15s ease" }}
+              >
+                <Row vertical="center" gap="16" style={{ minWidth: 0, flex: "1 1 auto" }}>
                   <OrderButtons
                     order={sg.order ?? index + 1}
                     isFirst={index === 0}
@@ -99,39 +122,52 @@ export default function SkillsManager({ initialSkills }: { initialSkills: any[] 
                     onUp={() => handleMoveOrder(sg.id, "up")}
                     onDown={() => handleMoveOrder(sg.id, "down")}
                   />
-                  <div>
-                    <div style={{ fontSize: "14.5px", fontWeight: 600, color: "#fff" }}>
+                  <Column gap="8" style={{ minWidth: 0 }}>
+                    <Text variant="heading-strong-xs" onBackground="neutral-strong">
                       {idTrans.title || sg.title}
-                    </div>
-                    <div style={{ display: "flex", gap: "6px", flexWrap: "wrap", marginTop: 6 }}>
+                    </Text>
+                    <Row gap="8" wrap>
                       {skillList.map((tag: string) => (
-                        <span
+                        <Row
                           key={tag}
-                          className={styles.langPill}
-                          style={{ display: "inline-flex", alignItems: "center", gap: "6px" }}
+                          vertical="center"
+                          gap="8"
+                          paddingX="8"
+                          paddingY="4"
+                          radius="m"
+                          background="neutral-alpha-weak"
+                          border="neutral-alpha-weak"
                         >
-                          <UniversalIcon name={resolveIconifyName(tag)} size={14} color="#34d399" />
-                          {tag}
-                        </span>
+                          <UniversalIcon
+                            name={resolveIconifyName(tag)}
+                            size={13}
+                            color="var(--brand-solid-strong)"
+                          />
+                          <Text variant="label-default-xs" onBackground="neutral-strong">
+                            {tag}
+                          </Text>
+                        </Row>
                       ))}
-                    </div>
-                  </div>
-                </div>
+                    </Row>
+                  </Column>
+                </Row>
 
-                <div style={{ display: "flex", gap: "8px" }}>
-                  <button
+                <Row vertical="center" gap="8" style={{ flexShrink: 0 }}>
+                  <Button
                     type="button"
-                    className={styles.secondaryButton}
+                    variant="secondary"
+                    size="s"
+                    label="Edit"
                     onClick={() => {
                       setIsCreatingSkill(false);
                       setEditingSkill(sg);
                     }}
-                  >
-                    Edit
-                  </button>
-                  <button
+                  />
+                  <Button
                     type="button"
-                    className={styles.dangerButton}
+                    variant="danger"
+                    size="s"
+                    label="Hapus"
                     onClick={async () => {
                       if (confirm(`Hapus kelompok skill ${sg.title}?`)) {
                         await deleteSkillGroupAction(sg.id);
@@ -140,15 +176,13 @@ export default function SkillsManager({ initialSkills }: { initialSkills: any[] 
                         router.refresh();
                       }
                     }}
-                  >
-                    Hapus
-                  </button>
-                </div>
-              </div>
+                  />
+                </Row>
+              </Row>
             );
           })}
-        </div>
+        </Column>
       )}
-    </div>
+    </Column>
   );
 }

@@ -1,9 +1,9 @@
 "use client";
 
+import { Button, Column, Heading, Input, Row, Text, Textarea } from "@once-ui-system/core";
 import type React from "react";
 import { useState } from "react";
 import { type SaveExperienceInput, saveExperienceAction, translateAction } from "../actions";
-import styles from "../admin.module.scss";
 
 export default function ExperienceForm({ experience, onCancel, onSave }: any) {
   const idTrans = experience?.translations?.find((t: any) => t.locale === "id") || {};
@@ -67,147 +67,140 @@ export default function ExperienceForm({ experience, onCancel, onSave }: any) {
   };
 
   return (
-    <div className={styles.glassCard}>
+    <Column
+      background="surface"
+      border="neutral-alpha-weak"
+      radius="l"
+      padding="24"
+      gap="24"
+      fillWidth
+    >
       <form
         onSubmit={handleSubmit}
-        style={{ display: "flex", flexDirection: "column", gap: "20px" }}
+        style={{ display: "flex", flexDirection: "column", gap: 24, width: "100%" }}
       >
-        <h2 style={{ fontSize: "17px", fontWeight: 700, margin: 0, color: "#fff" }}>
+        <Heading as="h2" variant="heading-strong-s" onBackground="neutral-strong">
           {experience ? "Edit Pengalaman" : "Tambah Pengalaman Baru"}
-        </h2>
+        </Heading>
 
-        <div className={styles.formGrid}>
-          <div className={styles.formGroup}>
-            <label>Perusahaan / Organisasi *</label>
-            <input
-              className={styles.formInput}
+        <Row gap="16" wrap fillWidth>
+          <Column gap="8" style={{ flex: 1, minWidth: 220 }}>
+            <Input
+              id="exp-company"
+              label="Perusahaan / Organisasi *"
               value={company}
               onChange={(e) => setCompany(e.target.value)}
               required
             />
-          </div>
-          <div className={styles.formGroup}>
-            <label>Timeframe (Periode) *</label>
-            <input
-              className={styles.formInput}
+          </Column>
+          <Column gap="8" style={{ flex: 1, minWidth: 200 }}>
+            <Input
+              id="exp-timeframe"
+              label="Timeframe (Periode) *"
               value={timeframe}
               onChange={(e) => setTimeframe(e.target.value)}
               placeholder="Jan 2026 - Present"
               required
             />
-          </div>
-          <div className={styles.formGroup}>
-            <label>Urutan Tampil (Order)</label>
-            <input
-              className={styles.formInput}
+          </Column>
+          <Column gap="8" style={{ flex: 1, minWidth: 140 }}>
+            <Input
+              id="exp-order"
+              label="Urutan Tampil (Order)"
               type="number"
-              value={order}
+              value={String(order)}
               onChange={(e) => setOrder(Number(e.target.value))}
               required
+              description="Urutan 1–8: Work. 9+: Organization."
             />
-            <div style={{ fontSize: "11px", color: "rgba(255,255,255,0.4)", marginTop: 4 }}>
-              Urutan 1–8: Work Experience. Urutan 9+: Organization & Committee.
-            </div>
-          </div>
-        </div>
+          </Column>
+        </Row>
 
-        <div>
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "space-between",
-              marginBottom: 12,
-            }}
-          >
-            <span style={{ fontSize: "14px", fontWeight: 700, color: "#fff" }}>
+        <Column gap="12" fillWidth>
+          <Row vertical="center" horizontal="between">
+            <Text variant="label-strong-m" onBackground="neutral-strong">
               Peran & Poin Pencapaian
-            </span>
-            <button
+            </Text>
+            <Button
               type="button"
-              className={styles.aiButton}
-              onClick={handleAutoTranslate}
+              variant="secondary"
+              size="s"
+              label={translating ? "Translating..." : "✨ Auto-Translate ID ke EN"}
               disabled={translating}
+              onClick={handleAutoTranslate}
+            />
+          </Row>
+
+          <Row gap="16" wrap fillWidth>
+            <Column
+              gap="12"
+              padding="16"
+              radius="m"
+              background="neutral-alpha-weak"
+              border="neutral-alpha-weak"
+              style={{ flex: 1, minWidth: 280 }}
             >
-              {translating ? "Translating..." : "✨ Auto-Translate ID ke EN"}
-            </button>
-          </div>
+              <Text variant="label-strong-xs" onBackground="neutral-medium">
+                🇮🇩 Indonesia
+              </Text>
+              <Input
+                id="exp-id-role"
+                label="Role / Jabatan *"
+                value={idRole}
+                onChange={(e) => setIdRole(e.target.value)}
+                required
+              />
+              <Textarea
+                id="exp-id-achievements"
+                label="Pencapaian (1 baris per poin)"
+                value={idAchievementsStr}
+                onChange={(e) => setIdAchievementsStr(e.target.value)}
+                placeholder="Mengembangkan sistem XYZ..."
+                lines={6}
+              />
+            </Column>
 
-          <div className={styles.bilingualContainer}>
-            <div className={styles.bilingualColumn}>
-              <div className={styles.langPill}>🇮🇩 Indonesia</div>
-              <div className={styles.formGroup}>
-                <label>Role / Jabatan *</label>
-                <input
-                  className={styles.formInput}
-                  value={idRole}
-                  onChange={(e) => setIdRole(e.target.value)}
-                  required
-                />
-              </div>
-              <div className={styles.formGroup}>
-                <label>Pencapaian (1 baris per poin)</label>
-                <textarea
-                  className={styles.formTextarea}
-                  value={idAchievementsStr}
-                  onChange={(e) => setIdAchievementsStr(e.target.value)}
-                  placeholder="Mengembangkan sistem XYZ..."
-                />
-              </div>
-            </div>
+            <Column
+              gap="12"
+              padding="16"
+              radius="m"
+              background="neutral-alpha-weak"
+              border="neutral-alpha-weak"
+              style={{ flex: 1, minWidth: 280 }}
+            >
+              <Text variant="label-strong-xs" onBackground="neutral-medium">
+                🇬🇧 English
+              </Text>
+              <Input
+                id="exp-en-role"
+                label="Role / Position"
+                value={enRole}
+                onChange={(e) => setEnRole(e.target.value)}
+              />
+              <Textarea
+                id="exp-en-achievements"
+                label="Achievements (1 per line)"
+                value={enAchievementsStr}
+                onChange={(e) => setEnAchievementsStr(e.target.value)}
+                placeholder="Developed XYZ system..."
+                lines={6}
+              />
+            </Column>
+          </Row>
+        </Column>
 
-            <div className={styles.bilingualColumn}>
-              <div className={styles.langPill}>🇬🇧 English</div>
-              <div className={styles.formGroup}>
-                <label>Role / Position</label>
-                <input
-                  className={styles.formInput}
-                  value={enRole}
-                  onChange={(e) => setEnRole(e.target.value)}
-                />
-              </div>
-              <div className={styles.formGroup}>
-                <label>Achievements (1 per line)</label>
-                <textarea
-                  className={styles.formTextarea}
-                  value={enAchievementsStr}
-                  onChange={(e) => setEnAchievementsStr(e.target.value)}
-                  placeholder="Developed XYZ system..."
-                />
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "flex-end",
-            gap: "12px",
-            borderTop: "1px solid rgba(255,255,255,0.08)",
-            paddingTop: 18,
-          }}
-        >
-          <button
-            type="button"
-            style={{
-              padding: "10px 18px",
-              borderRadius: "8px",
-              border: "1px solid rgba(255,255,255,0.12)",
-              background: "transparent",
-              color: "rgba(255,255,255,0.7)",
-              fontSize: "13.5px",
-              cursor: "pointer",
-            }}
-            onClick={onCancel}
-          >
-            Batal
-          </button>
-          <button type="submit" disabled={saving} className={styles.primaryButton}>
-            {saving ? "Menyimpan..." : "Simpan Pengalaman"}
-          </button>
-        </div>
+        <Row horizontal="end" gap="12" paddingTop="16" borderTop="neutral-alpha-weak">
+          <Button type="button" variant="secondary" size="m" label="Batal" onClick={onCancel} />
+          <Button
+            type="submit"
+            variant="primary"
+            size="m"
+            label={saving ? "Menyimpan..." : "Simpan Pengalaman"}
+            disabled={saving}
+            loading={saving}
+          />
+        </Row>
       </form>
-    </div>
+    </Column>
   );
 }

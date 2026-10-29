@@ -1,9 +1,9 @@
 "use client";
 
+import { Button, Column, Heading, Input, Row, Text, Textarea } from "@once-ui-system/core";
 import type React from "react";
 import { useState } from "react";
 import { type SaveStudyInput, saveStudyAction, translateAction } from "../actions";
-import styles from "../admin.module.scss";
 
 export default function StudyForm({ study, onCancel, onSave }: any) {
   const idTrans = study?.translations?.find((t: any) => t.locale === "id") || {};
@@ -58,126 +58,142 @@ export default function StudyForm({ study, onCancel, onSave }: any) {
   };
 
   return (
-    <div className={styles.glassCard}>
+    <Column
+      background="surface"
+      border="neutral-alpha-weak"
+      radius="l"
+      padding="24"
+      gap="24"
+      fillWidth
+    >
       <form
         onSubmit={handleSubmit}
-        style={{ display: "flex", flexDirection: "column", gap: "22px" }}
+        style={{ display: "flex", flexDirection: "column", gap: 24, width: "100%" }}
       >
-        <div style={{ display: "grid", gridTemplateColumns: "1.5fr 1fr 100px", gap: "16px" }}>
-          <div className={styles.formGroup}>
-            <label>Institusi Pendidikan *</label>
-            <input
-              className={styles.formInput}
+        <Heading as="h2" variant="heading-strong-s" onBackground="neutral-strong">
+          {study ? "Edit Riwayat Studi" : "Tambah Riwayat Studi Baru"}
+        </Heading>
+
+        <Row gap="16" wrap fillWidth>
+          <Column gap="8" style={{ flex: 1.5, minWidth: 220 }}>
+            <Input
+              id="study-institution"
+              label="Institusi Pendidikan *"
               required
               value={institution}
               onChange={(e) => setInstitution(e.target.value)}
               placeholder="Universitas Jenderal Soedirman"
             />
-          </div>
-          <div className={styles.formGroup}>
-            <label>Periode Waktu *</label>
-            <input
-              className={styles.formInput}
+          </Column>
+          <Column gap="8" style={{ flex: 1, minWidth: 180 }}>
+            <Input
+              id="study-timeframe"
+              label="Periode Waktu *"
               required
               value={timeframe}
               onChange={(e) => setTimeframe(e.target.value)}
               placeholder="2024 - Sekarang"
             />
-          </div>
-          <div className={styles.formGroup}>
-            <label>Urutan</label>
-            <input
-              className={styles.formInput}
+          </Column>
+          <Column gap="8" style={{ flex: 0.5, minWidth: 100 }}>
+            <Input
+              id="study-order"
+              label="Urutan"
               type="number"
-              value={order}
+              value={String(order)}
               onChange={(e) => setOrder(Number(e.target.value))}
             />
-          </div>
-        </div>
+          </Column>
+        </Row>
 
         {/* Bilingual Content */}
-        <div style={{ display: "flex", flexDirection: "column", gap: "14px" }}>
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-            <h3 style={{ fontSize: "14.5px", fontWeight: 600, color: "#fff", margin: 0 }}>
+        <Column gap="12" fillWidth>
+          <Row vertical="center" horizontal="between">
+            <Text variant="label-strong-m" onBackground="neutral-strong">
               Gelar & Deskripsi Pendidikan (Bilingual)
-            </h3>
-            <button
+            </Text>
+            <Button
               type="button"
-              className={styles.actionButton}
-              onClick={handleAutoTranslate}
+              variant="secondary"
+              size="s"
+              label={translating ? "Menerjemahkan..." : "✨ Auto-Translate ID ke EN"}
               disabled={translating}
+              onClick={handleAutoTranslate}
+            />
+          </Row>
+
+          <Row gap="16" wrap fillWidth>
+            <Column
+              gap="12"
+              padding="16"
+              radius="m"
+              background="neutral-alpha-weak"
+              border="neutral-alpha-weak"
+              style={{ flex: 1, minWidth: 280 }}
             >
-              {translating ? "Menerjemahkan..." : "✨ Auto-Translate ID ke EN"}
-            </button>
-          </div>
+              <Text variant="label-strong-xs" onBackground="neutral-medium">
+                🇮🇩 Bahasa Indonesia
+              </Text>
+              <Input
+                id="study-id-degree"
+                label="Gelar / Program Studi *"
+                required
+                value={idDegree}
+                onChange={(e) => setIdDegree(e.target.value)}
+                placeholder="S1 Informatika"
+              />
+              <Textarea
+                id="study-id-desc"
+                label="Deskripsi / Fokus Akademik"
+                value={idDescription}
+                onChange={(e) => setIdDescription(e.target.value)}
+                placeholder="Fokus pada rekayasa perangkat lunak dan sistem informasi..."
+                lines={4}
+              />
+            </Column>
 
-          <div className={styles.bilingualGrid}>
-            <div className={styles.bilingualColumn}>
-              <div className={styles.langPill}>🇮🇩 Bahasa Indonesia</div>
-              <div className={styles.formGroup}>
-                <label>Gelar / Program Studi *</label>
-                <input
-                  className={styles.formInput}
-                  required
-                  value={idDegree}
-                  onChange={(e) => setIdDegree(e.target.value)}
-                  placeholder="S1 Informatika"
-                />
-              </div>
-              <div className={styles.formGroup}>
-                <label>Deskripsi / Fokus Akademik</label>
-                <textarea
-                  className={styles.formTextarea}
-                  style={{ minHeight: 90 }}
-                  value={idDescription}
-                  onChange={(e) => setIdDescription(e.target.value)}
-                  placeholder="Fokus pada rekayasa perangkat lunak dan sistem informasi..."
-                />
-              </div>
-            </div>
+            <Column
+              gap="12"
+              padding="16"
+              radius="m"
+              background="neutral-alpha-weak"
+              border="neutral-alpha-weak"
+              style={{ flex: 1, minWidth: 280 }}
+            >
+              <Text variant="label-strong-xs" onBackground="neutral-medium">
+                🇬🇧 English
+              </Text>
+              <Input
+                id="study-en-degree"
+                label="Degree / Program"
+                value={enDegree}
+                onChange={(e) => setEnDegree(e.target.value)}
+                placeholder="Bachelor of Informatics"
+              />
+              <Textarea
+                id="study-en-desc"
+                label="Description / Academic Focus"
+                value={enDescription}
+                onChange={(e) => setEnDescription(e.target.value)}
+                placeholder="Focusing on software engineering and information systems..."
+                lines={4}
+              />
+            </Column>
+          </Row>
+        </Column>
 
-            <div className={styles.bilingualColumn}>
-              <div className={styles.langPill}>🇬🇧 English</div>
-              <div className={styles.formGroup}>
-                <label>Degree / Program</label>
-                <input
-                  className={styles.formInput}
-                  value={enDegree}
-                  onChange={(e) => setEnDegree(e.target.value)}
-                  placeholder="Bachelor of Informatics"
-                />
-              </div>
-              <div className={styles.formGroup}>
-                <label>Description / Academic Focus</label>
-                <textarea
-                  className={styles.formTextarea}
-                  style={{ minHeight: 90 }}
-                  value={enDescription}
-                  onChange={(e) => setEnDescription(e.target.value)}
-                  placeholder="Focusing on software engineering and information systems..."
-                />
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "flex-end",
-            gap: "12px",
-            borderTop: "1px solid rgba(255,255,255,0.08)",
-            paddingTop: 18,
-          }}
-        >
-          <button type="button" className={styles.secondaryButton} onClick={onCancel}>
-            Batal
-          </button>
-          <button type="submit" disabled={saving} className={styles.primaryButton}>
-            {saving ? "Menyimpan..." : "Simpan Riwayat Studi"}
-          </button>
-        </div>
+        <Row horizontal="end" gap="12" paddingTop="16" borderTop="neutral-alpha-weak">
+          <Button type="button" variant="secondary" size="m" label="Batal" onClick={onCancel} />
+          <Button
+            type="submit"
+            variant="primary"
+            size="m"
+            label={saving ? "Menyimpan..." : "Simpan Riwayat Studi"}
+            disabled={saving}
+            loading={saving}
+          />
+        </Row>
       </form>
-    </div>
+    </Column>
   );
 }

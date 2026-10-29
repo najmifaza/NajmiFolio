@@ -1,8 +1,8 @@
 "use client";
 
+import { Button, Column, Heading, Input, Row, SmartLink, Text } from "@once-ui-system/core";
 import type React from "react";
 import { useState } from "react";
-import styles from "../admin.module.scss";
 
 export default function AdminLoginPage() {
   const [password, setPassword] = useState("");
@@ -35,117 +35,93 @@ export default function AdminLoginPage() {
   };
 
   return (
-    <div
+    <Row
+      center
+      fill
       style={{
         minHeight: "100vh",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        padding: "24px",
-        background:
-          "radial-gradient(ellipse at 50% 20%, rgba(16, 185, 129, 0.08), transparent 70%), #050508",
+        padding: 24,
+        background: "var(--page-background)",
       }}
     >
-      <div
-        className={styles.glassCard}
-        style={{
-          width: "100%",
-          maxWidth: "380px",
-          padding: "36px 30px",
-          display: "flex",
-          flexDirection: "column",
-          gap: "24px",
-        }}
+      <Column
+        background="surface"
+        border="neutral-alpha-weak"
+        radius="l"
+        padding="32"
+        gap="24"
+        style={{ width: "100%", maxWidth: 380 }}
       >
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            gap: "10px",
-            textAlign: "center",
-          }}
-        >
-          <div className={styles.brandLogo} style={{ width: 40, height: 40, fontSize: 16 }}>
-            N
-          </div>
-          <h1
+        <Column horizontal="center" gap="8" style={{ textAlign: "center" }}>
+          <Row
+            center
             style={{
-              fontSize: "18px",
+              width: 40,
+              height: 40,
+              borderRadius: "50%",
+              background: "var(--neutral-background-strong)",
+              border: "1px solid var(--border-neutral-alpha-medium)",
               fontWeight: 600,
-              margin: 0,
-              letterSpacing: "-0.02em",
-              color: "#fff",
+              fontSize: 16,
+              color: "var(--neutral-on-background-strong)",
             }}
           >
+            N
+          </Row>
+          <Heading as="h1" variant="heading-strong-s" onBackground="neutral-strong">
             Najmi CMS
-          </h1>
-          <p style={{ fontSize: "12.5px", color: "rgba(255, 255, 255, 0.45)", margin: 0 }}>
+          </Heading>
+          <Text variant="body-default-xs" onBackground="neutral-weak">
             Panel kontrol konten dinamis & media
-          </p>
-        </div>
+          </Text>
+        </Column>
 
         <form
           onSubmit={handleSubmit}
-          style={{ display: "flex", flexDirection: "column", gap: "16px" }}
+          style={{ display: "flex", flexDirection: "column", gap: 16, width: "100%" }}
         >
-          <div className={styles.formGroup}>
-            <label htmlFor="admin-pass">Password Akses</label>
-            <input
-              id="admin-pass"
-              type="password"
-              className={styles.formInput}
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="Masukkan password admin"
-              required
-            />
-          </div>
+          <Input
+            id="admin-pass"
+            label="Password Akses"
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            placeholder="Masukkan password admin"
+            required
+          />
 
           {error && (
-            <div
-              style={{
-                padding: "8px 12px",
-                borderRadius: "6px",
-                background: "rgba(239, 68, 68, 0.12)",
-                border: "1px solid rgba(239, 68, 68, 0.25)",
-                color: "#fca5a5",
-                fontSize: "12px",
-              }}
+            <Row
+              padding="12"
+              radius="m"
+              background="danger-alpha-weak"
+              border="danger-alpha-medium"
             >
-              {error}
-            </div>
+              <Text variant="label-default-xs" onBackground="danger-medium">
+                {error}
+              </Text>
+            </Row>
           )}
 
-          <button
+          <Button
             type="submit"
+            variant="primary"
+            size="m"
+            fillWidth
+            label={loading ? "Memverifikasi & Masuk..." : "Masuk ke Dashboard →"}
             disabled={loading}
-            className={styles.primaryButton}
-            style={{ width: "100%", justifyContent: "center", padding: "10px 16px" }}
-          >
-            {loading ? "Memverifikasi & Masuk..." : "Masuk ke Dashboard →"}
-          </button>
+            loading={loading}
+          />
         </form>
 
-        <div
-          style={{
-            textAlign: "center",
-            paddingTop: "8px",
-            borderTop: "1px solid rgba(255,255,255,0.06)",
-          }}
-        >
-          <a
-            href="/"
-            style={{
-              fontSize: "12px",
-              color: "rgba(255,255,255,0.5)",
-              textDecoration: "none",
-            }}
-          >
-            ← Kembali ke Website Utama
-          </a>
-        </div>
-      </div>
-    </div>
+        <Row horizontal="center" paddingTop="8" borderTop="neutral-alpha-weak">
+          <SmartLink href="/" style={{ textDecoration: "none" }}>
+            <Text variant="body-default-xs" onBackground="neutral-weak">
+              ← Kembali ke Website Utama
+            </Text>
+          </SmartLink>
+        </Row>
+      </Column>
+    </Row>
   );
 }

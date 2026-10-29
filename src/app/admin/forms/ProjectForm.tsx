@@ -1,5 +1,6 @@
 "use client";
 
+import { Button, Column, Heading, Input, Row, Switch, Text, Textarea } from "@once-ui-system/core";
 import type React from "react";
 import { useState } from "react";
 import {
@@ -8,7 +9,6 @@ import {
   translateAction,
   uploadMediaAction,
 } from "../actions";
-import styles from "../admin.module.scss";
 
 export default function ProjectForm({
   project,
@@ -130,95 +130,106 @@ export default function ProjectForm({
   };
 
   return (
-    <div className={styles.glassCard}>
+    <Column
+      background="surface"
+      border="neutral-alpha-weak"
+      radius="l"
+      padding="24"
+      gap="24"
+      fillWidth
+    >
       <form
         onSubmit={handleSubmit}
-        style={{ display: "flex", flexDirection: "column", gap: "24px" }}
+        style={{ display: "flex", flexDirection: "column", gap: 24, width: "100%" }}
       >
-        <h2 style={{ fontSize: "17px", fontWeight: 700, margin: 0, color: "#fff" }}>
+        <Heading as="h2" variant="heading-strong-s" onBackground="neutral-strong">
           {project ? `Edit Project: ${project.slug}` : "Tambah Project Baru"}
-        </h2>
+        </Heading>
 
-        {/* Basic fields */}
-        <div className={styles.formGrid}>
-          <div className={styles.formGroup}>
-            <label>Slug URL *</label>
-            <input
-              className={styles.formInput}
+        <Row gap="16" wrap fillWidth>
+          <Column gap="8" style={{ flex: 1, minWidth: 200 }}>
+            <Input
+              id="proj-slug"
+              label="Slug URL *"
               value={slug}
               onChange={(e) => setSlug(e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, "-"))}
               placeholder="contoh: platform-properti-rumio"
               required
             />
-          </div>
-          <div className={styles.formGroup}>
-            <label>Urutan Tampil (Order) *</label>
-            <input
+          </Column>
+          <Column gap="8" style={{ flex: 1, minWidth: 140 }}>
+            <Input
+              id="proj-order"
+              label="Urutan Tampil *"
               type="number"
-              className={styles.formInput}
-              value={order}
+              value={String(order)}
               onChange={(e) => setOrder(Number(e.target.value))}
-              min={1}
               required
             />
-          </div>
-          <div className={styles.formGroup}>
-            <label>Tanggal Rilis / Publikasi *</label>
-            <input
+          </Column>
+          <Column gap="8" style={{ flex: 1, minWidth: 160 }}>
+            <Input
+              id="proj-publishedAt"
+              label="Tanggal Rilis *"
               type="date"
-              className={styles.formInput}
               value={publishedAt}
               onChange={(e) => setPublishedAt(e.target.value)}
               required
             />
-          </div>
-          <div className={styles.formGroup}>
-            <label>Live Demo URL (Website)</label>
-            <input
-              className={styles.formInput}
+          </Column>
+          <Column gap="8" style={{ flex: 1, minWidth: 200 }}>
+            <Input
+              id="proj-link"
+              label="Live Demo URL"
               value={link}
               onChange={(e) => setLink(e.target.value)}
               placeholder="https://..."
             />
-          </div>
-          <div className={styles.formGroup}>
-            <label>GitHub Repository URL</label>
-            <input
-              className={styles.formInput}
+          </Column>
+          <Column gap="8" style={{ flex: 1, minWidth: 200 }}>
+            <Input
+              id="proj-github"
+              label="GitHub Repository URL"
               value={github}
               onChange={(e) => setGithub(e.target.value)}
               placeholder="https://github.com/..."
             />
-          </div>
-        </div>
+          </Column>
+        </Row>
 
-        <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-          <input
-            type="checkbox"
-            id="proj-featured"
-            checked={featured}
-            onChange={(e) => setFeatured(e.target.checked)}
-            style={{ width: 16, height: 16, cursor: "pointer" }}
+        <Row vertical="center" gap="12">
+          <Switch
+            isChecked={featured}
+            onToggle={() => setFeatured(!featured)}
+            label="Jadikan Featured Project (tampil di badge teratas Halaman Utama)"
           />
-          <label
-            htmlFor="proj-featured"
-            style={{ cursor: "pointer", fontSize: 13.5, color: "rgba(255,255,255,0.8)" }}
-          >
-            Jadikan Featured Project (tampil di badge teratas Halaman Utama)
-          </label>
-        </div>
+        </Row>
 
         {/* Media Upload Area */}
-        <div className={styles.formGroup}>
-          <label>Cover & Media Galeri (Supabase Storage)</label>
-          <label className={styles.uploadZone}>
-            <span style={{ fontSize: 24 }}>☁️</span>
-            <span style={{ fontSize: 13.5, fontWeight: 600, color: "#93c5fd" }}>
+        <Column gap="8" fillWidth>
+          <Text variant="label-default-s" onBackground="neutral-medium">
+            Cover & Media Galeri (Supabase Storage)
+          </Text>
+          <label
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              gap: 8,
+              padding: 22,
+              border: "1px dashed var(--border-neutral-alpha-medium)",
+              borderRadius: "var(--radius-m)",
+              cursor: "pointer",
+              background: "var(--neutral-alpha-weak)",
+              transition: "all 0.15s ease",
+            }}
+          >
+            <Text variant="label-strong-s" onBackground="brand-medium">
               {uploading ? "Sedang Mengunggah File ke Supabase..." : "Klik untuk Upload Media Baru"}
-            </span>
-            <span style={{ fontSize: 12, color: "rgba(255,255,255,0.4)" }}>
+            </Text>
+            <Text variant="label-default-xs" onBackground="neutral-weak">
               Mendukung WebP, PNG, JPG, dan video WebM (maksimal 50MB)
-            </span>
+            </Text>
             <input
               type="file"
               accept="image/*,video/webm"
@@ -229,9 +240,21 @@ export default function ProjectForm({
           </label>
 
           {images.length > 0 && (
-            <div className={styles.mediaThumbGrid}>
+            <Row gap="12" wrap paddingTop="8">
               {images.map((url, idx) => (
-                <div key={url || `img-${idx}`} className={styles.mediaThumbItem}>
+                <Row
+                  key={url || `img-${idx}`}
+                  style={{
+                    position: "relative",
+                    width: 84,
+                    height: 56,
+                    borderRadius: 6,
+                    overflow: "hidden",
+                    border: "1px solid var(--border-neutral-alpha-medium)",
+                    background: "var(--surface-background)",
+                    flexShrink: 0,
+                  }}
+                >
                   {url.endsWith(".webm") ? (
                     <video
                       src={url}
@@ -241,151 +264,142 @@ export default function ProjectForm({
                       style={{ width: "100%", height: "100%", objectFit: "cover" }}
                     />
                   ) : (
-                    <img src={url} alt="thumbnail" />
+                    <img
+                      src={url}
+                      alt="thumbnail"
+                      style={{ width: "100%", height: "100%", objectFit: "cover" }}
+                    />
                   )}
-                  <button
+                  <Button
                     type="button"
-                    className={styles.removeBtn}
+                    variant="danger"
+                    size="s"
+                    label="✕"
                     onClick={() => setImages(images.filter((_, i) => i !== idx))}
-                  >
-                    ✕
-                  </button>
-                </div>
+                    style={{
+                      position: "absolute",
+                      top: 3,
+                      right: 3,
+                      width: 18,
+                      height: 18,
+                      minWidth: "unset",
+                      padding: 0,
+                      fontSize: 10,
+                    }}
+                  />
+                </Row>
               ))}
-            </div>
+            </Row>
           )}
-        </div>
+        </Column>
 
         {/* Bilingual Content Editor */}
-        <div>
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "space-between",
-              marginBottom: 12,
-            }}
-          >
-            <span style={{ fontSize: "14px", fontWeight: 700, color: "#fff" }}>
+        <Column gap="12" fillWidth>
+          <Row vertical="center" horizontal="between">
+            <Text variant="label-strong-m" onBackground="neutral-strong">
               Konten & Deskripsi Bilingual
-            </span>
-            <button
+            </Text>
+            <Button
               type="button"
-              className={styles.aiButton}
-              onClick={handleAutoTranslate}
+              variant="secondary"
+              size="s"
+              label={translating ? "Translating..." : "✨ Auto-Translate ID ke EN"}
               disabled={translating}
-            >
-              {translating ? "Translating..." : "✨ Auto-Translate ID ke EN"}
-            </button>
-          </div>
+              onClick={handleAutoTranslate}
+            />
+          </Row>
 
-          <div className={styles.bilingualContainer}>
+          <Row gap="16" wrap fillWidth>
             {/* ID */}
-            <div className={styles.bilingualColumn}>
-              <div className={styles.langPill}>
-                <span>🇮🇩</span> Bahasa Indonesia (Utama)
-              </div>
-              <div className={styles.formGroup}>
-                <label>Judul Proyek *</label>
-                <input
-                  className={styles.formInput}
-                  value={idTitle}
-                  onChange={(e) => setIdTitle(e.target.value)}
-                  placeholder="Judul dalam bahasa Indonesia"
-                  required
-                />
-              </div>
-              <div className={styles.formGroup}>
-                <label>Ringkasan Singkat (Summary)</label>
-                <textarea
-                  className={styles.formTextarea}
-                  style={{ minHeight: 80 }}
-                  value={idSummary}
-                  onChange={(e) => setIdSummary(e.target.value)}
-                  placeholder="Ringkasan singkat untuk card..."
-                />
-              </div>
-              <div className={styles.formGroup}>
-                <label>Konten Detail (Markdown / MDX)</label>
-                <textarea
-                  className={styles.formTextarea}
-                  style={{ minHeight: 220, fontFamily: "monospace", fontSize: 13 }}
-                  value={idContent}
-                  onChange={(e) => setIdContent(e.target.value)}
-                  placeholder="# Arsitektur Sistem..."
-                />
-              </div>
-            </div>
+            <Column
+              gap="12"
+              padding="16"
+              radius="m"
+              background="neutral-alpha-weak"
+              border="neutral-alpha-weak"
+              style={{ flex: 1, minWidth: 280 }}
+            >
+              <Text variant="label-strong-xs" onBackground="neutral-medium">
+                🇮🇩 Bahasa Indonesia (Utama)
+              </Text>
+              <Input
+                id="proj-id-title"
+                label="Judul Proyek *"
+                value={idTitle}
+                onChange={(e) => setIdTitle(e.target.value)}
+                placeholder="Judul dalam bahasa Indonesia"
+                required
+              />
+              <Textarea
+                id="proj-id-summary"
+                label="Ringkasan Singkat (Summary)"
+                value={idSummary}
+                onChange={(e) => setIdSummary(e.target.value)}
+                placeholder="Ringkasan singkat untuk card..."
+                lines={3}
+              />
+              <Textarea
+                id="proj-id-content"
+                label="Konten Detail (Markdown / MDX)"
+                value={idContent}
+                onChange={(e) => setIdContent(e.target.value)}
+                placeholder="# Arsitektur Sistem..."
+                lines={8}
+              />
+            </Column>
 
             {/* EN */}
-            <div className={styles.bilingualColumn}>
-              <div className={styles.langPill}>
-                <span>🇬🇧</span> English Version
-              </div>
-              <div className={styles.formGroup}>
-                <label>Project Title (EN)</label>
-                <input
-                  className={styles.formInput}
-                  value={enTitle}
-                  onChange={(e) => setEnTitle(e.target.value)}
-                  placeholder="Auto-translated or manual title"
-                />
-              </div>
-              <div className={styles.formGroup}>
-                <label>Summary (EN)</label>
-                <textarea
-                  className={styles.formTextarea}
-                  style={{ minHeight: 80 }}
-                  value={enSummary}
-                  onChange={(e) => setEnSummary(e.target.value)}
-                  placeholder="Short summary in English..."
-                />
-              </div>
-              <div className={styles.formGroup}>
-                <label>Content Detail (Markdown / MDX)</label>
-                <textarea
-                  className={styles.formTextarea}
-                  style={{ minHeight: 220, fontFamily: "monospace", fontSize: 13 }}
-                  value={enContent}
-                  onChange={(e) => setEnContent(e.target.value)}
-                  placeholder="# System Architecture..."
-                />
-              </div>
-            </div>
-          </div>
-        </div>
+            <Column
+              gap="12"
+              padding="16"
+              radius="m"
+              background="neutral-alpha-weak"
+              border="neutral-alpha-weak"
+              style={{ flex: 1, minWidth: 280 }}
+            >
+              <Text variant="label-strong-xs" onBackground="neutral-medium">
+                🇬🇧 English Version
+              </Text>
+              <Input
+                id="proj-en-title"
+                label="Project Title (EN)"
+                value={enTitle}
+                onChange={(e) => setEnTitle(e.target.value)}
+                placeholder="Auto-translated or manual title"
+              />
+              <Textarea
+                id="proj-en-summary"
+                label="Summary (EN)"
+                value={enSummary}
+                onChange={(e) => setEnSummary(e.target.value)}
+                placeholder="Short summary in English..."
+                lines={3}
+              />
+              <Textarea
+                id="proj-en-content"
+                label="Content Detail (Markdown / MDX)"
+                value={enContent}
+                onChange={(e) => setEnContent(e.target.value)}
+                placeholder="# System Architecture..."
+                lines={8}
+              />
+            </Column>
+          </Row>
+        </Column>
 
         {/* Actions */}
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "flex-end",
-            gap: "12px",
-            borderTop: "1px solid rgba(255,255,255,0.08)",
-            paddingTop: 18,
-          }}
-        >
-          <button
-            type="button"
-            style={{
-              padding: "10px 18px",
-              borderRadius: "8px",
-              border: "1px solid rgba(255,255,255,0.12)",
-              background: "transparent",
-              color: "rgba(255,255,255,0.7)",
-              fontSize: "13.5px",
-              fontWeight: 500,
-              cursor: "pointer",
-            }}
-            onClick={onCancel}
-          >
-            Batal
-          </button>
-          <button type="submit" disabled={saving} className={styles.primaryButton}>
-            {saving ? "Menyimpan..." : "Simpan Project"}
-          </button>
-        </div>
+        <Row horizontal="end" gap="12" paddingTop="16" borderTop="neutral-alpha-weak">
+          <Button type="button" variant="secondary" size="m" label="Batal" onClick={onCancel} />
+          <Button
+            type="submit"
+            variant="primary"
+            size="m"
+            label={saving ? "Menyimpan..." : "Simpan Project"}
+            disabled={saving}
+            loading={saving}
+          />
+        </Row>
       </form>
-    </div>
+    </Column>
   );
 }

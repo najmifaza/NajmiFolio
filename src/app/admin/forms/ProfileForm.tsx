@@ -1,6 +1,18 @@
 "use client";
 
 import { UniversalIcon } from "@/resources/icons";
+import {
+  Button,
+  Checkbox,
+  Column,
+  Heading,
+  Input,
+  Row,
+  SmartLink,
+  Switch,
+  Text,
+  Textarea,
+} from "@once-ui-system/core";
 import type React from "react";
 import { useState } from "react";
 import {
@@ -11,7 +23,6 @@ import {
   translateAction,
   uploadMediaAction,
 } from "../actions";
-import styles from "../admin.module.scss";
 
 const SOCIAL_ICON_OPTIONS = [
   { value: "github", label: "GitHub" },
@@ -159,13 +170,24 @@ export default function ProfileForm({ profile, onSave }: { profile: any; onSave:
   };
 
   return (
-    <div className={styles.glassCard}>
+    <Column
+      background="surface"
+      border="neutral-alpha-weak"
+      radius="l"
+      padding="24"
+      gap="24"
+      fillWidth
+    >
       <form
         onSubmit={handleSubmit}
-        style={{ display: "flex", flexDirection: "column", gap: "24px" }}
+        style={{ display: "flex", flexDirection: "column", gap: 24, width: "100%" }}
       >
+        <Heading as="h2" variant="heading-strong-s" onBackground="neutral-strong">
+          Profil & Identitas Utama
+        </Heading>
+
         {/* Avatar & Identitas */}
-        <div style={{ display: "flex", alignItems: "center", gap: "20px", flexWrap: "wrap" }}>
+        <Row vertical="center" gap="20" wrap>
           {avatar && (
             <img
               src={avatar}
@@ -175,7 +197,7 @@ export default function ProfileForm({ profile, onSave }: { profile: any; onSave:
                 height: 76,
                 borderRadius: "50%",
                 objectFit: "cover",
-                border: "2px solid rgba(59, 130, 246, 0.4)",
+                border: "2px solid var(--border-neutral-alpha-medium)",
                 boxShadow: "0 4px 14px rgba(0,0,0,0.4)",
               }}
             />
@@ -183,10 +205,10 @@ export default function ProfileForm({ profile, onSave }: { profile: any; onSave:
           <label
             style={{
               padding: "9px 16px",
-              borderRadius: "8px",
-              background: "rgba(255,255,255,0.06)",
-              border: "1px solid rgba(255,255,255,0.15)",
-              color: "#fff",
+              borderRadius: "var(--radius-m)",
+              background: "var(--neutral-alpha-weak)",
+              border: "1px solid var(--border-neutral-alpha-medium)",
+              color: "var(--neutral-on-background-strong)",
               fontSize: "13px",
               fontWeight: 500,
               cursor: "pointer",
@@ -201,193 +223,175 @@ export default function ProfileForm({ profile, onSave }: { profile: any; onSave:
               disabled={uploadingAvatar}
             />
           </label>
-        </div>
+        </Row>
 
-        <div className={styles.formGrid}>
-          <div className={styles.formGroup}>
-            <label>Email Kontak</label>
-            <input
-              className={styles.formInput}
+        <Row gap="16" wrap fillWidth>
+          <Column gap="8" style={{ flex: 1, minWidth: 200 }}>
+            <Input
+              id="prof-email"
+              label="Email Kontak"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
             />
-          </div>
-          <div className={styles.formGroup}>
-            <label>Timezone / Lokasi</label>
-            <input
-              className={styles.formInput}
+          </Column>
+          <Column gap="8" style={{ flex: 1, minWidth: 200 }}>
+            <Input
+              id="prof-location"
+              label="Timezone / Lokasi"
               value={location}
               onChange={(e) => setLocation(e.target.value)}
               required
             />
-          </div>
-          <div className={styles.formGroup}>
-            <label>Languages (Pisahkan koma)</label>
-            <input
-              className={styles.formInput}
+          </Column>
+          <Column gap="8" style={{ flex: 1.5, minWidth: 240 }}>
+            <Input
+              id="prof-languages"
+              label="Languages (Pisahkan koma)"
               value={languagesStr}
               onChange={(e) => setLanguagesStr(e.target.value)}
             />
-          </div>
-        </div>
+          </Column>
+        </Row>
 
         {/* Bilingual Narrative */}
-        <div>
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "space-between",
-              marginBottom: 12,
-            }}
-          >
-            <span style={{ fontSize: "14px", fontWeight: 700, color: "#fff" }}>
+        <Column gap="12" fillWidth>
+          <Row vertical="center" horizontal="between">
+            <Text variant="label-strong-m" onBackground="neutral-strong">
               Narasi & Informasi Pribadi
-            </span>
-            <button
+            </Text>
+            <Button
               type="button"
-              className={styles.aiButton}
-              onClick={handleAutoTranslate}
+              variant="secondary"
+              size="s"
+              label={translating ? "Translating..." : "✨ Auto-Translate ID ke EN"}
               disabled={translating}
-            >
-              {translating ? "Translating..." : "✨ Auto-Translate ID ke EN"}
-            </button>
-          </div>
+              onClick={handleAutoTranslate}
+            />
+          </Row>
 
-          <div className={styles.bilingualContainer}>
+          <Row gap="16" wrap fillWidth>
             {/* ID */}
-            <div className={styles.bilingualColumn}>
-              <div className={styles.langPill}>
-                <span>🇮🇩</span> Indonesia
-              </div>
-              <div className={styles.formGroup}>
-                <label>Nama Tampilan *</label>
-                <input
-                  className={styles.formInput}
-                  value={idName}
-                  onChange={(e) => setIdName(e.target.value)}
-                  required
-                />
-              </div>
-              <div className={styles.formGroup}>
-                <label>Role / Profesi *</label>
-                <input
-                  className={styles.formInput}
-                  value={idRole}
-                  onChange={(e) => setIdRole(e.target.value)}
-                  required
-                />
-              </div>
-              <div className={styles.formGroup}>
-                <label>Headline (Home)</label>
-                <input
-                  className={styles.formInput}
-                  value={idHeadline}
-                  onChange={(e) => setIdHeadline(e.target.value)}
-                />
-              </div>
-              <div className={styles.formGroup}>
-                <label>Subline (Home Hero)</label>
-                <textarea
-                  className={styles.formTextarea}
-                  style={{ minHeight: 70 }}
-                  value={idSubline}
-                  onChange={(e) => setIdSubline(e.target.value)}
-                />
-              </div>
-              <div className={styles.formGroup}>
-                <label>Intro / Biografi (About Page)</label>
-                <textarea
-                  className={styles.formTextarea}
-                  style={{ minHeight: 120 }}
-                  value={idIntro}
-                  onChange={(e) => setIdIntro(e.target.value)}
-                />
-              </div>
-            </div>
+            <Column
+              gap="12"
+              padding="16"
+              radius="m"
+              background="neutral-alpha-weak"
+              border="neutral-alpha-weak"
+              style={{ flex: 1, minWidth: 280 }}
+            >
+              <Text variant="label-strong-xs" onBackground="neutral-medium">
+                🇮🇩 Indonesia
+              </Text>
+              <Input
+                id="prof-id-name"
+                label="Nama Tampilan *"
+                value={idName}
+                onChange={(e) => setIdName(e.target.value)}
+                required
+              />
+              <Input
+                id="prof-id-role"
+                label="Role / Profesi *"
+                value={idRole}
+                onChange={(e) => setIdRole(e.target.value)}
+                required
+              />
+              <Input
+                id="prof-id-headline"
+                label="Headline (Home)"
+                value={idHeadline}
+                onChange={(e) => setIdHeadline(e.target.value)}
+              />
+              <Textarea
+                id="prof-id-subline"
+                label="Subline (Home Hero)"
+                value={idSubline}
+                onChange={(e) => setIdSubline(e.target.value)}
+                lines={3}
+              />
+              <Textarea
+                id="prof-id-intro"
+                label="Intro / Biografi (About Page)"
+                value={idIntro}
+                onChange={(e) => setIdIntro(e.target.value)}
+                lines={5}
+              />
+            </Column>
 
             {/* EN */}
-            <div className={styles.bilingualColumn}>
-              <div className={styles.langPill}>
-                <span>🇬🇧</span> English
-              </div>
-              <div className={styles.formGroup}>
-                <label>Display Name</label>
-                <input
-                  className={styles.formInput}
-                  value={enName}
-                  onChange={(e) => setEnName(e.target.value)}
-                />
-              </div>
-              <div className={styles.formGroup}>
-                <label>Role / Job Title</label>
-                <input
-                  className={styles.formInput}
-                  value={enRole}
-                  onChange={(e) => setEnRole(e.target.value)}
-                />
-              </div>
-              <div className={styles.formGroup}>
-                <label>Headline (Home)</label>
-                <input
-                  className={styles.formInput}
-                  value={enHeadline}
-                  onChange={(e) => setEnHeadline(e.target.value)}
-                />
-              </div>
-              <div className={styles.formGroup}>
-                <label>Subline (Home Hero)</label>
-                <textarea
-                  className={styles.formTextarea}
-                  style={{ minHeight: 70 }}
-                  value={enSubline}
-                  onChange={(e) => setEnSubline(e.target.value)}
-                />
-              </div>
-              <div className={styles.formGroup}>
-                <label>Intro / Biography (About Page)</label>
-                <textarea
-                  className={styles.formTextarea}
-                  style={{ minHeight: 120 }}
-                  value={enIntro}
-                  onChange={(e) => setEnIntro(e.target.value)}
-                />
-              </div>
-            </div>
-          </div>
-        </div>
+            <Column
+              gap="12"
+              padding="16"
+              radius="m"
+              background="neutral-alpha-weak"
+              border="neutral-alpha-weak"
+              style={{ flex: 1, minWidth: 280 }}
+            >
+              <Text variant="label-strong-xs" onBackground="neutral-medium">
+                🇬🇧 English
+              </Text>
+              <Input
+                id="prof-en-name"
+                label="Display Name"
+                value={enName}
+                onChange={(e) => setEnName(e.target.value)}
+              />
+              <Input
+                id="prof-en-role"
+                label="Role / Job Title"
+                value={enRole}
+                onChange={(e) => setEnRole(e.target.value)}
+              />
+              <Input
+                id="prof-en-headline"
+                label="Headline (Home)"
+                value={enHeadline}
+                onChange={(e) => setEnHeadline(e.target.value)}
+              />
+              <Textarea
+                id="prof-en-subline"
+                label="Subline (Home Hero)"
+                value={enSubline}
+                onChange={(e) => setEnSubline(e.target.value)}
+                lines={3}
+              />
+              <Textarea
+                id="prof-en-intro"
+                label="Intro / Biography (About Page)"
+                value={enIntro}
+                onChange={(e) => setEnIntro(e.target.value)}
+                lines={5}
+              />
+            </Column>
+          </Row>
+        </Column>
 
         {/* Social Media Links */}
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            gap: "14px",
-            borderTop: "1px solid rgba(255,255,255,0.08)",
-            paddingTop: 20,
-          }}
-        >
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-            <div>
-              <div style={{ fontSize: "14.5px", fontWeight: 600, color: "#fff" }}>
+        <Column gap="16" fillWidth paddingTop="16" borderTop="neutral-alpha-weak">
+          <Row vertical="center" horizontal="between" wrap gap="12">
+            <Column gap="2">
+              <Text variant="label-strong-m" onBackground="neutral-strong">
                 Social Media Links
-              </div>
-              <div style={{ fontSize: "12.5px", color: "rgba(255,255,255,0.45)", marginTop: 2 }}>
+              </Text>
+              <Text variant="body-default-xs" onBackground="neutral-weak">
                 Dikelola dinamis dan tampil di header, bio profil, serta footer. •{" "}
-                <a
+                <SmartLink
                   href="https://icon-sets.iconify.design/"
                   target="_blank"
                   rel="noreferrer"
-                  style={{ color: "#34d399", textDecoration: "underline" }}
                 >
-                  Katalog 200.000+ Iconify ↗
-                </a>
-              </div>
-            </div>
-            <button
+                  <Text as="span" onBackground="brand-medium">
+                    Katalog 200.000+ Iconify ↗
+                  </Text>
+                </SmartLink>
+              </Text>
+            </Column>
+            <Button
               type="button"
-              className={styles.secondaryButton}
+              variant="secondary"
+              size="s"
+              label="+ Tambah Social Link"
               onClick={() => {
                 setSocialLinks([
                   ...socialLinks,
@@ -400,39 +404,25 @@ export default function ProfileForm({ profile, onSave }: { profile: any; onSave:
                   },
                 ]);
               }}
-            >
-              + Tambah Social Link
-            </button>
-          </div>
+            />
+          </Row>
 
-          <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+          <Column gap="12" fillWidth>
             {socialLinks.map((item, idx) => (
-              <div
+              <Row
                 key={item.id || `${item.name}-${idx}`}
-                style={{
-                  display: "grid",
-                  gridTemplateColumns: "1.2fr 1.2fr 2fr 90px 45px",
-                  gap: "10px",
-                  alignItems: "center",
-                  background: "rgba(255,255,255,0.02)",
-                  padding: "10px 14px",
-                  borderRadius: "8px",
-                  border: "1px solid rgba(255,255,255,0.06)",
-                }}
+                gap="12"
+                vertical="center"
+                padding="12"
+                radius="m"
+                background="neutral-alpha-weak"
+                border="neutral-alpha-weak"
+                wrap
               >
-                <div>
-                  <label
-                    style={{
-                      fontSize: "11px",
-                      color: "rgba(255,255,255,0.4)",
-                      display: "block",
-                      marginBottom: 3,
-                    }}
-                  >
-                    Platform
-                  </label>
-                  <input
-                    className={styles.formInput}
+                <Column style={{ flex: "1 1 120px" }}>
+                  <Input
+                    id={`soc-name-${idx}`}
+                    label="Platform"
                     value={item.name}
                     placeholder="GitHub"
                     onChange={(e) => {
@@ -441,39 +431,32 @@ export default function ProfileForm({ profile, onSave }: { profile: any; onSave:
                       setSocialLinks(updated);
                     }}
                   />
-                </div>
-                <div>
-                  <label
+                </Column>
+                <Row gap="8" vertical="end" style={{ flex: "1.5 1 180px" }}>
+                  <Row
+                    center
                     style={{
-                      fontSize: "11px",
-                      color: "rgba(255,255,255,0.4)",
-                      display: "block",
-                      marginBottom: 3,
+                      width: 40,
+                      height: 40,
+                      borderRadius: "var(--radius-m)",
+                      background: "var(--surface-background)",
+                      border: "1px solid var(--border-neutral-alpha-medium)",
+                      flexShrink: 0,
                     }}
                   >
-                    Icon
-                  </label>
-                  <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-                    <div
-                      style={{
-                        width: 38,
-                        height: 38,
-                        borderRadius: "8px",
-                        background: "rgba(255,255,255,0.04)",
-                        border: "1px solid rgba(255,255,255,0.1)",
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        flexShrink: 0,
-                      }}
-                    >
-                      <UniversalIcon name={item.icon || "globe"} size={18} color="#34d399" />
-                    </div>
-                    <input
-                      className={styles.formInput}
+                    <UniversalIcon
+                      name={item.icon || "globe"}
+                      size={18}
+                      color="var(--brand-solid-strong)"
+                    />
+                  </Row>
+                  <Column style={{ flex: 1 }}>
+                    <Input
+                      id={`soc-icon-${idx}`}
+                      label="Icon"
                       list={`icon-suggestions-${idx}`}
                       value={item.icon || ""}
-                      placeholder="Pilih atau ketik icon..."
+                      placeholder="Iconify ID..."
                       onChange={(e) => {
                         const updated = [...socialLinks];
                         updated[idx].icon = e.target.value;
@@ -487,21 +470,12 @@ export default function ProfileForm({ profile, onSave }: { profile: any; onSave:
                         </option>
                       ))}
                     </datalist>
-                  </div>
-                </div>
-                <div>
-                  <label
-                    style={{
-                      fontSize: "11px",
-                      color: "rgba(255,255,255,0.4)",
-                      display: "block",
-                      marginBottom: 3,
-                    }}
-                  >
-                    Target URL
-                  </label>
-                  <input
-                    className={styles.formInput}
+                  </Column>
+                </Row>
+                <Column style={{ flex: "2 1 200px" }}>
+                  <Input
+                    id={`soc-link-${idx}`}
+                    label="Target URL"
                     value={item.link}
                     placeholder="https://..."
                     onChange={(e) => {
@@ -510,71 +484,46 @@ export default function ProfileForm({ profile, onSave }: { profile: any; onSave:
                       setSocialLinks(updated);
                     }}
                   />
-                </div>
-                <div>
-                  <label
-                    style={{
-                      fontSize: "11px",
-                      color: "rgba(255,255,255,0.4)",
-                      display: "block",
-                      marginBottom: 3,
+                </Column>
+                <Column gap="4" horizontal="center" vertical="end">
+                  <Checkbox
+                    id={`soc-essential-${idx}`}
+                    label="Essential"
+                    isChecked={item.essential}
+                    onToggle={() => {
+                      const updated = [...socialLinks];
+                      updated[idx].essential = !updated[idx].essential;
+                      setSocialLinks(updated);
                     }}
-                  >
-                    Essential
-                  </label>
-                  <div style={{ display: "flex", alignItems: "center", height: 38 }}>
-                    <input
-                      type="checkbox"
-                      checked={item.essential}
-                      onChange={(e) => {
-                        const updated = [...socialLinks];
-                        updated[idx].essential = e.target.checked;
-                        setSocialLinks(updated);
-                      }}
-                      style={{ width: 18, height: 18, accentColor: "#10b981", cursor: "pointer" }}
-                    />
-                  </div>
-                </div>
-                <div>
-                  <label
-                    style={{
-                      fontSize: "11px",
-                      color: "transparent",
-                      display: "block",
-                      marginBottom: 3,
-                    }}
-                  >
-                    X
-                  </label>
-                  <button
+                  />
+                </Column>
+                <Row vertical="end">
+                  <Button
                     type="button"
-                    className={styles.dangerButton}
-                    style={{ padding: "8px 10px", width: "100%" }}
+                    variant="danger"
+                    size="s"
+                    label="✕"
                     onClick={() => {
                       setSocialLinks(socialLinks.filter((_, i) => i !== idx));
                     }}
-                  >
-                    ✕
-                  </button>
-                </div>
-              </div>
+                  />
+                </Row>
+              </Row>
             ))}
-          </div>
-        </div>
+          </Column>
+        </Column>
 
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "flex-end",
-            borderTop: "1px solid rgba(255,255,255,0.08)",
-            paddingTop: 18,
-          }}
-        >
-          <button type="submit" disabled={saving} className={styles.primaryButton}>
-            {saving ? "Menyimpan..." : "Simpan Profil"}
-          </button>
-        </div>
+        <Row horizontal="end" paddingTop="16" borderTop="neutral-alpha-weak">
+          <Button
+            type="submit"
+            variant="primary"
+            size="m"
+            label={saving ? "Menyimpan..." : "Simpan Profil"}
+            disabled={saving}
+            loading={saving}
+          />
+        </Row>
       </form>
-    </div>
+    </Column>
   );
 }

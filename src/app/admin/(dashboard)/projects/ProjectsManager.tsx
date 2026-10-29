@@ -1,10 +1,10 @@
 "use client";
 
 import { deleteProjectAction, moveOrderAction } from "@/app/admin/actions";
-import styles from "@/app/admin/admin.module.scss";
 import { useAdminToast } from "@/app/admin/components/AdminToast";
 import OrderButtons from "@/app/admin/components/OrderButtons";
 import ProjectForm from "@/app/admin/forms/ProjectForm";
+import { Badge, Button, Column, Heading, Row, Text } from "@once-ui-system/core";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
@@ -46,25 +46,36 @@ export default function ProjectsManager({ initialProjects }: { initialProjects: 
   };
 
   return (
-    <div>
-      <div className={styles.contentHeader}>
-        <div className={styles.pageTitleGroup}>
-          <h1>Projects Manager</h1>
-          <p>Kelola portofolio karya, media cover CDN, dan terjemahan otomatis.</p>
-        </div>
+    <Column gap="24" fillWidth>
+      <Row
+        vertical="center"
+        horizontal="between"
+        paddingBottom="20"
+        borderBottom="neutral-alpha-weak"
+        wrap
+        gap="16"
+      >
+        <Column gap="4">
+          <Heading as="h1" variant="heading-strong-m" onBackground="neutral-strong">
+            Projects Manager
+          </Heading>
+          <Text variant="body-default-s" onBackground="neutral-weak">
+            Kelola portofolio karya, media cover CDN, dan terjemahan otomatis.
+          </Text>
+        </Column>
         {!isCreatingProject && !editingProject && (
-          <button
+          <Button
             type="button"
-            className={styles.primaryButton}
+            variant="primary"
+            size="m"
+            label="+ Tambah Project Baru"
             onClick={() => {
               setEditingProject(null);
               setIsCreatingProject(true);
             }}
-          >
-            + Tambah Project Baru
-          </button>
+          />
         )}
-      </div>
+      </Row>
 
       {isCreatingProject || editingProject ? (
         <ProjectForm
@@ -81,15 +92,26 @@ export default function ProjectsManager({ initialProjects }: { initialProjects: 
           }}
         />
       ) : (
-        <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+        <Column gap="12" fillWidth>
           {projects.map((proj, index: number) => {
             const idTrans = proj.translations?.find((t: any) => t.locale === "id") || {};
             const enTrans = proj.translations?.find((t: any) => t.locale === "en") || {};
             const coverImg = Array.isArray(proj.images) ? proj.images[0] : "";
 
             return (
-              <div key={proj.id} className={styles.itemCard}>
-                <div style={{ display: "flex", alignItems: "center", gap: "14px", minWidth: 0 }}>
+              <Row
+                key={proj.id}
+                vertical="center"
+                horizontal="between"
+                paddingX="16"
+                paddingY="12"
+                radius="m"
+                background="surface"
+                border="neutral-alpha-weak"
+                gap="16"
+                style={{ transition: "all 0.15s ease" }}
+              >
+                <Row vertical="center" gap="16" style={{ minWidth: 0, flex: "1 1 0", overflow: "hidden" }}>
                   <OrderButtons
                     order={proj.order ?? index + 1}
                     isFirst={index === 0}
@@ -128,80 +150,66 @@ export default function ProjectsManager({ initialProjects }: { initialProjects: 
                       />
                     )
                   ) : (
-                    <div
+                    <Row
+                      center
                       style={{
                         width: 80,
                         height: 52,
                         borderRadius: 6,
-                        background: "rgba(255,255,255,0.05)",
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        color: "rgba(255,255,255,0.2)",
+                        background: "var(--neutral-alpha-weak)",
+                        color: "var(--neutral-on-background-weak)",
                         fontSize: 12,
                         flexShrink: 0,
                       }}
                     >
                       No Media
-                    </div>
+                    </Row>
                   )}
-                  <div
-                    style={{
-                      display: "flex",
-                      flexDirection: "column",
-                      gap: "4px",
-                      minWidth: 0,
-                    }}
-                  >
-                    <div
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                        gap: "8px",
-                        flexWrap: "wrap",
-                      }}
-                    >
-                      <span style={{ fontSize: "14.5px", fontWeight: 600, color: "#fff" }}>
+                  <Column gap="4" style={{ minWidth: 0 }}>
+                    <Row vertical="center" gap="8" wrap>
+                      <Text variant="heading-strong-xs" onBackground="neutral-strong">
                         {idTrans.title || proj.slug}
-                      </span>
+                      </Text>
                       {proj.featured && (
-                        <span
+                        <Text
+                          variant="label-default-xs"
                           style={{
-                            fontSize: "11px",
                             padding: "2px 8px",
-                            borderRadius: "12px",
-                            background: "rgba(59, 130, 246, 0.2)",
-                            color: "#93c5fd",
+                            borderRadius: 12,
+                            background: "var(--brand-alpha-weak)",
+                            color: "var(--brand-on-background-medium)",
                             fontWeight: 600,
                           }}
                         >
                           Featured
-                        </span>
+                        </Text>
                       )}
-                    </div>
-                    <span style={{ fontSize: "12.5px", color: "rgba(255,255,255,0.45)" }}>
+                    </Row>
+                    <Text variant="body-default-xs" onBackground="neutral-weak" style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
                       <code>#{proj.order ?? 0}</code> • <code>/{proj.slug}</code>{" "}
                       {proj.publishedAt &&
                         `• ${new Date(proj.publishedAt).toISOString().split("T")[0]}`}{" "}
                       {enTrans.title && `• EN: ${enTrans.title}`}
-                    </span>
-                  </div>
-                </div>
+                    </Text>
+                  </Column>
+                </Row>
 
-                <div style={{ display: "flex", alignItems: "center", gap: "8px", flexShrink: 0 }}>
-                  <button
+                <Row vertical="center" gap="8" style={{ flexShrink: 0 }}>
+                  <Button
                     type="button"
-                    className={styles.secondaryButton}
+                    variant="secondary"
+                    size="s"
+                    label="Edit"
                     onClick={() => {
                       setIsCreatingProject(false);
                       setEditingProject(proj);
                     }}
-                  >
-                    Edit
-                  </button>
-                  <button
+                  />
+                  <Button
                     type="button"
-                    className={styles.dangerButton}
+                    variant="danger"
+                    size="s"
+                    label="Hapus"
                     onClick={async () => {
                       if (confirm(`Yakin hapus project ${proj.slug}?`)) {
                         await deleteProjectAction(proj.id);
@@ -210,15 +218,13 @@ export default function ProjectsManager({ initialProjects }: { initialProjects: 
                         router.refresh();
                       }
                     }}
-                  >
-                    Hapus
-                  </button>
-                </div>
-              </div>
+                  />
+                </Row>
+              </Row>
             );
           })}
-        </div>
+        </Column>
       )}
-    </div>
+    </Column>
   );
 }

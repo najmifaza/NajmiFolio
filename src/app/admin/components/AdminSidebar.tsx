@@ -1,8 +1,7 @@
 "use client";
 
-import Link from "next/link";
+import { Button, Column, Row, SmartLink, StatusIndicator, Text } from "@once-ui-system/core";
 import { usePathname, useRouter } from "next/navigation";
-import styles from "../admin.module.scss";
 
 export interface AdminCounts {
   projects: number;
@@ -24,102 +23,149 @@ export default function AdminSidebar({ counts }: { counts: AdminCounts }) {
   };
 
   const navItems = [
-    {
-      href: "/admin/projects",
-      label: "Projects",
-      count: counts.projects,
-    },
-    {
-      href: "/admin/profile",
-      label: "Profile & Bio",
-    },
-    {
-      href: "/admin/experiences",
-      label: "Experiences",
-      count: counts.experiences,
-    },
-    {
-      href: "/admin/studies",
-      label: "Studies",
-      count: counts.studies,
-    },
-    {
-      href: "/admin/skills",
-      label: "Technical Skills",
-      count: counts.skills,
-    },
-    {
-      href: "/admin/certificates",
-      label: "Certificates",
-      count: counts.certificates,
-    },
-    {
-      href: "/admin/rooms",
-      label: "Pesan Anonim",
-      count: counts.rooms,
-    },
+    { href: "/admin/projects", label: "Projects", count: counts.projects },
+    { href: "/admin/profile", label: "Profile & Bio" },
+    { href: "/admin/experiences", label: "Experiences", count: counts.experiences },
+    { href: "/admin/studies", label: "Studies", count: counts.studies },
+    { href: "/admin/skills", label: "Technical Skills", count: counts.skills },
+    { href: "/admin/certificates", label: "Certificates", count: counts.certificates },
+    { href: "/admin/rooms", label: "Pesan Anonim", count: counts.rooms },
   ];
 
   return (
-    <aside className={styles.sidebar}>
-      <div>
-        <div className={styles.brand}>
-          <div className={styles.brandLogo}>NF</div>
-          <div className={styles.brandText}>
-            <span>Najmi CMS</span>
-            <span>
-              <span className={styles.statusDot} />
-              PostgreSQL Live
-            </span>
-          </div>
-        </div>
+    <Column
+      as="aside"
+      fillHeight
+      vertical="between"
+      paddingX="20"
+      paddingY="24"
+      style={{
+        width: 260,
+        flexShrink: 0,
+        background: "var(--page-background)",
+        borderRight: "1px solid var(--border-neutral-alpha-weak)",
+        position: "sticky",
+        top: 0,
+        height: "100vh",
+        zIndex: 10,
+      }}
+    >
+      <Column gap="m">
+        {/* Brand */}
+        <Row gap="12" vertical="center" paddingBottom="m" borderBottom="neutral-alpha-weak">
+          <Row
+            center
+            style={{
+              width: 32,
+              height: 32,
+              borderRadius: "50%",
+              background: "var(--neutral-background-strong)",
+              border: "1px solid var(--border-neutral-alpha-medium)",
+              fontWeight: 600,
+              fontSize: 13,
+              color: "var(--neutral-on-background-strong)",
+              flexShrink: 0,
+            }}
+          >
+            NF
+          </Row>
+          <Column gap="2">
+            <Text variant="label-strong-s" onBackground="neutral-strong">
+              Najmi CMS
+            </Text>
+            <Row gap="4" vertical="center">
+              <StatusIndicator color="emerald" size="s" ariaLabel="DB live" />
+              <Text variant="label-default-xs" onBackground="neutral-weak">
+                PostgreSQL Live
+              </Text>
+            </Row>
+          </Column>
+        </Row>
 
-        <nav className={styles.navGroup}>
+        {/* Nav items */}
+        <Column gap="2">
           {navItems.map((item) => {
             const isActive = pathname === item.href || pathname.startsWith(`${item.href}/`);
             return (
-              <Link
-                key={item.href}
-                href={item.href}
-                className={`${styles.navItem} ${isActive ? styles.active : ""}`}
-              >
-                <div className={styles.navItemLeft}>
-                  <span className={styles.navDash}>—</span>
-                  <span>{item.label}</span>
-                </div>
-                {item.count !== undefined && <span className={styles.navBadge}>{item.count}</span>}
-              </Link>
+              <SmartLink key={item.href} href={item.href} style={{ textDecoration: "none" }}>
+                <Row
+                  vertical="center"
+                  horizontal="between"
+                  paddingX="12"
+                  paddingY="8"
+                  border={isActive ? "neutral-alpha-medium" : undefined}
+                  background={isActive ? "neutral-alpha-weak" : "transparent"}
+                  radius="m"
+                  style={{ transition: "all 0.15s ease" }}
+                >
+                  <Row gap="8" vertical="center">
+                    <Text
+                      variant="label-default-xs"
+                      style={{
+                        color: isActive
+                          ? "var(--accent-on-background-medium)"
+                          : "var(--neutral-on-background-weak)",
+                      }}
+                    >
+                      —
+                    </Text>
+                    <Text
+                      variant="label-default-s"
+                      onBackground={isActive ? "neutral-strong" : "neutral-weak"}
+                      style={{ fontWeight: isActive ? 500 : 400 }}
+                    >
+                      {item.label}
+                    </Text>
+                  </Row>
+                  {item.count !== undefined && (
+                    <Text
+                      variant="label-default-xs"
+                      style={{
+                        padding: "1px 7px",
+                        borderRadius: 9999,
+                        background: isActive
+                          ? "var(--accent-background-weak)"
+                          : "var(--neutral-background-weak)",
+                        border: `1px solid ${isActive ? "var(--accent-border-weak)" : "var(--border-neutral-alpha-weak)"}`,
+                        color: isActive
+                          ? "var(--accent-on-background-medium)"
+                          : "var(--neutral-on-background-weak)",
+                      }}
+                    >
+                      {item.count}
+                    </Text>
+                  )}
+                </Row>
+              </SmartLink>
             );
           })}
-        </nav>
-      </div>
+        </Column>
+      </Column>
 
-      <div className={styles.sidebarFooter}>
-        <a
+      {/* Footer */}
+      <Column gap="4" paddingTop="m" borderTop="neutral-alpha-weak">
+        <SmartLink
           href="/"
           target="_blank"
           rel="noopener noreferrer"
-          className={styles.navItem}
           style={{ textDecoration: "none" }}
         >
-          <div className={styles.navItemLeft}>
-            <span className={styles.navDash}>←</span>
-            <span>Lihat Website</span>
-          </div>
-          <span style={{ fontSize: 11, opacity: 0.5 }}>↗</span>
-        </a>
-        <button
-          type="button"
-          className={styles.navItem}
-          style={{ color: "#f87171" }}
-          onClick={handleLogout}
-        >
-          <div className={styles.navItemLeft}>
-            <span className={styles.navDash}>×</span>
-            <span>Keluar</span>
-          </div>
-        </button>
-      </div>
-    </aside>
+          <Row vertical="center" horizontal="between" paddingX="12" paddingY="8" radius="m">
+            <Row gap="8" vertical="center">
+              <Text variant="label-default-xs" onBackground="neutral-weak">
+                ←
+              </Text>
+              <Text variant="label-default-s" onBackground="neutral-weak">
+                Lihat Website
+              </Text>
+            </Row>
+            <Text variant="label-default-xs" onBackground="neutral-weak">
+              ↗
+            </Text>
+          </Row>
+        </SmartLink>
+        <Button variant="danger" size="s" fillWidth label="Keluar" onClick={handleLogout} />
+      </Column>
+    </Column>
   );
 }

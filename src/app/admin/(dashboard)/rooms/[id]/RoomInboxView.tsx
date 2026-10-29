@@ -1,9 +1,16 @@
 "use client";
 
 import { deleteAnonymousMessageAction } from "@/app/admin/actions";
-import styles from "@/app/admin/admin.module.scss";
 import { useAdminToast } from "@/app/admin/components/AdminToast";
-import Link from "next/link";
+import {
+  Button,
+  Column,
+  Heading,
+  Row,
+  SmartLink,
+  StatusIndicator,
+  Text,
+} from "@once-ui-system/core";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
@@ -13,98 +20,116 @@ export default function RoomInboxView({ room }: { room: any }) {
   const [messages, setMessages] = useState<any[]>(room.messages || []);
 
   return (
-    <div>
-      <div className={styles.inboxHeader}>
-        <Link
-          href="/admin/rooms"
-          className={styles.secondaryButton}
-          style={{ textDecoration: "none" }}
-        >
-          <span>←</span>
-          <span>Kembali ke Daftar Ruang</span>
-        </Link>
+    <Column gap="20" fillWidth>
+      <Row vertical="center" horizontal="between" wrap gap="12">
+        <SmartLink href="/admin/rooms" style={{ textDecoration: "none" }}>
+          <Button type="button" variant="secondary" size="s" label="← Kembali ke Daftar Ruang" />
+        </SmartLink>
 
-        <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-          <a
-            href={`/${room.slug}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            className={styles.aiButton}
-            style={{ textDecoration: "none" }}
-          >
-            <span>Buka Form Publik</span>
-            <span>↗</span>
-          </a>
-        </div>
-      </div>
+        <SmartLink href={`/${room.slug}`} target="_blank" rel="noopener noreferrer">
+          <Button type="button" variant="tertiary" size="s" label="Buka Form Publik ↗" />
+        </SmartLink>
+      </Row>
 
-      <div className={styles.glassCard} style={{ marginBottom: "20px" }}>
-        <div className={styles.inboxRoomMeta}>
-          <div>
-            <h2 className={styles.inboxRoomTitle}>{room.title}</h2>
-            <div className={styles.inboxRoomSubtitle}>
-              <span style={{ fontFamily: "monospace", color: "#38bdf8" }}>/{room.slug}</span>
-              <span>•</span>
-              <span
-                className={`${styles.statusPill} ${
-                  room.isActive ? styles.active : styles.inactive
-                }`}
+      <Column
+        background="surface"
+        border="neutral-alpha-weak"
+        radius="l"
+        padding="24"
+        gap="12"
+        fillWidth
+      >
+        <Row vertical="center" horizontal="between" wrap gap="12">
+          <Column gap="8">
+            <Heading as="h2" variant="heading-strong-s" onBackground="neutral-strong">
+              {room.title}
+            </Heading>
+            <Row vertical="center" gap="8">
+              <Text
+                variant="label-default-xs"
+                style={{ fontFamily: "monospace", color: "var(--brand-solid-strong)" }}
               >
-                {room.isActive ? "Aktif" : "Nonaktif"}
-              </span>
-            </div>
+                /{room.slug}
+              </Text>
+              <Text variant="label-default-xs" onBackground="neutral-weak">
+                •
+              </Text>
+              <Row vertical="center" gap="4">
+                <StatusIndicator color={room.isActive ? "green" : "gray"} size="s" />
+                <Text variant="label-default-xs" onBackground="neutral-strong">
+                  {room.isActive ? "Aktif" : "Nonaktif"}
+                </Text>
+              </Row>
+            </Row>
             {room.description && (
-              <p
-                style={{
-                  margin: "10px 0 0 0",
-                  fontSize: "13px",
-                  color: "rgba(255,255,255,0.6)",
-                  lineHeight: "1.5",
-                }}
-              >
+              <Text variant="body-default-xs" onBackground="neutral-weak" style={{ marginTop: 4 }}>
                 {room.description}
-              </p>
+              </Text>
             )}
-          </div>
-          <div className={styles.inboxCountBadge}>{messages.length} Pesan Masuk</div>
-        </div>
-      </div>
+          </Column>
 
-      <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
-        {messages.length === 0 ? (
-          <div
-            className={styles.glassCard}
-            style={{
-              textAlign: "center",
-              padding: "48px 24px",
-              color: "rgba(255,255,255,0.45)",
-              fontSize: "13.5px",
-            }}
+          <Row
+            vertical="center"
+            paddingX="16"
+            paddingY="8"
+            radius="full"
+            background="brand-alpha-weak"
+            border="brand-alpha-weak"
           >
-            Belum ada pesan anonim yang masuk untuk ruang ini.
-          </div>
+            <Text variant="label-strong-xs" style={{ color: "var(--brand-on-background-medium)" }}>
+              {messages.length} Pesan Masuk
+            </Text>
+          </Row>
+        </Row>
+      </Column>
+
+      <Column gap="12" fillWidth>
+        {messages.length === 0 ? (
+          <Row center padding="48" radius="l" background="surface" border="neutral-alpha-weak">
+            <Text variant="body-default-s" onBackground="neutral-weak">
+              Belum ada pesan anonim yang masuk untuk ruang ini.
+            </Text>
+          </Row>
         ) : (
           messages.map((msg: any) => (
-            <div key={msg.id} className={styles.inboxMessageCard}>
-              <div className={styles.inboxMessageHeader}>
-                <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-                  <span
-                    className={`${styles.inboxSenderPill} ${
-                      !msg.senderTag ? styles.anonymous : ""
-                    }`}
+            <Column
+              key={msg.id}
+              background="surface"
+              border="neutral-alpha-weak"
+              radius="m"
+              padding="16"
+              gap="12"
+              fillWidth
+            >
+              <Row vertical="center" horizontal="between" wrap gap="12">
+                <Row vertical="center" gap="12">
+                  <Row
+                    vertical="center"
+                    paddingX="8"
+                    paddingY="4"
+                    radius="full"
+                    background={msg.senderTag ? "brand-alpha-weak" : "neutral-alpha-weak"}
+                    border={msg.senderTag ? "brand-alpha-weak" : "neutral-alpha-weak"}
                   >
-                    {msg.senderTag ? msg.senderTag : "Anonim"}
-                  </span>
-                  <span className={styles.inboxTimestamp}>
+                    <Text
+                      variant="label-strong-xs"
+                      onBackground={msg.senderTag ? "brand-medium" : "neutral-weak"}
+                    >
+                      {msg.senderTag ? msg.senderTag : "Anonim"}
+                    </Text>
+                  </Row>
+                  <Text variant="body-default-xs" onBackground="neutral-weak">
                     {new Date(msg.createdAt).toLocaleString("id-ID", {
                       dateStyle: "medium",
                       timeStyle: "short",
                     })}
-                  </span>
-                </div>
-                <button
+                  </Text>
+                </Row>
+                <Button
                   type="button"
-                  className={styles.dangerButton}
+                  variant="danger"
+                  size="s"
+                  label="Hapus"
                   onClick={async () => {
                     if (confirm("Hapus pesan anonim ini?")) {
                       await deleteAnonymousMessageAction(msg.id);
@@ -113,15 +138,19 @@ export default function RoomInboxView({ room }: { room: any }) {
                       router.refresh();
                     }
                   }}
-                >
-                  Hapus
-                </button>
-              </div>
-              <p className={styles.inboxMessageBody}>{msg.content}</p>
-            </div>
+                />
+              </Row>
+              <Text
+                variant="body-default-m"
+                onBackground="neutral-strong"
+                style={{ whiteSpace: "pre-wrap", wordBreak: "break-word" }}
+              >
+                {msg.content}
+              </Text>
+            </Column>
           ))
         )}
-      </div>
-    </div>
+      </Column>
+    </Column>
   );
 }

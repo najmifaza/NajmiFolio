@@ -1,10 +1,20 @@
 "use client";
 
 import { UniversalIcon, resolveIconifyName } from "@/resources/icons";
+import {
+  Button,
+  Column,
+  Heading,
+  Input,
+  Row,
+  SmartLink,
+  Tag,
+  Text,
+  Textarea,
+} from "@once-ui-system/core";
 import type React from "react";
 import { useState } from "react";
 import { type SaveSkillGroupInput, saveSkillGroupAction, translateAction } from "../actions";
-import styles from "../admin.module.scss";
 
 export default function SkillGroupForm({ skillGroup, onCancel, onSave }: any) {
   const idTrans = skillGroup?.translations?.find((t: any) => t.locale === "id") || {};
@@ -69,211 +79,213 @@ export default function SkillGroupForm({ skillGroup, onCancel, onSave }: any) {
   };
 
   return (
-    <div className={styles.glassCard}>
+    <Column
+      background="surface"
+      border="neutral-alpha-weak"
+      radius="l"
+      padding="24"
+      gap="24"
+      fillWidth
+    >
       <form
         onSubmit={handleSubmit}
-        style={{ display: "flex", flexDirection: "column", gap: "22px" }}
+        style={{ display: "flex", flexDirection: "column", gap: 24, width: "100%" }}
       >
-        <div style={{ display: "grid", gridTemplateColumns: "2fr 100px", gap: "16px" }}>
-          <div className={styles.formGroup}>
-            <label>Identifier Nama Grup (Internal/Default) *</label>
-            <input
-              className={styles.formInput}
+        <Heading as="h2" variant="heading-strong-s" onBackground="neutral-strong">
+          {skillGroup ? "Edit Kelompok Skill" : "Tambah Kelompok Skill Baru"}
+        </Heading>
+
+        <Row gap="16" wrap fillWidth>
+          <Column gap="8" style={{ flex: 2, minWidth: 240 }}>
+            <Input
+              id="skill-title"
+              label="Identifier Nama Grup (Internal/Default) *"
               required
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               placeholder="Web Development"
             />
-          </div>
-          <div className={styles.formGroup}>
-            <label>Urutan</label>
-            <input
-              className={styles.formInput}
+          </Column>
+          <Column gap="8" style={{ flex: 0.5, minWidth: 100 }}>
+            <Input
+              id="skill-order"
+              label="Urutan"
               type="number"
-              value={order}
+              value={String(order)}
               onChange={(e) => setOrder(Number(e.target.value))}
             />
-          </div>
-        </div>
+          </Column>
+        </Row>
 
-        <div className={styles.formGroup}>
-          <label>Daftar Skills / Teknologi (Pisahkan dengan koma) *</label>
-          <input
-            className={styles.formInput}
+        <Column gap="8" fillWidth>
+          <Input
+            id="skill-list"
+            label="Daftar Skills / Teknologi (Pisahkan dengan koma) *"
             required
             value={skillsStr}
             onChange={(e) => setSkillsStr(e.target.value)}
             placeholder="React, Next.js, TypeScript, Node.js, Prisma, MySQL"
           />
-          <div style={{ display: "flex", gap: "6px", flexWrap: "wrap", marginTop: 8 }}>
+          <Row gap="8" wrap paddingTop="4">
             {skillsStr
               .split(",")
               .map((s: string) => s.trim())
               .filter(Boolean)
               .map((name: string) => (
-                <span
+                <Row
                   key={name}
-                  className={styles.langPill}
-                  style={{ display: "inline-flex", alignItems: "center", gap: "6px" }}
+                  vertical="center"
+                  gap="8"
+                  paddingX="8"
+                  paddingY="4"
+                  radius="m"
+                  background="neutral-alpha-weak"
+                  border="neutral-alpha-weak"
                 >
-                  <UniversalIcon name={resolveIconifyName(name)} size={13} color="#34d399" />
-                  {name}
-                </span>
+                  <UniversalIcon
+                    name={resolveIconifyName(name)}
+                    size={13}
+                    color="var(--brand-solid-strong)"
+                  />
+                  <Text variant="label-default-xs" onBackground="neutral-strong">
+                    {name}
+                  </Text>
+                </Row>
               ))}
-          </div>
-          <div style={{ fontSize: "12px", color: "rgba(255,255,255,0.4)", marginTop: 6 }}>
-            Ketik nama teknologi, icon akan otomatis terdeteksi (Next.js, Python, Figma, SQL, dll).
-          </div>
-          <div
-            style={{
-              marginTop: 10,
-              padding: "12px 14px",
-              borderRadius: "8px",
-              background: "rgba(255, 255, 255, 0.02)",
-              border: "1px solid rgba(255, 255, 255, 0.06)",
-              fontSize: "12px",
-              lineHeight: 1.6,
-              color: "rgba(255, 255, 255, 0.6)",
-            }}
+          </Row>
+          <Text variant="label-default-xs" onBackground="neutral-weak">
+            Ketik nama teknologi, icon otomatis terdeteksi (Next.js, Python, Figma, SQL, dll).
+          </Text>
+
+          {/* Doc helper box */}
+          <Column
+            gap="8"
+            padding="16"
+            radius="m"
+            background="neutral-alpha-weak"
+            border="neutral-alpha-weak"
+            style={{ marginTop: 8 }}
           >
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-                marginBottom: 8,
-                flexWrap: "wrap",
-                gap: "8px",
-              }}
-            >
-              <span style={{ fontWeight: 600, color: "#fff" }}>
-                📖 Dokumentasi & Pencarian 200.000+ Icon (Iconify):
-              </span>
-              <div style={{ display: "flex", gap: "12px" }}>
-                <a
+            <Row vertical="center" horizontal="between" wrap gap="8">
+              <Text variant="label-strong-xs" onBackground="neutral-strong">
+                📖 Pencarian 200.000+ Icon (Iconify):
+              </Text>
+              <Row gap="12">
+                <SmartLink
                   href="https://icon-sets.iconify.design/"
                   target="_blank"
                   rel="noreferrer"
-                  style={{ color: "#34d399", textDecoration: "underline", fontWeight: 500 }}
                 >
-                  Iconify Search Engine ↗
-                </a>
-                <a
-                  href="https://simpleicons.org/"
-                  target="_blank"
-                  rel="noreferrer"
-                  style={{ color: "#34d399", textDecoration: "underline", fontWeight: 500 }}
-                >
-                  Simple Icons (Brand & Tech) ↗
-                </a>
-              </div>
-            </div>
-            <div>
-              <strong>Cara Pakai:</strong>
-              <ul style={{ margin: "4px 0 0 16px", padding: 0 }}>
-                <li>
-                  <strong>Nama teknologi umum:</strong> Langsung ketik namanya (misal:{" "}
-                  <code>React</code>, <code>Docker</code>, <code>Rust</code>,{" "}
-                  <code>Kubernetes</code>, <code>Vue</code>, <code>FastAPI</code>,{" "}
-                  <code>Redis</code>, <code>PostgreSQL</code>, <code>Prisma</code>,{" "}
-                  <code>Tailwind CSS</code>, <code>Figma</code>) — icon otomatis terpasang.
-                </li>
-                <li>
-                  <strong>Spesifik set Iconify:</strong> Bisa ketik ID icon apa pun dari katalog
-                  Iconify (misal: <code>simple-icons:docker</code>, <code>lucide:cpu</code>,{" "}
-                  <code>fa6-solid:server</code>, <code>tabler:terminal-2</code>).
-                </li>
-              </ul>
-            </div>
-            <div style={{ marginTop: 6, color: "#34d399", fontSize: "11px" }}>
-              ✨ Seluruh icon diunduh on-demand tanpa perlu konfigurasi atau mendaftarkan kode lagi.
-            </div>
-          </div>
-        </div>
+                  <Text variant="label-strong-xs" onBackground="brand-medium">
+                    Iconify Search Engine ↗
+                  </Text>
+                </SmartLink>
+                <SmartLink href="https://simpleicons.org/" target="_blank" rel="noreferrer">
+                  <Text variant="label-strong-xs" onBackground="brand-medium">
+                    Simple Icons ↗
+                  </Text>
+                </SmartLink>
+              </Row>
+            </Row>
+            <Text
+              variant="body-default-xs"
+              onBackground="neutral-medium"
+              style={{ lineHeight: 1.5 }}
+            >
+              Ketik nama teknologi biasa atau format spesifik seperti{" "}
+              <code>simple-icons:docker</code>, <code>lucide:cpu</code>, dll.
+            </Text>
+          </Column>
+        </Column>
 
         {/* Bilingual Content */}
-        <div style={{ display: "flex", flexDirection: "column", gap: "14px" }}>
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-            <h3 style={{ fontSize: "14.5px", fontWeight: 600, color: "#fff", margin: 0 }}>
+        <Column gap="12" fillWidth>
+          <Row vertical="center" horizontal="between">
+            <Text variant="label-strong-m" onBackground="neutral-strong">
               Judul & Penjelasan Grup Skill (Bilingual)
-            </h3>
-            <button
+            </Text>
+            <Button
               type="button"
-              className={styles.actionButton}
-              onClick={handleAutoTranslate}
+              variant="secondary"
+              size="s"
+              label={translating ? "Menerjemahkan..." : "✨ Auto-Translate ID ke EN"}
               disabled={translating}
+              onClick={handleAutoTranslate}
+            />
+          </Row>
+
+          <Row gap="16" wrap fillWidth>
+            <Column
+              gap="12"
+              padding="16"
+              radius="m"
+              background="neutral-alpha-weak"
+              border="neutral-alpha-weak"
+              style={{ flex: 1, minWidth: 280 }}
             >
-              {translating ? "Menerjemahkan..." : "✨ Auto-Translate ID ke EN"}
-            </button>
-          </div>
+              <Text variant="label-strong-xs" onBackground="neutral-medium">
+                🇮🇩 Bahasa Indonesia
+              </Text>
+              <Input
+                id="skill-id-title"
+                label="Judul Kelompok *"
+                required
+                value={idTitle}
+                onChange={(e) => setIdTitle(e.target.value)}
+                placeholder="Pengembangan Web"
+              />
+              <Textarea
+                id="skill-id-desc"
+                label="Deskripsi Tambahan"
+                value={idDescription}
+                onChange={(e) => setIdDescription(e.target.value)}
+                placeholder="Keahlian dalam membangun aplikasi web modern performa tinggi..."
+                lines={3}
+              />
+            </Column>
 
-          <div className={styles.bilingualGrid}>
-            <div className={styles.bilingualColumn}>
-              <div className={styles.langPill}>🇮🇩 Bahasa Indonesia</div>
-              <div className={styles.formGroup}>
-                <label>Judul Kelompok *</label>
-                <input
-                  className={styles.formInput}
-                  required
-                  value={idTitle}
-                  onChange={(e) => setIdTitle(e.target.value)}
-                  placeholder="Pengembangan Web"
-                />
-              </div>
-              <div className={styles.formGroup}>
-                <label>Deskripsi Tambahan</label>
-                <textarea
-                  className={styles.formTextarea}
-                  style={{ minHeight: 70 }}
-                  value={idDescription}
-                  onChange={(e) => setIdDescription(e.target.value)}
-                  placeholder="Keahlian dalam membangun aplikasi web modern performa tinggi..."
-                />
-              </div>
-            </div>
+            <Column
+              gap="12"
+              padding="16"
+              radius="m"
+              background="neutral-alpha-weak"
+              border="neutral-alpha-weak"
+              style={{ flex: 1, minWidth: 280 }}
+            >
+              <Text variant="label-strong-xs" onBackground="neutral-medium">
+                🇬🇧 English
+              </Text>
+              <Input
+                id="skill-en-title"
+                label="Group Title"
+                value={enTitle}
+                onChange={(e) => setEnTitle(e.target.value)}
+                placeholder="Web Development"
+              />
+              <Textarea
+                id="skill-en-desc"
+                label="Description"
+                value={enDescription}
+                onChange={(e) => setEnDescription(e.target.value)}
+                placeholder="Proficiency in building high-performance modern web apps..."
+                lines={3}
+              />
+            </Column>
+          </Row>
+        </Column>
 
-            <div className={styles.bilingualColumn}>
-              <div className={styles.langPill}>🇬🇧 English</div>
-              <div className={styles.formGroup}>
-                <label>Group Title</label>
-                <input
-                  className={styles.formInput}
-                  value={enTitle}
-                  onChange={(e) => setEnTitle(e.target.value)}
-                  placeholder="Web Development"
-                />
-              </div>
-              <div className={styles.formGroup}>
-                <label>Description</label>
-                <textarea
-                  className={styles.formTextarea}
-                  style={{ minHeight: 70 }}
-                  value={enDescription}
-                  onChange={(e) => setEnDescription(e.target.value)}
-                  placeholder="Proficiency in building high-performance modern web apps..."
-                />
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "flex-end",
-            gap: "12px",
-            borderTop: "1px solid rgba(255,255,255,0.08)",
-            paddingTop: 18,
-          }}
-        >
-          <button type="button" className={styles.secondaryButton} onClick={onCancel}>
-            Batal
-          </button>
-          <button type="submit" disabled={saving} className={styles.primaryButton}>
-            {saving ? "Menyimpan..." : "Simpan Kelompok Skill"}
-          </button>
-        </div>
+        <Row horizontal="end" gap="12" paddingTop="16" borderTop="neutral-alpha-weak">
+          <Button type="button" variant="secondary" size="m" label="Batal" onClick={onCancel} />
+          <Button
+            type="submit"
+            variant="primary"
+            size="m"
+            label={saving ? "Menyimpan..." : "Simpan Kelompok Skill"}
+            disabled={saving}
+            loading={saving}
+          />
+        </Row>
       </form>
-    </div>
+    </Column>
   );
 }

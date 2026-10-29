@@ -3,6 +3,26 @@
   --font-label: var(--font-body);
 }
 
+/* Thin scrollbar — match Once UI aesthetic across all themes */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--neutral-alpha-medium) transparent;
+}
+*::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+*::-webkit-scrollbar-thumb {
+  background: var(--neutral-alpha-medium);
+  border-radius: 999px;
+}
+*::-webkit-scrollbar-thumb:hover {
+  background: var(--neutral-alpha-strong);
+}
+
 /* :root {
   /*
   /* Example setup for custom colors */

@@ -1,5 +1,7 @@
 "use client";
 
+import { IconButton, Row, Text } from "@once-ui-system/core";
+
 interface OrderButtonsProps {
   order: number;
   isFirst: boolean;
@@ -18,89 +20,43 @@ export default function OrderButtons({
   disabled,
 }: OrderButtonsProps) {
   return (
-    <div
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        gap: "3px",
-        paddingRight: "10px",
-        marginRight: "6px",
-        borderRight: "1px solid rgba(255, 255, 255, 0.08)",
-        flexShrink: 0,
-      }}
+    <Row
+      vertical="center"
+      gap="4"
+      paddingRight="12"
+      marginRight="8"
+      borderRight="neutral-alpha-weak"
+      style={{ flexShrink: 0 }}
     >
-      <button
-        type="button"
+      <IconButton
+        variant={isFirst || disabled ? "ghost" : "secondary"}
+        size="s"
+        icon="chevronUp"
         disabled={isFirst || disabled}
-        onClick={(e) => {
+        onClick={(e: React.MouseEvent) => {
           e.stopPropagation();
           onUp();
         }}
-        title="Geser ke Atas"
-        style={{
-          width: "26px",
-          height: "20px",
-          borderRadius: "4px",
-          background:
-            isFirst || disabled ? "rgba(255, 255, 255, 0.02)" : "rgba(16, 185, 129, 0.12)",
-          border:
-            isFirst || disabled
-              ? "1px solid rgba(255, 255, 255, 0.05)"
-              : "1px solid rgba(16, 185, 129, 0.3)",
-          color: isFirst || disabled ? "rgba(255, 255, 255, 0.2)" : "#10b981",
-          cursor: isFirst || disabled ? "not-allowed" : "pointer",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          fontSize: "10px",
-          lineHeight: 1,
-          transition: "all 0.15s ease",
-        }}
-      >
-        ▲
-      </button>
-      <span
-        style={{
-          fontSize: "11px",
-          fontWeight: 700,
-          color: "rgba(255, 255, 255, 0.8)",
-          minWidth: "22px",
-          textAlign: "center",
-          fontVariantNumeric: "tabular-nums",
-        }}
+        tooltip="Geser ke Atas"
+      />
+      <Text
+        variant="label-strong-xs"
+        onBackground="neutral-medium"
+        style={{ minWidth: 22, textAlign: "center", fontVariantNumeric: "tabular-nums" }}
       >
         #{order}
-      </span>
-      <button
-        type="button"
+      </Text>
+      <IconButton
+        variant={isLast || disabled ? "ghost" : "secondary"}
+        size="s"
+        icon="chevronDown"
         disabled={isLast || disabled}
-        onClick={(e) => {
+        onClick={(e: React.MouseEvent) => {
           e.stopPropagation();
           onDown();
         }}
-        title="Geser ke Bawah"
-        style={{
-          width: "26px",
-          height: "20px",
-          borderRadius: "4px",
-          background: isLast || disabled ? "rgba(255, 255, 255, 0.02)" : "rgba(16, 185, 129, 0.12)",
-          border:
-            isLast || disabled
-              ? "1px solid rgba(255, 255, 255, 0.05)"
-              : "1px solid rgba(16, 185, 129, 0.3)",
-          color: isLast || disabled ? "rgba(255, 255, 255, 0.2)" : "#10b981",
-          cursor: isLast || disabled ? "not-allowed" : "pointer",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          fontSize: "10px",
-          lineHeight: 1,
-          transition: "all 0.15s ease",
-        }}
-      >
-        ▼
-      </button>
-    </div>
+        tooltip="Geser ke Bawah"
+      />
+    </Row>
   );
 }

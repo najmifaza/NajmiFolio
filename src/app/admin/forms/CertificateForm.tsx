@@ -1,9 +1,9 @@
 "use client";
 
+import { Button, Column, Heading, Input, Row, Text } from "@once-ui-system/core";
 import type React from "react";
 import { useState } from "react";
 import { type SaveCertificateInput, saveCertificateAction, uploadMediaAction } from "../actions";
-import styles from "../admin.module.scss";
 
 export default function CertificateForm({ cert, onCancel, onSave }: any) {
   const [title, setTitle] = useState(cert?.title || "");
@@ -62,70 +62,79 @@ export default function CertificateForm({ cert, onCancel, onSave }: any) {
   };
 
   return (
-    <div className={styles.glassCard}>
+    <Column
+      background="surface"
+      border="neutral-alpha-weak"
+      radius="l"
+      padding="24"
+      gap="24"
+      fillWidth
+    >
       <form
         onSubmit={handleSubmit}
-        style={{ display: "flex", flexDirection: "column", gap: "20px" }}
+        style={{ display: "flex", flexDirection: "column", gap: 24, width: "100%" }}
       >
-        <h2 style={{ fontSize: "17px", fontWeight: 700, margin: 0, color: "#fff" }}>
+        <Heading as="h2" variant="heading-strong-s" onBackground="neutral-strong">
           {cert ? "Edit Sertifikat" : "Tambah Sertifikat Baru"}
-        </h2>
+        </Heading>
 
-        <div className={styles.formGrid}>
-          <div className={styles.formGroup}>
-            <label>Judul Sertifikat *</label>
-            <input
-              className={styles.formInput}
+        <Row gap="16" wrap fillWidth>
+          <Column gap="8" style={{ flex: 1, minWidth: 220 }}>
+            <Input
+              id="cert-title"
+              label="Judul Sertifikat *"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               required
             />
-          </div>
-          <div className={styles.formGroup}>
-            <label>Penerbit (Issuer) *</label>
-            <input
-              className={styles.formInput}
+          </Column>
+          <Column gap="8" style={{ flex: 1, minWidth: 180 }}>
+            <Input
+              id="cert-issuer"
+              label="Penerbit (Issuer) *"
               value={issuer}
               onChange={(e) => setIssuer(e.target.value)}
               placeholder="IBM / Dicoding / BEM-U"
               required
             />
-          </div>
-          <div className={styles.formGroup}>
-            <label>Periode / Tanggal</label>
-            <input
-              className={styles.formInput}
+          </Column>
+          <Column gap="8" style={{ flex: 1, minWidth: 150 }}>
+            <Input
+              id="cert-date"
+              label="Periode / Tanggal"
               value={date}
               onChange={(e) => setDate(e.target.value)}
               placeholder="Nov 2025"
               required
             />
-          </div>
-          <div className={styles.formGroup}>
-            <label>Credential URL (Opsional)</label>
-            <input
-              className={styles.formInput}
+          </Column>
+          <Column gap="8" style={{ flex: 1, minWidth: 200 }}>
+            <Input
+              id="cert-url"
+              label="Credential URL (Opsional)"
               value={url}
               onChange={(e) => setUrl(e.target.value)}
               placeholder="https://credly.com/... atau https://dicoding.com/..."
             />
-          </div>
-          <div className={styles.formGroup}>
-            <label>Urutan Tampil</label>
-            <input
-              className={styles.formInput}
+          </Column>
+          <Column gap="8" style={{ flex: 1, minWidth: 120 }}>
+            <Input
+              id="cert-order"
+              label="Urutan Tampil"
               type="number"
-              value={order}
+              value={String(order)}
               onChange={(e) => setOrder(Number(e.target.value))}
               required
             />
-          </div>
-        </div>
+          </Column>
+        </Row>
 
         {/* Certificate Image Upload */}
-        <div className={styles.formGroup}>
-          <label>File / Gambar Sertifikat (CDN) *</label>
-          <div style={{ display: "flex", alignItems: "center", gap: "16px", flexWrap: "wrap" }}>
+        <Column gap="8" fillWidth>
+          <Text variant="label-default-s" onBackground="neutral-medium">
+            File / Gambar Sertifikat (CDN) *
+          </Text>
+          <Row vertical="center" gap="16" wrap>
             {image && (
               <img
                 src={image}
@@ -134,7 +143,8 @@ export default function CertificateForm({ cert, onCancel, onSave }: any) {
                   width: 90,
                   height: 60,
                   objectFit: "contain",
-                  background: "rgba(255,255,255,0.05)",
+                  background: "var(--neutral-alpha-weak)",
+                  border: "1px solid var(--border-neutral-alpha-weak)",
                   borderRadius: 6,
                   padding: 4,
                 }}
@@ -143,12 +153,13 @@ export default function CertificateForm({ cert, onCancel, onSave }: any) {
             <label
               style={{
                 padding: "8px 16px",
-                borderRadius: "8px",
-                background: "rgba(255,255,255,0.06)",
-                border: "1px solid rgba(255,255,255,0.15)",
-                color: "#fff",
+                borderRadius: "var(--radius-m)",
+                background: "var(--neutral-alpha-weak)",
+                border: "1px solid var(--border-neutral-alpha-medium)",
+                color: "var(--neutral-on-background-strong)",
                 fontSize: "13px",
                 cursor: "pointer",
+                fontWeight: 500,
               }}
             >
               {uploading ? "Mengunggah..." : "Upload Gambar Sertifikat"}
@@ -160,38 +171,21 @@ export default function CertificateForm({ cert, onCancel, onSave }: any) {
                 disabled={uploading}
               />
             </label>
-          </div>
-        </div>
+          </Row>
+        </Column>
 
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "flex-end",
-            gap: "12px",
-            borderTop: "1px solid rgba(255,255,255,0.08)",
-            paddingTop: 18,
-          }}
-        >
-          <button
-            type="button"
-            style={{
-              padding: "10px 18px",
-              borderRadius: "8px",
-              border: "1px solid rgba(255,255,255,0.12)",
-              background: "transparent",
-              color: "rgba(255,255,255,0.7)",
-              fontSize: "13.5px",
-              cursor: "pointer",
-            }}
-            onClick={onCancel}
-          >
-            Batal
-          </button>
-          <button type="submit" disabled={saving} className={styles.primaryButton}>
-            {saving ? "Menyimpan..." : "Simpan Sertifikat"}
-          </button>
-        </div>
+        <Row horizontal="end" gap="12" paddingTop="16" borderTop="neutral-alpha-weak">
+          <Button type="button" variant="secondary" size="m" label="Batal" onClick={onCancel} />
+          <Button
+            type="submit"
+            variant="primary"
+            size="m"
+            label={saving ? "Menyimpan..." : "Simpan Sertifikat"}
+            disabled={saving}
+            loading={saving}
+          />
+        </Row>
       </form>
-    </div>
+    </Column>
   );
 }

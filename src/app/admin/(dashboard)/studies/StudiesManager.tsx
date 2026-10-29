@@ -1,10 +1,10 @@
 "use client";
 
 import { deleteStudyAction, moveOrderAction } from "@/app/admin/actions";
-import styles from "@/app/admin/admin.module.scss";
 import { useAdminToast } from "@/app/admin/components/AdminToast";
 import OrderButtons from "@/app/admin/components/OrderButtons";
 import StudyForm from "@/app/admin/forms/StudyForm";
+import { Button, Column, Heading, Row, Text } from "@once-ui-system/core";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
@@ -46,25 +46,36 @@ export default function StudiesManager({ initialStudies }: { initialStudies: any
   };
 
   return (
-    <div>
-      <div className={styles.contentHeader}>
-        <div className={styles.pageTitleGroup}>
-          <h1>Studies & Education</h1>
-          <p>Kelola riwayat pendidikan formal dan institusi.</p>
-        </div>
+    <Column gap="24" fillWidth>
+      <Row
+        vertical="center"
+        horizontal="between"
+        paddingBottom="20"
+        borderBottom="neutral-alpha-weak"
+        wrap
+        gap="16"
+      >
+        <Column gap="4">
+          <Heading as="h1" variant="heading-strong-m" onBackground="neutral-strong">
+            Studies & Education
+          </Heading>
+          <Text variant="body-default-s" onBackground="neutral-weak">
+            Kelola riwayat pendidikan formal dan institusi.
+          </Text>
+        </Column>
         {!isCreatingStudy && !editingStudy && (
-          <button
+          <Button
             type="button"
-            className={styles.primaryButton}
+            variant="primary"
+            size="m"
+            label="+ Tambah Riwayat Studi"
             onClick={() => {
               setEditingStudy(null);
               setIsCreatingStudy(true);
             }}
-          >
-            + Tambah Riwayat Studi
-          </button>
+          />
         )}
-      </div>
+      </Row>
 
       {isCreatingStudy || editingStudy ? (
         <StudyForm
@@ -81,12 +92,24 @@ export default function StudiesManager({ initialStudies }: { initialStudies: any
           }}
         />
       ) : (
-        <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+        <Column gap="12" fillWidth>
           {studies.map((item: any, index: number) => {
             const idTrans = item.translations?.find((t: any) => t.locale === "id") || {};
             return (
-              <div key={item.id} className={styles.itemCard}>
-                <div style={{ display: "flex", alignItems: "center", gap: "14px" }}>
+              <Row
+                key={item.id}
+                vertical="center"
+                horizontal="between"
+                paddingX="16"
+                paddingY="12"
+                radius="m"
+                background="surface"
+                border="neutral-alpha-weak"
+                wrap
+                gap="16"
+                style={{ transition: "all 0.15s ease" }}
+              >
+                <Row vertical="center" gap="16" style={{ minWidth: 0, flex: "1 1 auto" }}>
                   <OrderButtons
                     order={item.order ?? index + 1}
                     isFirst={index === 0}
@@ -95,31 +118,33 @@ export default function StudiesManager({ initialStudies }: { initialStudies: any
                     onUp={() => handleMoveOrder(item.id, "up")}
                     onDown={() => handleMoveOrder(item.id, "down")}
                   />
-                  <div>
-                    <div style={{ fontSize: "14.5px", fontWeight: 600, color: "#fff" }}>
+                  <Column gap="2" style={{ minWidth: 0 }}>
+                    <Text variant="heading-strong-xs" onBackground="neutral-strong">
                       {item.institution}
-                    </div>
-                    <div style={{ fontSize: "13px", color: "#34d399", marginTop: 2 }}>
-                      {idTrans.degree || "Studi"} •{" "}
-                      <span style={{ color: "rgba(255,255,255,0.45)" }}>{item.timeframe}</span>
-                    </div>
-                  </div>
-                </div>
+                    </Text>
+                    <Text variant="body-default-xs" onBackground="neutral-weak">
+                      <Text as="span" onBackground="brand-medium">{idTrans.degree || "Studi"}</Text>{" "}
+                      • {item.timeframe}
+                    </Text>
+                  </Column>
+                </Row>
 
-                <div style={{ display: "flex", gap: "8px" }}>
-                  <button
+                <Row vertical="center" gap="8" style={{ flexShrink: 0 }}>
+                  <Button
                     type="button"
-                    className={styles.secondaryButton}
+                    variant="secondary"
+                    size="s"
+                    label="Edit"
                     onClick={() => {
                       setIsCreatingStudy(false);
                       setEditingStudy(item);
                     }}
-                  >
-                    Edit
-                  </button>
-                  <button
+                  />
+                  <Button
                     type="button"
-                    className={styles.dangerButton}
+                    variant="danger"
+                    size="s"
+                    label="Hapus"
                     onClick={async () => {
                       if (confirm(`Hapus riwayat studi ${item.institution}?`)) {
                         await deleteStudyAction(item.id);
@@ -128,15 +153,13 @@ export default function StudiesManager({ initialStudies }: { initialStudies: any
                         router.refresh();
                       }
                     }}
-                  >
-                    Hapus
-                  </button>
-                </div>
-              </div>
+                  />
+                </Row>
+              </Row>
             );
           })}
-        </div>
+        </Column>
       )}
-    </div>
+    </Column>
   );
 }

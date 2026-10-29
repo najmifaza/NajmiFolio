@@ -1,9 +1,9 @@
 "use client";
 
+import { Button, Column, Heading, Input, Row, Switch, Text, Textarea } from "@once-ui-system/core";
 import type React from "react";
 import { useState } from "react";
 import { type SaveMessageRoomInput, saveMessageRoomAction } from "../actions";
-import styles from "../admin.module.scss";
 
 function toInputDateTime(dateStr?: string | null): string {
   if (!dateStr) return "";
@@ -73,40 +73,41 @@ export default function RoomForm({
   };
 
   return (
-    <div className={styles.glassCard} style={{ marginBottom: "24px" }}>
+    <Column
+      background="surface"
+      border="neutral-alpha-weak"
+      radius="l"
+      padding="24"
+      gap="24"
+      fillWidth
+      style={{ marginBottom: 24 }}
+    >
       <form
         onSubmit={handleSubmit}
-        style={{ display: "flex", flexDirection: "column", gap: "20px" }}
+        style={{ display: "flex", flexDirection: "column", gap: 24, width: "100%" }}
       >
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-          <h2 style={{ fontSize: "17px", fontWeight: 700, margin: 0, color: "#fff" }}>
+        <Row vertical="center" horizontal="between">
+          <Heading as="h2" variant="heading-strong-s" onBackground="neutral-strong">
             {room?.id ? "Edit Ruang Pesan Anonim" : "Buat Ruang Pesan Anonim Baru"}
-          </h2>
-          <span style={{ fontSize: "12px", color: "rgba(255, 255, 255, 0.45)" }}>
+          </Heading>
+          <Text variant="label-default-xs" onBackground="neutral-weak">
             Praktikan / Mahasiswa
-          </span>
-        </div>
+          </Text>
+        </Row>
 
         {error && (
-          <div
-            style={{
-              padding: "10px 14px",
-              borderRadius: "8px",
-              backgroundColor: "rgba(239, 68, 68, 0.15)",
-              border: "1px solid rgba(239, 68, 68, 0.3)",
-              color: "#fca5a5",
-              fontSize: "13px",
-            }}
-          >
-            {error}
-          </div>
+          <Row padding="12" radius="m" background="danger-alpha-weak" border="danger-alpha-medium">
+            <Text variant="label-default-s" onBackground="danger-medium">
+              {error}
+            </Text>
+          </Row>
         )}
 
-        <div className={styles.formGrid}>
-          <div className={styles.formGroup}>
-            <label>Judul Ruang / Acara / Praktikum *</label>
-            <input
-              className={styles.formInput}
+        <Row gap="16" wrap fillWidth>
+          <Column gap="8" style={{ flex: 1.5, minWidth: 260 }}>
+            <Input
+              id="room-title"
+              label="Judul Ruang / Acara / Praktikum *"
               required
               value={title}
               onChange={(e) => {
@@ -117,130 +118,99 @@ export default function RoomForm({
               }}
               placeholder="Contoh: Praktikum Basis Data Shift C"
             />
-          </div>
+          </Column>
 
-          <div className={styles.formGroup}>
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-                marginBottom: "2px",
-              }}
-            >
-              <label>Slug URL (contoh: /BasdatShiftC) *</label>
-              <button
+          <Column gap="8" style={{ flex: 1, minWidth: 220 }}>
+            <Row vertical="center" horizontal="between">
+              <Text variant="label-default-xs" onBackground="neutral-medium">
+                Slug URL (contoh: /BasdatShiftC) *
+              </Text>
+              <Button
                 type="button"
-                className={styles.aiButton}
+                variant="secondary"
+                size="s"
+                label="⚡ Generate"
                 onClick={handleGenerateSlug}
-                style={{ padding: "3px 10px", fontSize: "11px" }}
-              >
-                ⚡ Generate Slug
-              </button>
-            </div>
-            <div className={styles.slugInputWrapper}>
-              <span>/</span>
-              <input
-                className={styles.formInput}
-                required
-                value={slug}
-                onChange={(e) => setSlug(e.target.value.replace(/[^a-zA-Z0-9_-]/g, ""))}
-                placeholder="BasdatShiftC"
               />
-            </div>
+            </Row>
+            <Input
+              id="room-slug"
+              required
+              value={slug}
+              onChange={(e) => setSlug(e.target.value.replace(/[^a-zA-Z0-9_-]/g, ""))}
+              placeholder="BasdatShiftC"
+              hasPrefix="/"
+            />
             {slug && (
-              <span style={{ fontSize: "11px", color: "#10b981", marginTop: "2px" }}>
-                Preview link:{" "}
-                {typeof window !== "undefined" ? window.location.host : "localhost:3000"}/
-                {slug.replace(/^\/+/, "")}
-              </span>
+              <Text variant="label-default-xs" style={{ color: "var(--brand-solid-strong)" }}>
+                Preview link: /{slug.replace(/^\/+/, "")}
+              </Text>
             )}
-          </div>
-        </div>
+          </Column>
+        </Row>
 
-        <div className={styles.formGroup}>
-          <label>Deskripsi / Instruksi untuk Praktikan (Opsional)</label>
-          <textarea
-            className={styles.formTextarea}
-            rows={3}
+        <Column gap="8" fillWidth>
+          <Textarea
+            id="room-desc"
+            label="Deskripsi / Instruksi untuk Praktikan (Opsional)"
+            lines={3}
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             placeholder="Tuliskan petunjuk untuk praktikan, misal: 'Silakan berikan kritik, saran, atau kendala modul 4 secara bebas dan rahasia.'"
           />
-        </div>
+        </Column>
 
-        <div className={styles.formGrid}>
-          <div className={styles.formGroup}>
-            <label>Jadwal Buka (Opsional)</label>
-            <input
+        <Row gap="16" wrap fillWidth>
+          <Column gap="8" style={{ flex: 1, minWidth: 220 }}>
+            <Input
+              id="room-open-at"
+              label="Jadwal Buka (Opsional)"
               type="datetime-local"
-              className={styles.formInput}
               value={openAt}
               onChange={(e) => setOpenAt(e.target.value)}
+              description="Kosongkan jika langsung dibuka."
             />
-            <span style={{ fontSize: "11px", color: "rgba(255, 255, 255, 0.4)" }}>
-              Kosongkan jika ingin langsung dibuka sekarang.
-            </span>
-          </div>
+          </Column>
 
-          <div className={styles.formGroup}>
-            <label>Jadwal Tutup (Opsional)</label>
-            <input
+          <Column gap="8" style={{ flex: 1, minWidth: 220 }}>
+            <Input
+              id="room-close-at"
+              label="Jadwal Tutup (Opsional)"
               type="datetime-local"
-              className={styles.formInput}
               value={closeAt}
               onChange={(e) => setCloseAt(e.target.value)}
+              description="Kosongkan jika tanpa batas waktu."
             />
-            <span style={{ fontSize: "11px", color: "rgba(255, 255, 255, 0.4)" }}>
-              Kosongkan jika tidak ada batas waktu penutupan.
-            </span>
-          </div>
-        </div>
+          </Column>
+        </Row>
 
-        <div style={{ display: "flex", alignItems: "center", gap: 10, marginTop: 4 }}>
-          <input
-            type="checkbox"
-            id="roomActiveToggle"
-            checked={isActive}
-            onChange={(e) => setIsActive(e.target.checked)}
-            style={{
-              width: 16,
-              height: 16,
-              cursor: "pointer",
-              accentColor: "#10b981",
-            }}
+        <Row vertical="center" gap="12">
+          <Switch
+            isChecked={isActive}
+            onToggle={() => setIsActive(!isActive)}
+            label="Status Aktif (Form dibuka untuk pengiriman pesan anonim jika jadwal sesuai)"
           />
-          <label
-            htmlFor="roomActiveToggle"
-            style={{ cursor: "pointer", fontSize: "13.5px", color: "rgba(255,255,255,0.85)" }}
-          >
-            Status Aktif (Form dibuka untuk pengiriman pesan anonim jika jadwal sesuai)
-          </label>
-        </div>
+        </Row>
 
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "flex-end",
-            gap: "12px",
-            borderTop: "1px solid rgba(255,255,255,0.08)",
-            paddingTop: 18,
-            marginTop: 6,
-          }}
-        >
-          <button
+        <Row horizontal="end" gap="12" paddingTop="16" borderTop="neutral-alpha-weak">
+          <Button
             type="button"
-            className={styles.secondaryButton}
+            variant="secondary"
+            size="m"
+            label="Batal"
             onClick={onCancel}
             disabled={saving}
-          >
-            Batal
-          </button>
-          <button type="submit" className={styles.primaryButton} disabled={saving}>
-            {saving ? "Menyimpan..." : room?.id ? "Perbarui Ruang" : "Buat Ruang"}
-          </button>
-        </div>
+          />
+          <Button
+            type="submit"
+            variant="primary"
+            size="m"
+            label={saving ? "Menyimpan..." : room?.id ? "Perbarui Ruang" : "Buat Ruang"}
+            disabled={saving}
+            loading={saving}
+          />
+        </Row>
       </form>
-    </div>
+    </Column>
   );
 }
