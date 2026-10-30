@@ -3,6 +3,55 @@
   --font-label: var(--font-body);
 }
 
+/* Admin panel responsive styles */
+.admin-mobile-only {
+  display: none !important;
+}
+
+.admin-main-area {
+  padding: 32px 48px;
+}
+
+@media (max-width: 1024px) {
+  .admin-desktop-only {
+    display: none !important;
+  }
+
+  .admin-mobile-only {
+    display: flex !important;
+  }
+
+  .admin-mobile-overlay {
+    display: block !important;
+  }
+
+  .admin-main-area {
+    padding: 72px 16px 32px 16px !important;
+  }
+
+  .admin-layout-row {
+    flex-direction: column !important;
+  }
+}
+
+@media (max-width: 640px) {
+  .admin-card-row {
+    flex-wrap: wrap !important;
+  }
+
+  .admin-card-actions {
+    width: 100% !important;
+    justify-content: flex-end !important;
+    padding-top: 8px !important;
+    border-top: 1px solid var(--border-neutral-alpha-weak) !important;
+  }
+
+  .admin-card-media {
+    width: 60px !important;
+    height: 40px !important;
+  }
+}
+
 /* Thin scrollbar — match Once UI aesthetic across all themes */
 * {
   scrollbar-width: thin;

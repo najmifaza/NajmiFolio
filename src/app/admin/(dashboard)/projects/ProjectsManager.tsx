@@ -109,9 +109,10 @@ export default function ProjectsManager({ initialProjects }: { initialProjects: 
                 background="surface"
                 border="neutral-alpha-weak"
                 gap="16"
+                className="admin-card-row"
                 style={{ transition: "all 0.15s ease" }}
               >
-                <Row vertical="center" gap="16" style={{ minWidth: 0, flex: "1 1 0", overflow: "hidden" }}>
+                <Row vertical="center" gap="16" style={{ minWidth: 0, flex: "1 1 auto" }}>
                   <OrderButtons
                     order={proj.order ?? index + 1}
                     isFirst={index === 0}
@@ -128,6 +129,7 @@ export default function ProjectsManager({ initialProjects }: { initialProjects: 
                         autoPlay
                         loop
                         playsInline
+                        className="admin-card-media"
                         style={{
                           width: 80,
                           height: 52,
@@ -140,6 +142,7 @@ export default function ProjectsManager({ initialProjects }: { initialProjects: 
                       <img
                         src={coverImg}
                         alt={proj.slug}
+                        className="admin-card-media"
                         style={{
                           width: 80,
                           height: 52,
@@ -165,7 +168,7 @@ export default function ProjectsManager({ initialProjects }: { initialProjects: 
                       No Media
                     </Row>
                   )}
-                  <Column gap="4" style={{ minWidth: 0 }}>
+                  <Column gap="4" style={{ minWidth: 0, flex: 1 }}>
                     <Row vertical="center" gap="8" wrap>
                       <Text variant="heading-strong-xs" onBackground="neutral-strong">
                         {idTrans.title || proj.slug}
@@ -194,7 +197,7 @@ export default function ProjectsManager({ initialProjects }: { initialProjects: 
                   </Column>
                 </Row>
 
-                <Row vertical="center" gap="8" style={{ flexShrink: 0 }}>
+                <Row vertical="center" gap="8" className="admin-card-actions" style={{ flexShrink: 0 }}>
                   <Button
                     type="button"
                     variant="secondary"

@@ -46,10 +46,16 @@ export default async function DashboardLayout({
 
   return (
     <AdminToastProvider>
-      <Row fill style={{ minHeight: "100vh" }}>
+      <Row fill className="admin-layout-row" style={{ minHeight: "100vh" }}>
         <AdminSidebar counts={counts} />
-        {/* Mirror publik: Flex padding="l" horizontal="center" wrapping content */}
-        <Flex zIndex={0} fillWidth padding="l" horizontal="center" flex={1} style={{ overflowY: "auto" }}>
+        <Flex
+          zIndex={0}
+          fillWidth
+          className="admin-main-area"
+          horizontal="center"
+          flex={1}
+          style={{ overflowY: "auto" }}
+        >
           <Flex horizontal="center" fillWidth minHeight="0">
             <Column as="main" fillWidth style={{ maxWidth: 1200 }}>
               {children}

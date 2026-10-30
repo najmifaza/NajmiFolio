@@ -109,8 +109,8 @@ export default function ExperiencesManager({
                 radius="m"
                 background="surface"
                 border="neutral-alpha-weak"
-                wrap
                 gap="16"
+                className="admin-card-row"
                 style={{ transition: "all 0.15s ease" }}
               >
                 <Row vertical="center" gap="16" style={{ minWidth: 0, flex: "1 1 auto" }}>
@@ -122,7 +122,7 @@ export default function ExperiencesManager({
                     onUp={() => handleMoveOrder(exp.id, "up")}
                     onDown={() => handleMoveOrder(exp.id, "down")}
                   />
-                  <Column gap="2" style={{ minWidth: 0 }}>
+                  <Column gap="2" style={{ minWidth: 0, flex: 1 }}>
                     <Text variant="heading-strong-xs" onBackground="neutral-strong">
                       {exp.company}
                     </Text>
@@ -131,7 +131,7 @@ export default function ExperiencesManager({
                     </Text>
                   </Column>
                 </Row>
-                <Row vertical="center" gap="8" style={{ flexShrink: 0 }}>
+                <Row vertical="center" gap="8" className="admin-card-actions" style={{ flexShrink: 0 }}>
                   <Button
                     type="button"
                     variant="secondary"

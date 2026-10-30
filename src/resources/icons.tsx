@@ -7,6 +7,7 @@ import {
   HiArrowRight,
   HiArrowTopRightOnSquare,
   HiArrowUpRight,
+  HiBars3,
   HiCalendarDays,
   HiChevronDown,
   HiChevronLeft,
@@ -69,6 +70,7 @@ import {
 
 export const baseIconLibrary: Record<string, IconType> = {
   ...defaultOnceIcons,
+  menu: HiBars3,
   chevronRight: HiChevronRight,
   chevronLeft: HiChevronLeft,
   chevronDown: HiChevronDown,

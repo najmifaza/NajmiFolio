@@ -55,7 +55,7 @@ export default function RoomInboxView({ room }: { room: any }) {
                 •
               </Text>
               <Row vertical="center" gap="4">
-                <StatusIndicator color={room.isActive ? "green" : "gray"} size="s" />
+                <StatusIndicator color={room.isActive ? "emerald" : "gray"} size="s" />
                 <Text variant="label-default-xs" onBackground="neutral-strong">
                   {room.isActive ? "Aktif" : "Nonaktif"}
                 </Text>

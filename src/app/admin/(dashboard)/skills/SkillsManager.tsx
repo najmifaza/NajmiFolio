@@ -109,8 +109,8 @@ export default function SkillsManager({ initialSkills }: { initialSkills: any[] 
                 radius="m"
                 background="surface"
                 border="neutral-alpha-weak"
-                wrap
                 gap="16"
+                className="admin-card-row"
                 style={{ transition: "all 0.15s ease" }}
               >
                 <Row vertical="center" gap="16" style={{ minWidth: 0, flex: "1 1 auto" }}>
@@ -122,7 +122,7 @@ export default function SkillsManager({ initialSkills }: { initialSkills: any[] 
                     onUp={() => handleMoveOrder(sg.id, "up")}
                     onDown={() => handleMoveOrder(sg.id, "down")}
                   />
-                  <Column gap="8" style={{ minWidth: 0 }}>
+                  <Column gap="8" style={{ minWidth: 0, flex: 1 }}>
                     <Text variant="heading-strong-xs" onBackground="neutral-strong">
                       {idTrans.title || sg.title}
                     </Text>
@@ -152,7 +152,7 @@ export default function SkillsManager({ initialSkills }: { initialSkills: any[] 
                   </Column>
                 </Row>
 
-                <Row vertical="center" gap="8" style={{ flexShrink: 0 }}>
+                <Row vertical="center" gap="8" className="admin-card-actions" style={{ flexShrink: 0 }}>
                   <Button
                     type="button"
                     variant="secondary"

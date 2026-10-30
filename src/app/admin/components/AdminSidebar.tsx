@@ -1,7 +1,8 @@
 "use client";
 
-import { Button, Column, Row, SmartLink, StatusIndicator, Text } from "@once-ui-system/core";
+import { Button, Column, IconButton, Row, SmartLink, StatusIndicator, Text } from "@once-ui-system/core";
 import { usePathname, useRouter } from "next/navigation";
+import { useState } from "react";
 
 export interface AdminCounts {
   projects: number;
@@ -15,6 +16,7 @@ export interface AdminCounts {
 export default function AdminSidebar({ counts }: { counts: AdminCounts }) {
   const pathname = usePathname();
   const router = useRouter();
+  const [mobileOpen, setMobileOpen] = useState(false);
 
   const handleLogout = async () => {
     await fetch("/api/authenticate", { method: "DELETE" });
@@ -32,24 +34,8 @@ export default function AdminSidebar({ counts }: { counts: AdminCounts }) {
     { href: "/admin/rooms", label: "Pesan Anonim", count: counts.rooms },
   ];
 
-  return (
-    <Column
-      as="aside"
-      fillHeight
-      vertical="between"
-      paddingX="20"
-      paddingY="24"
-      style={{
-        width: 260,
-        flexShrink: 0,
-        background: "var(--page-background)",
-        borderRight: "1px solid var(--border-neutral-alpha-weak)",
-        position: "sticky",
-        top: 0,
-        height: "100vh",
-        zIndex: 10,
-      }}
-    >
+  const SidebarContent = () => (
+    <>
       <Column gap="m">
         {/* Brand */}
         <Row gap="12" vertical="center" paddingBottom="m" borderBottom="neutral-alpha-weak">
@@ -87,7 +73,12 @@ export default function AdminSidebar({ counts }: { counts: AdminCounts }) {
           {navItems.map((item) => {
             const isActive = pathname === item.href || pathname.startsWith(`${item.href}/`);
             return (
-              <SmartLink key={item.href} href={item.href} style={{ textDecoration: "none" }}>
+              <SmartLink
+                key={item.href}
+                href={item.href}
+                style={{ textDecoration: "none" }}
+                onClick={() => setMobileOpen(false)}
+              >
                 <Row
                   vertical="center"
                   horizontal="between"
@@ -152,20 +143,117 @@ export default function AdminSidebar({ counts }: { counts: AdminCounts }) {
         >
           <Row vertical="center" horizontal="between" paddingX="12" paddingY="8" radius="m">
             <Row gap="8" vertical="center">
-              <Text variant="label-default-xs" onBackground="neutral-weak">
-                ←
-              </Text>
-              <Text variant="label-default-s" onBackground="neutral-weak">
-                Lihat Website
-              </Text>
+              <Text variant="label-default-xs" onBackground="neutral-weak">←</Text>
+              <Text variant="label-default-s" onBackground="neutral-weak">Lihat Website</Text>
             </Row>
-            <Text variant="label-default-xs" onBackground="neutral-weak">
-              ↗
-            </Text>
           </Row>
         </SmartLink>
         <Button variant="danger" size="s" fillWidth label="Keluar" onClick={handleLogout} />
       </Column>
-    </Column>
+    </>
+  );
+
+  return (
+    <>
+      {/* Desktop sidebar — hidden on ≤1024px via CSS class */}
+      <Column
+        as="aside"
+        fillHeight
+        vertical="between"
+        paddingX="20"
+        paddingY="24"
+        className="admin-desktop-only"
+        style={{
+          width: 260,
+          flexShrink: 0,
+          background: "var(--page-background)",
+          borderRight: "1px solid var(--border-neutral-alpha-weak)",
+          position: "sticky",
+          top: 0,
+          height: "100vh",
+          zIndex: 10,
+        }}
+      >
+        <SidebarContent />
+      </Column>
+
+      {/* Mobile topbar — visible only on ≤1024px */}
+      <Row
+        fillWidth
+        vertical="center"
+        horizontal="between"
+        paddingX="16"
+        paddingY="12"
+        className="admin-mobile-only"
+        style={{
+          position: "fixed",
+          top: 0,
+          left: 0,
+          right: 0,
+          zIndex: 100,
+          background: "var(--page-background)",
+          borderBottom: "1px solid var(--border-neutral-alpha-weak)",
+          backdropFilter: "blur(12px)",
+        }}
+      >
+        <Text variant="label-strong-s" onBackground="neutral-strong">Najmi CMS</Text>
+        <IconButton
+          variant="secondary"
+          size="m"
+          icon={mobileOpen ? "close" : "menu"}
+          onClick={() => setMobileOpen(!mobileOpen)}
+          tooltip="Menu"
+        />
+      </Row>
+
+      {/* Mobile overlay — hanya tampil saat drawer open */}
+      {mobileOpen && (
+        <div
+          className="admin-mobile-only admin-mobile-overlay"
+          style={{
+            position: "fixed",
+            inset: 0,
+            zIndex: 99,
+            background: "rgba(0,0,0,0.6)",
+            backdropFilter: "blur(4px)",
+          }}
+          onClick={() => setMobileOpen(false)}
+        />
+      )}
+
+      {/* Mobile drawer — slide in dari kiri */}
+      <Column
+        vertical="between"
+        paddingX="20"
+        paddingY="24"
+        className="admin-mobile-only"
+        style={{
+          position: "fixed",
+          top: 0,
+          left: 0,
+          bottom: 0,
+          width: 280,
+          zIndex: 101,
+          background: "var(--page-background)",
+          borderRight: "1px solid var(--border-neutral-alpha-weak)",
+          transform: mobileOpen ? "translateX(0)" : "translateX(-100%)",
+          transition: "transform 0.25s ease",
+          overflowY: "auto",
+          boxShadow: mobileOpen ? "4px 0 24px rgba(0,0,0,0.5)" : "none",
+        }}
+      >
+        <Row vertical="center" horizontal="between" paddingBottom="s" borderBottom="neutral-alpha-weak">
+          <Text variant="label-strong-s" onBackground="neutral-strong">Menu</Text>
+          <IconButton
+            variant="secondary"
+            size="s"
+            icon="close"
+            onClick={() => setMobileOpen(false)}
+            tooltip="Tutup"
+          />
+        </Row>
+        <SidebarContent />
+      </Column>
+    </>
   );
 }

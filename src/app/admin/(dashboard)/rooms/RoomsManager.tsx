@@ -118,10 +118,10 @@ export default function RoomsManager({ initialRooms }: { initialRooms: any[] }) 
               radius="m"
               background="surface"
               border="neutral-alpha-weak"
-              wrap
               gap="16"
+              className="admin-card-row"
             >
-              <Column gap="8" style={{ flex: 1, minWidth: 260 }}>
+              <Column gap="8" style={{ flex: 1, minWidth: 200 }}>
                 <Row vertical="center" gap="12" wrap>
                   <Text variant="heading-strong-xs" onBackground="neutral-strong">
                     {room.title}
@@ -175,7 +175,7 @@ export default function RoomsManager({ initialRooms }: { initialRooms: any[] }) 
                 )}
               </Column>
 
-              <Row vertical="center" gap="8" style={{ flexShrink: 0 }}>
+              <Row vertical="center" gap="8" className="admin-card-actions" style={{ flexShrink: 0 }}>
                 <SmartLink href={`/admin/rooms/${room.id}`} style={{ textDecoration: "none" }}>
                   <Button
                     type="button"

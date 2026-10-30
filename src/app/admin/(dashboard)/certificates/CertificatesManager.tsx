@@ -107,8 +107,8 @@ export default function CertificatesManager({
               radius="m"
               background="surface"
               border="neutral-alpha-weak"
-              wrap
               gap="16"
+              className="admin-card-row"
               style={{ transition: "all 0.15s ease" }}
             >
               <Row vertical="center" gap="16" style={{ minWidth: 0, flex: "1 1 auto" }}>
@@ -146,7 +146,7 @@ export default function CertificatesManager({
                 </Column>
               </Row>
 
-              <Row vertical="center" gap="8" style={{ flexShrink: 0 }}>
+              <Row vertical="center" gap="8" className="admin-card-actions" style={{ flexShrink: 0 }}>
                 <Button
                   type="button"
                   variant="secondary"
